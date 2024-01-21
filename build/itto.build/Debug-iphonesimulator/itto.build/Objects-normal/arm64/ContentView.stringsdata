@@ -1,0 +1,56 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Sets:"
+      },
+      {
+        "comment": "",
+        "key": "Repetitions"
+      },
+      {
+        "comment": "",
+        "key": "%lld"
+      },
+      {
+        "comment": "",
+        "key": "Break Time:"
+      },
+      {
+        "comment": "",
+        "key": "%lld min"
+      },
+      {
+        "comment": "",
+        "key": "Interval Time:"
+      },
+      {
+        "comment": "",
+        "key": "Subject"
+      },
+      {
+        "comment": "",
+        "key": "Add Class"
+      },
+      {
+        "comment": "",
+        "key": "Start Timer"
+      },
+      {
+        "comment": "",
+        "key": "Stop Timer"
+      },
+      {
+        "comment": "",
+        "key": "Resume Timer"
+      },
+      {
+        "comment": "",
+        "key": "Pause Timer"
+      }
+    ]
+  },
+  "version": 1
+}

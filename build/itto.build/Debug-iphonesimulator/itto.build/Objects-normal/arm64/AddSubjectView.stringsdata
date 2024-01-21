@@ -1,0 +1,24 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/AddSubjectView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Add subject"
+      },
+      {
+        "comment": "",
+        "key": "Arithmetics"
+      },
+      {
+        "comment": "",
+        "key": ""
+      },
+      {
+        "comment": "",
+        "key": "Save"
+      }
+    ]
+  },
+  "version": 1
+}

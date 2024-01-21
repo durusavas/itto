@@ -1,0 +1,16 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/SubjectView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "My Subjects"
+      },
+      {
+        "comment": "",
+        "key": "Add new"
+      }
+    ]
+  },
+  "version": 1
+}

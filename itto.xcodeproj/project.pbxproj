@@ -1,0 +1,400 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B91CA6A12B07AB040019C898 /* ittoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6A02B07AB040019C898 /* ittoApp.swift */; };
+		B91CA6A32B07AB040019C898 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6A22B07AB040019C898 /* ContentView.swift */; };
+		B91CA6A52B07AB060019C898 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91CA6A42B07AB060019C898 /* Assets.xcassets */; };
+		B91CA6A82B07AB060019C898 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91CA6A72B07AB060019C898 /* Preview Assets.xcassets */; };
+		B91CA6B02B07AEA20019C898 /* Itto.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6AE2B07AEA20019C898 /* Itto.xcdatamodeld */; };
+		B91CA6B22B07AFD00019C898 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B12B07AFD00019C898 /* DataController.swift */; };
+		B91CA6B42B07BE8A0019C898 /* SubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B32B07BE8A0019C898 /* SubjectView.swift */; };
+		B91CA6B62B07C2AC0019C898 /* AddSubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */; };
+		B9EA93672B0AAC6F00083807 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA93662B0AAC6F00083807 /* ReportView.swift */; };
+		B9EA93692B0AB3FC00083807 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA93682B0AB3FC00083807 /* MainView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B91CA69D2B07AB040019C898 /* itto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = itto.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B91CA6A02B07AB040019C898 /* ittoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ittoApp.swift; sourceTree = "<group>"; };
+		B91CA6A22B07AB040019C898 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B91CA6A42B07AB060019C898 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B91CA6A72B07AB060019C898 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B91CA6AF2B07AEA20019C898 /* Itto.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Itto.xcdatamodel; sourceTree = "<group>"; };
+		B91CA6B12B07AFD00019C898 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		B91CA6B32B07BE8A0019C898 /* SubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectView.swift; sourceTree = "<group>"; };
+		B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubjectView.swift; sourceTree = "<group>"; };
+		B9EA93662B0AAC6F00083807 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		B9EA93682B0AB3FC00083807 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B91CA69A2B07AB040019C898 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B91CA6942B07AB040019C898 = {
+			isa = PBXGroup;
+			children = (
+				B91CA69F2B07AB040019C898 /* itto */,
+				B91CA69E2B07AB040019C898 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B91CA69E2B07AB040019C898 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B91CA69D2B07AB040019C898 /* itto.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B91CA69F2B07AB040019C898 /* itto */ = {
+			isa = PBXGroup;
+			children = (
+				B91CA6A02B07AB040019C898 /* ittoApp.swift */,
+				B91CA6A22B07AB040019C898 /* ContentView.swift */,
+				B9EA93682B0AB3FC00083807 /* MainView.swift */,
+				B91CA6B32B07BE8A0019C898 /* SubjectView.swift */,
+				B9EA93662B0AAC6F00083807 /* ReportView.swift */,
+				B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */,
+				B91CA6AE2B07AEA20019C898 /* Itto.xcdatamodeld */,
+				B91CA6B12B07AFD00019C898 /* DataController.swift */,
+				B91CA6A42B07AB060019C898 /* Assets.xcassets */,
+				B91CA6A62B07AB060019C898 /* Preview Content */,
+			);
+			path = itto;
+			sourceTree = "<group>";
+		};
+		B91CA6A62B07AB060019C898 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				B91CA6A72B07AB060019C898 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B91CA69C2B07AB040019C898 /* itto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B91CA6AB2B07AB060019C898 /* Build configuration list for PBXNativeTarget "itto" */;
+			buildPhases = (
+				B91CA6992B07AB040019C898 /* Sources */,
+				B91CA69A2B07AB040019C898 /* Frameworks */,
+				B91CA69B2B07AB040019C898 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = itto;
+			packageProductDependencies = (
+			);
+			productName = itto;
+			productReference = B91CA69D2B07AB040019C898 /* itto.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B91CA6952B07AB040019C898 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					B91CA69C2B07AB040019C898 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+				};
+			};
+			buildConfigurationList = B91CA6982B07AB040019C898 /* Build configuration list for PBXProject "itto" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B91CA6942B07AB040019C898;
+			packageReferences = (
+				B9EA936A2B0BE79300083807 /* XCRemoteSwiftPackageReference "ChartView" */,
+			);
+			productRefGroup = B91CA69E2B07AB040019C898 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B91CA69C2B07AB040019C898 /* itto */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B91CA69B2B07AB040019C898 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B91CA6A82B07AB060019C898 /* Preview Assets.xcassets in Resources */,
+				B91CA6A52B07AB060019C898 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B91CA6992B07AB040019C898 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B91CA6B02B07AEA20019C898 /* Itto.xcdatamodeld in Sources */,
+				B9EA93692B0AB3FC00083807 /* MainView.swift in Sources */,
+				B91CA6B22B07AFD00019C898 /* DataController.swift in Sources */,
+				B9EA93672B0AAC6F00083807 /* ReportView.swift in Sources */,
+				B91CA6B42B07BE8A0019C898 /* SubjectView.swift in Sources */,
+				B91CA6B62B07C2AC0019C898 /* AddSubjectView.swift in Sources */,
+				B91CA6A32B07AB040019C898 /* ContentView.swift in Sources */,
+				B91CA6A12B07AB040019C898 /* ittoApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B91CA6A92B07AB060019C898 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B91CA6AA2B07AB060019C898 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B91CA6AC2B07AB060019C898 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = duru.itto;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B91CA6AD2B07AB060019C898 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = duru.itto;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B91CA6982B07AB040019C898 /* Build configuration list for PBXProject "itto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B91CA6A92B07AB060019C898 /* Debug */,
+				B91CA6AA2B07AB060019C898 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B91CA6AB2B07AB060019C898 /* Build configuration list for PBXNativeTarget "itto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B91CA6AC2B07AB060019C898 /* Debug */,
+				B91CA6AD2B07AB060019C898 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B9EA936A2B0BE79300083807 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCVersionGroup section */
+		B91CA6AE2B07AEA20019C898 /* Itto.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B91CA6AF2B07AEA20019C898 /* Itto.xcdatamodel */,
+			);
+			currentVersion = B91CA6AF2B07AEA20019C898 /* Itto.xcdatamodel */;
+			path = Itto.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = B91CA6952B07AB040019C898 /* Project object */;
+}
