@@ -60,9 +60,6 @@ struct SubjectView: View {
             }
            
         }
-        .background(content: {
-                            Rectangle().fill(gradient).ignoresSafeArea()
-                        })
         
     }
     
