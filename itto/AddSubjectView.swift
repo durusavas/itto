@@ -24,10 +24,7 @@ extension Color {
         return String(format: "R: %.0f, G: %.0f, B: %.0f", red * 255, green * 255, blue * 255)
     }
 }
-
 struct AddSubjectView: View {
-   
-    
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
@@ -35,36 +32,38 @@ struct AddSubjectView: View {
     @State private var color: Color = Color.red
     
     var body: some View {
-            // Place NavigationView on top of the gradient
-            NavigationView {
-                Form {
-                    Section {
-                        HStack {
-                            TextField("Arithmetics", text: $name)
-                                .padding()
-                            ColorPicker("", selection: $color)
-                        }
-                    }
+        Form {
+            Section {
+                HStack {
+                    TextField("Enter subject name", text: $name)
+                        .padding()
+                    ColorPicker("Choose Color", selection: $color)
                 }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            let newSubject = Subjects(context: moc)
-                            newSubject.id = UUID()
-                            newSubject.name = name
-                            newSubject.color = color.toRgbString()
-                            
-                            try? moc.save()
-                            dismiss()
-                        } label: {
-                            Label("Save", systemImage: "save")
-                        }
-                    }
-                }
-                .navigationTitle("Add subject")
-                
             }
-           
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: saveSubject) {
+                    Label("Save", systemImage: "save")
+                }
+            }
+        }
+        .navigationTitle("Add Subject")
+    }
+
+    private func saveSubject() {
+        let newSubject = Subjects(context: moc)
+        newSubject.id = UUID()
+        newSubject.name = name
+        newSubject.color = color.toRgbString()
+        
+        do {
+            try moc.save()
+            dismiss()
+        } catch {
+            // Handle the error here, perhaps with an alert to the user
+            print("Error saving subject: \(error.localizedDescription)")
+        }
     }
 }
 

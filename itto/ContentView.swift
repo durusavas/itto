@@ -82,7 +82,7 @@ struct ContentView: View {
     
     
     var body: some View {
-        
+        NavigationView{
         VStack {
             if(!timerStarted){
                 HStack{
@@ -114,6 +114,7 @@ struct ContentView: View {
             
             CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted)
                 .padding()
+                .padding()
 
             
             if(!timerStarted){
@@ -130,6 +131,7 @@ struct ContentView: View {
                         Image(systemName: "plus")
                     }
                     
+                    
                 } .padding()
                 
             }
@@ -139,8 +141,8 @@ struct ContentView: View {
                         resumeTimer()
                     }
                     .padding()
-                    .background(.gray.opacity(0.2))
-                    .cornerRadius(10)
+                    .background(.gray.opacity(0.1))
+                    .cornerRadius(15)
                     
                 }
                 
@@ -149,9 +151,9 @@ struct ContentView: View {
                         pauseTimer()
                     }
                     .padding()
-                    .background(.gray.opacity(0.2))
+                    .background(.gray.opacity(0.1))
                     
-                    .cornerRadius(10)
+                    .cornerRadius(15)
                 }
                 if timerIsPaused && !timerStarted {
                     Button("Start Timer") {
@@ -159,9 +161,9 @@ struct ContentView: View {
                     }     .foregroundColor(.blue)
                         .padding()
                         .font(.largeTitle)
-                        .background(.gray.opacity(0.2))
-                        .cornerRadius(10)
-                      
+                        .background(.gray.opacity(0.1))
+                        .cornerRadius(15)
+                    
                     
                 } else {
                     Button("Stop Timer") {
@@ -171,10 +173,10 @@ struct ContentView: View {
                     .foregroundColor(.blue)
                     .padding()
                     .font(.title2)
-                    .background(.gray.opacity(0.2))
+                    .background(.gray.opacity(0.1))
                     .cornerRadius(10)
                 }
-                
+            }
                
             }
         }
