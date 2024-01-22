@@ -32,23 +32,26 @@ struct AddSubjectView: View {
     @State private var color: Color = Color.red
     
     var body: some View {
-        Form {
-            Section {
-                HStack {
-                    TextField("Enter subject name", text: $name)
-                        .padding()
-                    ColorPicker("Choose Color", selection: $color)
+        NavigationView{
+            Form {
+                Section {
+                    HStack {
+                        TextField("Enter subject name", text: $name)
+                            .padding()
+                        ColorPicker("Choose Color", selection: $color)
+                    }
                 }
             }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: saveSubject) {
-                    Label("Save", systemImage: "save")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: saveSubject) {
+                        Label("Save", systemImage: "save")
+                    }
                 }
             }
+            .navigationTitle("Add Subject")
         }
-        .navigationTitle("Add Subject")
+        
     }
 
     private func saveSubject() {
