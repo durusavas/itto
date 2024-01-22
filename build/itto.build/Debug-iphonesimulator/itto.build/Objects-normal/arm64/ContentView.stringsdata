@@ -4,6 +4,10 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "%lld / %lld"
+      },
+      {
+        "comment": "",
         "key": "Sets:"
       },
       {
@@ -36,19 +40,19 @@
       },
       {
         "comment": "",
-        "key": "Start Timer"
-      },
-      {
-        "comment": "",
-        "key": "Stop Timer"
-      },
-      {
-        "comment": "",
         "key": "Resume Timer"
       },
       {
         "comment": "",
         "key": "Pause Timer"
+      },
+      {
+        "comment": "",
+        "key": "Start Timer"
+      },
+      {
+        "comment": "",
+        "key": "Stop Timer"
       }
     ]
   },

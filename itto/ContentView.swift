@@ -10,8 +10,10 @@ import Foundation
 
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
+    var currentInterval: Int
+    var intervalNumber: Int
     var content: Content
-    
+    var isTimerStarted: Bool
     
     var body: some View {
         
@@ -30,6 +32,14 @@ struct CircularProgressView<Content: View>: View {
                 .animation(.linear, value: progress)
             
             content
+            if isTimerStarted{
+                Text("\(currentInterval) / \(intervalNumber)") // Display the current set number
+                                
+                                .offset(y: -40)
+                
+            }
+           
+                            
         }
         .frame(width: 200, height: 200)
         
@@ -47,7 +57,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     
-    @State private var interval = 4
+    @State private var intervalNumber = 4
     @State private var intervalTime = 30 // Interval time in minutes
     @State private var breakTime = 5 // Break time in minutes
     @State private var timer: Timer?
@@ -78,7 +88,7 @@ struct ContentView: View {
                 HStack{
                     VStack {
                         Text("Sets:")
-                        Picker("Repetitions", selection: $interval) {
+                        Picker("Repetitions", selection: $intervalNumber) {
                             ForEach(sets, id: \.self) { number in
                                 Text("\(number)")
                             }
@@ -102,8 +112,9 @@ struct ContentView: View {
                 .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
             }
             
-            CircularProgressView(progress: progressValue(), content: timerIsPaused ? AnyView(intervalPicker) : AnyView(countdownView))
+            CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted)
                 .padding()
+
             
             if(!timerStarted){
                 HStack{
@@ -116,19 +127,41 @@ struct ContentView: View {
                     
                     NavigationLink(destination: AddSubjectView()) {
                         Text("Add Class")
-                        
                         Image(systemName: "plus")
                     }
                     
                 } .padding()
                 
             }
-            HStack{
+            VStack{
+                if timerIsPaused && timerStarted {
+                    Button("Resume Timer") {
+                        resumeTimer()
+                    }
+                    .padding()
+                    .background(.gray.opacity(0.2))
+                    .cornerRadius(10)
+                    
+                }
+                
+                if(!timerIsPaused){
+                    Button("Pause Timer"){
+                        pauseTimer()
+                    }
+                    .padding()
+                    .background(.gray.opacity(0.2))
+                    
+                    .cornerRadius(10)
+                }
                 if timerIsPaused && !timerStarted {
                     Button("Start Timer") {
                         startTimer()
                     }     .foregroundColor(.blue)
                         .padding()
+                        .font(.largeTitle)
+                        .background(.gray.opacity(0.2))
+                        .cornerRadius(10)
+                      
                     
                 } else {
                     Button("Stop Timer") {
@@ -137,24 +170,18 @@ struct ContentView: View {
                     }
                     .foregroundColor(.blue)
                     .padding()
-                }
-                if timerIsPaused && timerStarted {
-                    Button("Resume Timer") {
-                        resumeTimer()
-                    }
-                    .padding()
+                    .font(.title2)
+                    .background(.gray.opacity(0.2))
+                    .cornerRadius(10)
                 }
                 
-                if(!timerIsPaused){
-                    Button("Pause Timer"){
-                        pauseTimer()
-                    }
-                }
+               
             }
         }
         .animation(.easeInOut, value: timerStarted)
     }
     private var intervalPicker: some View {
+        
         Picker("Interval Time:", selection: $intervalTime) {
             ForEach(times, id: \.self) { number in
                 Text("\(number)")
@@ -193,7 +220,7 @@ struct ContentView: View {
                 }
             } else {
                 // if there is tjrs des repetiton a faire switch to break
-                if self.currentInterval < self.interval {
+                if self.currentInterval < self.intervalNumber {
                     self.onBreak.toggle()
                     self.countdownTime = self.onBreak ? self.breakTime * 60 : self.intervalTime * 60
                     if !self.onBreak { // If the next interval is a work interval, increment the interval count.
@@ -243,7 +270,7 @@ struct ContentView: View {
                     self.totalWorkTime += 1
                 }
             } else {
-                if self.currentInterval < self.interval {
+                if self.currentInterval < self.intervalNumber {
                     self.onBreak.toggle()
                     self.countdownTime = self.onBreak ? self.breakTime * 60 : self.intervalTime * 60
                     if !self.onBreak {
