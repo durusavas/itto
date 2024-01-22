@@ -11,15 +11,15 @@ import Foundation
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
     var content: Content
-   
-
-    var body: some View {
     
+    
+    var body: some View {
+        
         
         ZStack {
             Circle()
-                .stroke(lineWidth: 15)
-                .opacity(0.3)
+                .stroke(lineWidth: 25)
+                .opacity(0.1)
                 .foregroundColor(Color.gray)
             
             Circle()
@@ -34,7 +34,7 @@ struct CircularProgressView<Content: View>: View {
         .frame(width: 200, height: 200)
         
     }
-        
+    
     
 }
 
@@ -61,19 +61,20 @@ struct ContentView: View {
     
     @State private var chosenSubject = ""
     @State private var timerStarted = false
-
+    
     @State private var navigateToReportView = false
     
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
     
-
-
+    
+    
     
     var body: some View {
-
-            VStack {
+        
+        VStack {
+            if(!timerStarted){
                 HStack{
                     VStack {
                         Text("Sets:")
@@ -98,10 +99,13 @@ struct ContentView: View {
                         .clipped()
                     }
                 }
-                
-                CircularProgressView(progress: progressValue(), content: timerIsPaused ? AnyView(intervalPicker) : AnyView(countdownView))
-                    .padding()
-                
+                .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
+            }
+            
+            CircularProgressView(progress: progressValue(), content: timerIsPaused ? AnyView(intervalPicker) : AnyView(countdownView))
+                .padding()
+            
+            if(!timerStarted){
                 HStack{
                     Picker("Subject", selection: $chosenSubject) {
                         ForEach(subjects) { item in
@@ -112,46 +116,43 @@ struct ContentView: View {
                     
                     NavigationLink(destination: AddSubjectView()) {
                         Text("Add Class")
-                            
+                        
                         Image(systemName: "plus")
                     }
                     
                 } .padding()
                 
-                HStack{
-                    if timerIsPaused && !timerStarted {
-                        Button("Start Timer") {
-                            startTimer()
-                        }     .foregroundColor(.blue)
-                            .padding()
+            }
+            HStack{
+                if timerIsPaused && !timerStarted {
+                    Button("Start Timer") {
+                        startTimer()
+                    }     .foregroundColor(.blue)
+                        .padding()
+                    
+                } else {
+                    Button("Stop Timer") {
+                        stopTimer()
                         
-                    } else {
-                        Button("Stop Timer") {
-                            stopTimer()
-                            
-                        }
-                        .foregroundColor(.blue)
-                        .padding()
                     }
-                    if timerIsPaused && timerStarted {
-                        Button("Resume Timer") {
-                            resumeTimer()
-                        }
-                        .padding()
+                    .foregroundColor(.blue)
+                    .padding()
+                }
+                if timerIsPaused && timerStarted {
+                    Button("Resume Timer") {
+                        resumeTimer()
                     }
-
-                    if(!timerIsPaused){
-                        Button("Pause Timer"){
-                            pauseTimer()
-                        }
-                    }
-                   
+                    .padding()
                 }
                 
-            
-           
+                if(!timerIsPaused){
+                    Button("Pause Timer"){
+                        pauseTimer()
+                    }
+                }
+            }
         }
-          
+        .animation(.easeInOut, value: timerStarted)
     }
     private var intervalPicker: some View {
         Picker("Interval Time:", selection: $intervalTime) {
@@ -200,7 +201,7 @@ struct ContentView: View {
                     }
                 } else {
                     self.timer?.invalidate()
-                  
+                    
                 }
             }
         }
@@ -225,7 +226,7 @@ struct ContentView: View {
             }
         }
     }
-
+    
     
     
     private func pauseTimer() {
@@ -260,9 +261,9 @@ struct ContentView: View {
         let seconds = time % 60
         return "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
     }
-        
     
-   
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
