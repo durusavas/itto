@@ -60,7 +60,8 @@ struct ContentView: View {
     @State private var timerStartDate: Date?
     
     @State private var chosenSubject = ""
-    
+    @State private var timerStarted = false
+
     @State private var navigateToReportView = false
     
     let sets = [1, 2, 3, 4, 5, 6]
@@ -111,17 +112,14 @@ struct ContentView: View {
                     
                     NavigationLink(destination: AddSubjectView()) {
                         Text("Add Class")
-                            .foregroundColor(.blue)
-                            .padding()
-                            .background(Color.gray)
-                        
-                            .cornerRadius(10)
+                            
+                        Image(systemName: "plus")
                     }
                     
                 } .padding()
                 
                 HStack{
-                    if timerIsPaused {
+                    if timerIsPaused && !timerStarted {
                         Button("Start Timer") {
                             startTimer()
                         }     .foregroundColor(.blue)
@@ -135,23 +133,25 @@ struct ContentView: View {
                         .foregroundColor(.blue)
                         .padding()
                     }
-                    Button(timerIsPaused ? "Resume Timer" : "Pause Timer") {
-                        if timerIsPaused {
+                    if timerIsPaused && timerStarted {
+                        Button("Resume Timer") {
                             resumeTimer()
-                        } else {
+                        }
+                        .padding()
+                    }
+
+                    if(!timerIsPaused){
+                        Button("Pause Timer"){
                             pauseTimer()
                         }
                     }
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .foregroundColor(.white)
+                   
                 }
                 
             
            
         }
-            .background(gradient.ignoresSafeArea(.all))
+          
     }
     private var intervalPicker: some View {
         Picker("Interval Time:", selection: $intervalTime) {
@@ -182,6 +182,7 @@ struct ContentView: View {
         onBreak = false
         currentInterval = 1
         totalWorkTime = 0
+        timerStarted = true
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if self.countdownTime > 0 {
@@ -210,7 +211,7 @@ struct ContentView: View {
         timer?.invalidate()
         countdownTime = 0
         timerIsPaused = true
-
+        timerStarted = false
         let newReport = Report(context: moc)
         newReport.date = timerStartDate
         newReport.subjectName = chosenSubject
