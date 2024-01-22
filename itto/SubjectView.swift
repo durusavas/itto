@@ -26,42 +26,47 @@ struct SubjectView: View {
     
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             VStack {
-                List(subject) { item in
-                    HStack {
-                        Circle()
-                            .frame(width: 20, height: 20) // Set a size for the circle
-                            .foregroundColor(item.color?.toColor() ?? Color.white) // Use the parsed color
-                        Text(item.name ?? "Unknown")
-                        Text(item.color ?? "black")
+                List {
+                    ForEach(subject, id: \.self) { item in
+                        HStack {
+                            Circle()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(item.color?.toColor() ?? Color.white)
+                            Text(item.name ?? "Unknown")
+                        }
+                    }
+                    .onDelete(perform: deleteSubject) // Enables swipe-to-delete
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showAddScreen.toggle()
+                        } label: {
+                            Label("Add new", systemImage: "plus")
+                        }
                     }
                 }
-            }
-            
-            
-            .toolbar{
-                ToolbarItem(placement: .navigationBarTrailing){
-                    
-                    Button{
-                        showAddScreen.toggle()
-                        
-                    } label: {
-                        Label("Add new", systemImage: "plus")
-                    }
-                    
+                .navigationTitle("My Subjects")
+                .sheet(isPresented: $showAddScreen) {
+                    AddSubjectView()
                 }
             }
-            .navigationTitle("My Subjects")
-            
-            
-            .sheet(isPresented: $showAddScreen){
-                AddSubjectView()
-            }
-           
         }
-        
     }
+
+    // Function to handle the deletion of subjects
+    private func deleteSubject(at offsets: IndexSet) {
+        for index in offsets {
+            let subjectToDelete = subject[index]
+            moc.delete(subjectToDelete)
+        }
+
+        // Save the context
+        try? moc.save()
+    }
+
     
 }
 extension String {
