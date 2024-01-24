@@ -1,1 +1,2 @@
-itto.xcodeproj/* linguist-vendored
+# Direct Swift
+*.* linguist-language=Swift
