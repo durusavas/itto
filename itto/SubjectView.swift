@@ -69,20 +69,7 @@ struct SubjectView: View {
 
     
 }
-extension String {
-    func toColor() -> Color {
-        let rgbValues = self.split(separator: ",")
-            .map { $0.split(separator: ":").last }
-            .compactMap { $0 }
-            .map { Double($0.trimmingCharacters(in: .whitespaces)) ?? 0 }
-        
-        if rgbValues.count == 3 {
-            return Color(red: rgbValues[0] / 255, green: rgbValues[1] / 255, blue: rgbValues[2] / 255)
-        } else {
-            return Color.white // Default color in case of parsing failure
-        }
-    }
-}
+
 
 
 #Preview {

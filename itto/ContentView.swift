@@ -14,10 +14,9 @@ struct CircularProgressView<Content: View>: View {
     var intervalNumber: Int
     var content: Content
     var isTimerStarted: Bool
+    var accentColor: Color
     
     var body: some View {
-        
-        
         ZStack {
             Circle()
                 .stroke(lineWidth: 25)
@@ -27,33 +26,21 @@ struct CircularProgressView<Content: View>: View {
             Circle()
                 .trim(from: 0.0, to: progress)
                 .stroke(style: StrokeStyle(lineWidth: 17, lineCap: .round, lineJoin: .round))
-                .foregroundColor(Color.blue)
+                .foregroundColor(accentColor)
                 .rotationEffect(Angle(degrees: 270))
                 .animation(.linear, value: progress)
             
             content
             if isTimerStarted{
                 Text("\(currentInterval) / \(intervalNumber)") // Display the current set number
-                                
-                                .offset(y: -40)
-                
+                    .offset(y: -40)
             }
-           
-                            
         }
         .frame(width: 200, height: 200)
-        
     }
-    
-    
-}
-
-extension Color {
-    static let customBackgroundColor = Color(red: 234 / 255, green: 255 / 255, blue: 184 / 255)
 }
 
 struct ContentView: View {
-    
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     
@@ -77,111 +64,119 @@ struct ContentView: View {
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
-    
-    
-    
-    
+
     var body: some View {
         NavigationView{
-        VStack {
-            if(!timerStarted){
-                HStack{
-                    VStack {
-                        Text("Sets:")
-                        Picker("Repetitions", selection: $intervalNumber) {
-                            ForEach(sets, id: \.self) { number in
-                                Text("\(number)")
+            VStack {
+                if(!timerStarted){
+                    HStack{
+                        VStack {
+                            Text("Sets:")
+                            Picker("Repetitions", selection: $intervalNumber) {
+                                ForEach(sets, id: \.self) { number in
+                                    Text("\(number)")
+                                }
                             }
+                            .pickerStyle(WheelPickerStyle())
+                            .frame(width: 100, height: 100)
+                            .clipped()
                         }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(width: 100, height: 100)
-                        .clipped()
-                    }
-                    VStack {
-                        Text("Break Time:")
-                        Picker("Break Time:", selection: $breakTime) {
-                            ForEach(breakTimes, id: \.self) { number in
-                                Text("\(number) min")
+                        VStack {
+                            Text("Break Time:")
+                            Picker("Break Time:", selection: $breakTime) {
+                                ForEach(breakTimes, id: \.self) { number in
+                                    Text("\(number) min")
+                                }
                             }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(width: 100, height: 100)
-                        .clipped()
-                    }
-                }
-                .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
-            }
-            
-            CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted)
-                .padding()
-                .padding()
-
-            
-            if(!timerStarted){
-                HStack{
-                    Picker("Subject", selection: $chosenSubject) {
-                        ForEach(subjects) { item in
-                            Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                            .pickerStyle(WheelPickerStyle())
+                            .frame(width: 100, height: 100)
+                            .clipped()
                         }
                     }
-                    
-                    
-                    NavigationLink(destination: AddSubjectView()) {
-                        Text("Add Class")
-                        Image(systemName: "plus")
-                    }
-                    
-                    
-                } .padding()
-                
-            }
-            VStack{
-                if timerIsPaused && timerStarted {
-                    Button("Resume Timer") {
-                        resumeTimer()
-                    }
-                    .padding()
-                    .background(.gray.opacity(0.1))
-                    .cornerRadius(15)
-                    
+                    .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
                 }
                 
-                if(!timerIsPaused){
-                    Button("Pause Timer"){
-                        pauseTimer()
-                    }
+                CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted, accentColor: getColorForSelectedSubject())
                     .padding()
-                    .background(.gray.opacity(0.1))
+                    .padding()
+                
+                
+                if(!timerStarted){
+                    HStack{
+                        Picker("Subject", selection: $chosenSubject) {
+                            ForEach(subjects) { item in
+                                Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                            }
+                        }
+                        
+                        
+                        NavigationLink(destination: AddSubjectView()) {
+                            Text("Add Class")
+                            Image(systemName: "plus")
+                        }
+                        
+                        
+                    } .padding()
                     
-                    .cornerRadius(15)
                 }
-                if timerIsPaused && !timerStarted {
-                    Button("Start Timer") {
-                        startTimer()
-                    }     .foregroundColor(.blue)
+                VStack{
+                    if timerIsPaused && timerStarted {
+                        Button("Resume Timer") {
+                            resumeTimer()
+                        }
                         .padding()
-                        .font(.largeTitle)
                         .background(.gray.opacity(0.1))
                         .cornerRadius(15)
-                    
-                    
-                } else {
-                    Button("Stop Timer") {
-                        stopTimer()
                         
                     }
-                    .foregroundColor(.blue)
-                    .padding()
-                    .font(.title2)
-                    .background(.gray.opacity(0.1))
-                    .cornerRadius(10)
+                    
+                    if(!timerIsPaused){
+                        Button("Pause Timer"){
+                            pauseTimer()
+                        }
+                        .padding()
+                     
+                        .background(.gray.opacity(0.1))
+                        .cornerRadius(15)
+                    }
+                    if timerIsPaused && !timerStarted {
+                        Button("Start Timer") {
+                            startTimer()
+                        }     .foregroundColor(.blue)
+                            .padding()
+                            .font(.largeTitle)
+                            .background(.gray.opacity(0.1))
+                            .cornerRadius(15)
+                        
+                        
+                    } else {
+                        Button("Stop Timer") {
+                            stopTimer()
+                           
+                            
+                        }
+                        .foregroundColor(.blue)
+                        .padding()
+                        .font(.title2)
+                        .background(.gray.opacity(0.1))
+                        .cornerRadius(10)
+                        .padding()
+                    }
                 }
-            }
-               
+                
             }
         }
         .animation(.easeInOut, value: timerStarted)
     }
+    
+    private func getColorForSelectedSubject() -> Color {
+        guard let subjectColorString = subjects.first(where: { $0.name == chosenSubject })?.color else {
+            return Color.white // Default color if no subject is selected or color is not set
+        }
+        return subjectColorString.toColor()
+    }
+
+
     private var intervalPicker: some View {
         
         Picker("Interval Time:", selection: $intervalTime) {
@@ -291,9 +286,22 @@ struct ContentView: View {
         return "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
     }
     
-    
-    
 }
+extension String {
+    func toColor() -> Color {
+        let rgbValues = self.split(separator: ",")
+            .map { $0.split(separator: ":").last }
+            .compactMap { $0 }
+            .map { Double($0.trimmingCharacters(in: .whitespaces)) ?? 0 }
+        
+        if rgbValues.count == 3 {
+            return Color(red: rgbValues[0] / 255, green: rgbValues[1] / 255, blue: rgbValues[2] / 255)
+        } else {
+            return Color.white // Default color in case of parsing failure
+        }
+    }
+}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
