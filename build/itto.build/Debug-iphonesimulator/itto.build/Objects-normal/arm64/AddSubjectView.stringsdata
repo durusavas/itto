@@ -17,6 +17,14 @@
       {
         "comment": "",
         "key": "Save"
+      },
+      {
+        "comment": "",
+        "key": "Error"
+      },
+      {
+        "comment": "",
+        "key": "OK"
       }
     ]
   },
