@@ -2,7 +2,7 @@
 //  Report+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 22/01/2024.
+//  Created by Duru SAVAŞ on 29/01/2024.
 //
 //  This file was automatically generated and should not be edited.
 //

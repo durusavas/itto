@@ -15,14 +15,6 @@ struct SubjectView: View {
     
     
     @State private var showAddScreen = false
-    let gradient = LinearGradient(
-        gradient: Gradient(colors: [
-            Color(red: 0 / 255, green: 28 / 255, blue: 40 / 255, opacity: 1),
-            Color(red: 0 / 255, green: 59 / 255, blue: 139 / 255, opacity: 1)
-        ]),
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
     
     
     var body: some View {

@@ -4,15 +4,15 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "This week"
-      },
-      {
-        "comment": "",
-        "key": "Date"
+        "key": "Day"
       },
       {
         "comment": "",
         "key": "Work Time"
+      },
+      {
+        "comment": "",
+        "key": "%lld mins"
       }
     ]
   },
