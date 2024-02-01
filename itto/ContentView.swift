@@ -112,17 +112,13 @@ struct ContentView: View {
                                 Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
                             }
                         }
-                        
-                        
                         NavigationLink(destination: AddSubjectView()) {
                             Text("Add Class")
                             Image(systemName: "plus")
                         }
-                        
-                        
                     } .padding()
-                    
                 }
+                
                 VStack{
                     if timerIsPaused && timerStarted {
                         Button("Resume Timer") {
@@ -143,6 +139,7 @@ struct ContentView: View {
                         .background(.gray.opacity(0.1))
                         .cornerRadius(15)
                     }
+                    
                     if timerIsPaused && !timerStarted {
                         Button("Start Timer") {
                             startTimer()
@@ -167,9 +164,7 @@ struct ContentView: View {
                         .padding()
                     }
                 }
-                
             }
-            
         }
         .animation(.easeInOut, value: timerStarted)
         .sheet(isPresented: $showDescSheet) { // Present the sheet for entering the description
@@ -182,12 +177,12 @@ struct ContentView: View {
             Text("What have you done? ")
                 .font(.largeTitle)
                 .padding()
-
+            
             TextField("Description", text: $reportDescription)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .padding()
-
+            
             Button("Save") {
                 // Save the report with the description
                 let newReport = Report(context: moc)
@@ -195,7 +190,7 @@ struct ContentView: View {
                 newReport.subjectName = chosenSubject
                 newReport.totalTime = Int16(totalWorkTime)
                 newReport.desc = reportDescription  // Save the description
-
+                
                 if moc.hasChanges {
                     do {
                         try moc.save()
@@ -203,12 +198,9 @@ struct ContentView: View {
                         print("Could not save data: \(error.localizedDescription)")
                     }
                 }
-
-                // Dismiss the sheet
                 showDescSheet = false
             }
             .padding()
-         
             .cornerRadius(10)
         }
     }
@@ -220,9 +212,7 @@ struct ContentView: View {
         return subjectColorString.toColor()
     }
     
-    
     private var intervalPicker: some View {
-        
         Picker("Interval Time:", selection: $intervalTime) {
             ForEach(times, id: \.self) { number in
                 Text("\(number)")
@@ -274,9 +264,7 @@ struct ContentView: View {
             }
         }
     }
-    
-    
-    
+ 
     private func stopTimer() {
         showDescSheet = true
         timerEndDate = Date()
@@ -289,11 +277,8 @@ struct ContentView: View {
         newReport.date = timerStartDate
         newReport.subjectName = chosenSubject
         newReport.totalTime = Int16(totalWorkTime)
-        
     }
-    
-    
-    
+
     private func pauseTimer() {
         timer?.invalidate()
         timerIsPaused = true
@@ -328,6 +313,7 @@ struct ContentView: View {
     }
     
 }
+
 extension String {
     func toColor() -> Color {
         let rgbValues = self.split(separator: ",")
@@ -342,9 +328,6 @@ extension String {
         }
     }
 }
-
-
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

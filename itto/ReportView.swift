@@ -13,13 +13,10 @@ struct ReportView: View {
     @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
     @State private var weekOffset = 0
     
-    
     var body: some View {
         NavigationView {
             VStack {
-                
                 WeeklyChartView(weekOffset: weekOffset, reports: report, subjects: subject)
-                
             }
             .navigationTitle(navigationTitle(for: weekOffset))
             .toolbar {
@@ -43,7 +40,6 @@ struct ReportView: View {
         guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
             return (currentDate, currentDate)
         }
-        
         var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
         // Check if the startOfWeek is Sunday and adjust
         if calendar.component(.weekday, from: startOfWeek) == 1 {
@@ -53,7 +49,6 @@ struct ReportView: View {
         
         return (startOfWeek, endOfWeek)
     }
-    
     
     private func navigationTitle(for weekOffset: Int) -> String {
         let (startOfWeek, _) = weekRange(offset: weekOffset)
@@ -74,8 +69,6 @@ struct ReportView: View {
     }
     
 }
-
-
 
 // Chart View
 struct WeeklyChartView: View {
@@ -118,12 +111,10 @@ struct WeeklyChartView: View {
                                 y: .value("Work Time", Double(report.totalTime) / 60)
                             )
                             .foregroundStyle(report.color)
-                            
                         }
                     }
                 }
             }
-            
             .frame(width: 300, height: 300)
             .padding()
             .padding()
@@ -152,7 +143,7 @@ struct WeeklyChartView: View {
                                 Spacer()
                                 Text("\(subjectWithTotalTime.totalTime/60) mins")
                             }
-
+                            
                             // Only add descriptions if they exist
                             if !subjectWithTotalTime.descriptions.isEmpty {
                                 ForEach(subjectWithTotalTime.descriptions, id: \.self) { description in
@@ -164,15 +155,8 @@ struct WeeklyChartView: View {
                         }
                     }
                 }
-
-
-
-                
             }
-            
         }
-        
-        
     }
     
     private var currentDate: Date {
@@ -189,7 +173,7 @@ struct WeeklyChartView: View {
     private func filteredSubjectsForDay() -> [SubjectWithTotalTime] {
         let currentDate = daysOfTheWeek(start: weekRange(offset: weekOffset).0)[currentDayOffset]
         let currentDayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
-
+        
         return subjects.flatMap { subject -> [SubjectWithTotalTime] in
             guard let subjectName = subject.name else { return [] }
             let subjectReports = currentDayReports.filter { $0.subjectName == subjectName }
@@ -202,11 +186,6 @@ struct WeeklyChartView: View {
             }
         }
     }
-
-
-
-
-    
     
     private func weekRange(offset: Int) -> (Date, Date) {
         let calendar = Calendar(identifier: .gregorian)
@@ -279,7 +258,6 @@ struct CombinedReport {
     }
 }
 
-// Date Extension
 extension Date {
     var formattedDay: String {
         let formatter = DateFormatter()
@@ -287,15 +265,6 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-
-/* Preview
- struct ReportView_Previews: PreviewProvider {
- static var previews: some View {
- ReportView()
- }
- }
- */
-
 
 #Preview {
     ReportView()

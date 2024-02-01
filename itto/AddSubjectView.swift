@@ -11,8 +11,7 @@ extension Color {
     func toRgbString() -> String {
         // Convert Color to UIColor
         let uiColor = UIColor(self)
-        
-        // Get RGB components
+
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
@@ -33,7 +32,7 @@ struct AddSubjectView: View {
     @State private var color: Color = Color.red
     @State private var showAlert = false
     @State private var alertMessage = ""
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -58,26 +57,26 @@ struct AddSubjectView: View {
             }
         }
     }
-
+    
     private func saveSubject() {
         guard validateInput(name: name, color: color) else {
             alertMessage = "Invalid input: Name and color are required."
             showAlert = true
             return
         }
-
+        
         let colorString = color.toRgbString()
         if isDuplicate(name: name, color: colorString) {
             alertMessage = "Duplicate name or color detected. Subject not saved."
             showAlert = true
             return
         }
-
+        
         let newSubject = Subjects(context: moc)
         newSubject.id = UUID()
         newSubject.name = name
         newSubject.color = colorString
-
+        
         do {
             try moc.save()
             dismiss()
@@ -86,12 +85,12 @@ struct AddSubjectView: View {
             showAlert = true
         }
     }
-
+    
     private func isDuplicate(name: String, color: String) -> Bool {
         let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
         let predicate = NSPredicate(format: "name == %@ OR color == %@", name, color)
         fetchRequest.predicate = predicate
-
+        
         do {
             let matchingSubjects = try moc.fetch(fetchRequest)
             return !matchingSubjects.isEmpty
@@ -100,13 +99,11 @@ struct AddSubjectView: View {
             return false
         }
     }
-
+    
     private func validateInput(name: String, color: Color) -> Bool {
         return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
-
-
 
 // Preview
 struct AddSubjectView_Previews: PreviewProvider {

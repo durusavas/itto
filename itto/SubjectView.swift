@@ -12,10 +12,7 @@ import Foundation
 struct SubjectView: View {
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
-    
-    
     @State private var showAddScreen = false
-    
     
     var body: some View {
         NavigationView {
@@ -47,22 +44,18 @@ struct SubjectView: View {
             }
         }
     }
-
-    // Function to handle the deletion of subjects
+    
+// Function to handle the deletion of subjects
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
             let subjectToDelete = subject[index]
             moc.delete(subjectToDelete)
         }
-
+        
         // Save the context
         try? moc.save()
     }
-
-    
 }
-
-
 
 #Preview {
     SubjectView()
