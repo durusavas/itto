@@ -143,16 +143,30 @@ struct WeeklyChartView: View {
                 }
                 List {
                     ForEach(filteredSubjectsForDay(), id: \.subject.id) { subjectWithTotalTime in
-                        HStack {
-                            Circle()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(subjectWithTotalTime.subject.color?.toColor() ?? Color.white)
-                            Text(subjectWithTotalTime.subject.name ?? "Unknown")
-                            Spacer()
-                            Text("\(subjectWithTotalTime.totalTime/60) mins")
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Circle()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(subjectWithTotalTime.subject.color?.toColor() ?? Color.white)
+                                Text(subjectWithTotalTime.subject.name ?? "Unknown")
+                                Spacer()
+                                Text("\(subjectWithTotalTime.totalTime/60) mins")
+                            }
+
+                            // Only add descriptions if they exist
+                            if !subjectWithTotalTime.descriptions.isEmpty {
+                                ForEach(subjectWithTotalTime.descriptions, id: \.self) { description in
+                                    Text(description)
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }
+                            }
                         }
                     }
                 }
+
+
+
                 
             }
             
@@ -175,15 +189,23 @@ struct WeeklyChartView: View {
     private func filteredSubjectsForDay() -> [SubjectWithTotalTime] {
         let currentDate = daysOfTheWeek(start: weekRange(offset: weekOffset).0)[currentDayOffset]
         let currentDayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
-        
-        return subjects.compactMap { subject in
-            guard let subjectName = subject.name else { return nil }
-            let totalMinutes = currentDayReports.filter { $0.subjectName == subjectName }
-                .map { Int($0.totalTime) }
-                .reduce(0, +)
-            return totalMinutes > 0 ? SubjectWithTotalTime(subject: subject, totalTime: totalMinutes) : nil
+
+        return subjects.flatMap { subject -> [SubjectWithTotalTime] in
+            guard let subjectName = subject.name else { return [] }
+            let subjectReports = currentDayReports.filter { $0.subjectName == subjectName }
+            let totalMinutes = subjectReports.map { Int($0.totalTime) }.reduce(0, +)
+            let descriptions = subjectReports.map { $0.reportDescription }
+            if totalMinutes > 0 {
+                return [SubjectWithTotalTime(subject: subject, totalTime: totalMinutes, descriptions: descriptions)]
+            } else {
+                return []
+            }
         }
     }
+
+
+
+
     
     
     private func weekRange(offset: Int) -> (Date, Date) {
@@ -219,6 +241,7 @@ struct WeeklyChartView: View {
 struct SubjectWithTotalTime {
     let subject: Subjects
     let totalTime: Int
+    let descriptions: [String]
 }
 
 // Combined Report Struct
@@ -228,6 +251,7 @@ struct CombinedReport {
     var totalTime: Int16
     var subjectColor: String
     var subjectId: UUID
+    var reportDescription: String
     
     var color: Color {
         let colorString = subjectColor
@@ -246,6 +270,7 @@ struct CombinedReport {
         self.totalTime = report.totalTime
         self.subjectColor = subject.color ?? "R:0, G:0, B:0"
         self.subjectId = subject.id ?? UUID()
+        self.reportDescription = report.desc ?? ""
     }
     static func totalTimeForSubject(_ subjectName: String, in reports: [CombinedReport]) -> Int {
         return reports.filter { $0.subjectName == subjectName }
