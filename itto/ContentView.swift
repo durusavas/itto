@@ -61,10 +61,14 @@ struct ContentView: View {
     
     @State private var navigateToReportView = false
     
+    @State private var showDescSheet = false
+    @State private var reportDescription = ""
+    
+    
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
-
+    
     var body: some View {
         NavigationView{
             VStack {
@@ -135,7 +139,7 @@ struct ContentView: View {
                             pauseTimer()
                         }
                         .padding()
-                     
+                        
                         .background(.gray.opacity(0.1))
                         .cornerRadius(15)
                     }
@@ -152,7 +156,7 @@ struct ContentView: View {
                     } else {
                         Button("Stop Timer") {
                             stopTimer()
-                           
+                            
                             
                         }
                         .foregroundColor(.blue)
@@ -165,8 +169,48 @@ struct ContentView: View {
                 }
                 
             }
+            
         }
         .animation(.easeInOut, value: timerStarted)
+        .sheet(isPresented: $showDescSheet) { // Present the sheet for entering the description
+            descriptionSheet
+        }
+    }
+    
+    private var descriptionSheet: some View {
+        VStack {
+            Text("What have you done? ")
+                .font(.largeTitle)
+                .padding()
+
+            TextField("Description", text: $reportDescription)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .padding()
+
+            Button("Save") {
+                // Save the report with the description
+                let newReport = Report(context: moc)
+                newReport.date = timerStartDate
+                newReport.subjectName = chosenSubject
+                newReport.totalTime = Int16(totalWorkTime)
+                newReport.desc = reportDescription  // Save the description
+
+                if moc.hasChanges {
+                    do {
+                        try moc.save()
+                    } catch {
+                        print("Could not save data: \(error.localizedDescription)")
+                    }
+                }
+
+                // Dismiss the sheet
+                showDescSheet = false
+            }
+            .padding()
+         
+            .cornerRadius(10)
+        }
     }
     
     private func getColorForSelectedSubject() -> Color {
@@ -175,8 +219,8 @@ struct ContentView: View {
         }
         return subjectColorString.toColor()
     }
-
-
+    
+    
     private var intervalPicker: some View {
         
         Picker("Interval Time:", selection: $intervalTime) {
@@ -231,24 +275,21 @@ struct ContentView: View {
         }
     }
     
+    
+    
     private func stopTimer() {
+        showDescSheet = true
         timerEndDate = Date()
         timer?.invalidate()
         countdownTime = 0
         timerIsPaused = true
         timerStarted = false
+        
         let newReport = Report(context: moc)
         newReport.date = timerStartDate
         newReport.subjectName = chosenSubject
         newReport.totalTime = Int16(totalWorkTime)
-        if moc.hasChanges {
-            do {
-                try moc.save()
-            } catch {
-                // Handle the error, perhaps with an alert to the user
-                print("Could not save data: \(error.localizedDescription)")
-            }
-        }
+        
     }
     
     
@@ -301,6 +342,8 @@ extension String {
         }
     }
 }
+
+
 
 
 struct ContentView_Previews: PreviewProvider {

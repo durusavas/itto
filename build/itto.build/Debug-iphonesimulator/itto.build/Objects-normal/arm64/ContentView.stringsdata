@@ -53,6 +53,18 @@
       {
         "comment": "",
         "key": "Stop Timer"
+      },
+      {
+        "comment": "",
+        "key": "What have you done? "
+      },
+      {
+        "comment": "",
+        "key": "Description"
+      },
+      {
+        "comment": "",
+        "key": "Save"
       }
     ]
   },

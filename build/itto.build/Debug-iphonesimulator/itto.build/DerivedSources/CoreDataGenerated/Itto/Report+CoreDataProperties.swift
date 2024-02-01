@@ -2,7 +2,7 @@
 //  Report+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 29/01/2024.
+//  Created by Duru SAVAŞ on 01/02/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -18,6 +18,7 @@ extension Report {
     }
 
     @NSManaged public var date: Date?
+    @NSManaged public var desc: String?
     @NSManaged public var subjectName: String?
     @NSManaged public var totalTime: Int16
 

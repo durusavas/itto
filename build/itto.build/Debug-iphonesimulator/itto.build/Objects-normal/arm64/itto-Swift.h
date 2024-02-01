@@ -310,6 +310,7 @@ SWIFT_CLASS_NAMED("Report")
 
 @interface Report (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSDate * _Nullable date;
+@property (nonatomic, copy) NSString * _Nullable desc;
 @property (nonatomic, copy) NSString * _Nullable subjectName;
 @property (nonatomic) int16_t totalTime;
 @end
