@@ -18,6 +18,7 @@ extension Subjects {
     }
 
     @NSManaged public var color: String?
+    @NSManaged public var days: NSObject?
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
 

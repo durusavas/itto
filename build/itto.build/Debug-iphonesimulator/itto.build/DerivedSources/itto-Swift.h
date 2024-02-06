@@ -324,10 +324,12 @@ SWIFT_CLASS_NAMED("Subjects")
 @end
 
 
+@class NSObject;
 @class NSUUID;
 
 @interface Subjects (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSString * _Nullable color;
+@property (nonatomic, strong) NSObject * _Nullable days;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
 @end

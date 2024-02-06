@@ -33,6 +33,9 @@ struct AddSubjectView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
+    @State private var selectedDays: [Day] = []
+    @State private var selectedWeekdays: [Day] = []
+    
     var body: some View {
         NavigationView {
             Form {
@@ -43,6 +46,12 @@ struct AddSubjectView: View {
                         ColorPicker("Choose Color", selection: $color)
                     }
                 }
+                Section{
+                                    Text("Choose the days you have this class in.")
+                                        .font(.headline)
+                                    DaysPicker(selectedDays: $selectedWeekdays)
+                                        
+                                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -76,6 +85,7 @@ struct AddSubjectView: View {
         newSubject.id = UUID()
         newSubject.name = name
         newSubject.color = colorString
+        newSubject.days =  selectedWeekdays.map { $0.rawValue } as NSObject
         
         do {
             try moc.save()
@@ -105,9 +115,36 @@ struct AddSubjectView: View {
     }
 }
 
-// Preview
-struct AddSubjectView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddSubjectView()
+enum Day: String, CaseIterable {
+    case  Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+}
+
+struct DaysPicker: View {
+
+
+    @Binding var selectedDays: [Day]
+  
+    var body: some View {
+        VStack{
+           
+            HStack {
+                ForEach(Day.allCases, id: \.self) { day in
+                    Text(String(day.rawValue.first!))
+                        .bold()
+                        .foregroundColor(.white)
+                        .frame(width: 30, height: 30)
+                        .background(selectedDays.contains(day) ? Color.cyan.cornerRadius(10) : Color.gray.cornerRadius(10))
+                        .onTapGesture {
+                            if selectedDays.contains(day) {
+                                selectedDays.removeAll(where: {$0 == day})
+                            } else {
+                                selectedDays.append(day)
+                            }
+                        }
+                }
+                
+            }
+            .padding()
+        }
     }
 }
