@@ -9,12 +9,13 @@ import SwiftUI
 
 @main
 struct ittoApp: App {
-    @StateObject private var dataController = DataController() // ben ekledim coredata için
+   // @StateObject private var dataController = DataController() // ben ekledim coredata için
     
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .environment(\.managedObjectContext, dataController.container.viewContext) // reading data
+            SplashScreenView()
+            //MainView()
+             //   .environment(\.managedObjectContext, dataController.container.viewContext) // reading data
         }
     }
 }
