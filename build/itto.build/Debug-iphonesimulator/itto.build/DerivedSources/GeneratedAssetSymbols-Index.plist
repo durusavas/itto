@@ -3,20 +3,20 @@
 <plist version="1.0">
 <dict>
 	<key>colors</key>
+	<array/>
+	<key>images</key>
 	<array>
 		<dict>
 			<key>catalogPath</key>
 			<string>/Users/durusavas/Desktop/itto/itto/Assets.xcassets</string>
 			<key>objcSymbol</key>
-			<string>ACColorNameBg</string>
+			<string>ACImageNameLogo1</string>
 			<key>relativePath</key>
-			<string>./bg.colorset</string>
+			<string>./logo1.imageset</string>
 			<key>swiftSymbol</key>
-			<string>bg</string>
+			<string>logo1</string>
 		</dict>
 	</array>
-	<key>images</key>
-	<array/>
 	<key>symbols</key>
 	<array/>
 </dict>

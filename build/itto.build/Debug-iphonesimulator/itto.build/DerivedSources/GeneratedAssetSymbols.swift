@@ -24,15 +24,15 @@ private let resourceBundle = Foundation.Bundle(for: ResourceBundleClass.self)
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension DeveloperToolsSupport.ColorResource {
 
-    /// The "bg" asset catalog color resource.
-    static let bg = DeveloperToolsSupport.ColorResource(name: "bg", bundle: resourceBundle)
-
 }
 
 // MARK: - Image Symbols -
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension DeveloperToolsSupport.ImageResource {
+
+    /// The "logo1" asset catalog image resource.
+    static let logo1 = DeveloperToolsSupport.ImageResource(name: "logo1", bundle: resourceBundle)
 
 }
 
@@ -43,15 +43,6 @@ extension DeveloperToolsSupport.ImageResource {
 @available(macCatalyst, unavailable)
 extension AppKit.NSColor {
 
-    /// The "bg" asset catalog color.
-    static var bg: AppKit.NSColor {
-#if !targetEnvironment(macCatalyst)
-        .init(resource: .bg)
-#else
-        .init()
-#endif
-    }
-
 }
 #endif
 
@@ -60,15 +51,6 @@ extension AppKit.NSColor {
 @available(watchOS, unavailable)
 extension UIKit.UIColor {
 
-    /// The "bg" asset catalog color.
-    static var bg: UIKit.UIColor {
-#if !os(watchOS)
-        .init(resource: .bg)
-#else
-        .init()
-#endif
-    }
-
 }
 #endif
 
@@ -76,16 +58,10 @@ extension UIKit.UIColor {
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension SwiftUI.Color {
 
-    /// The "bg" asset catalog color.
-    static var bg: SwiftUI.Color { .init(.bg) }
-
 }
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension SwiftUI.ShapeStyle where Self == SwiftUI.Color {
-
-    /// The "bg" asset catalog color.
-    static var bg: SwiftUI.Color { .init(.bg) }
 
 }
 #endif
@@ -97,6 +73,15 @@ extension SwiftUI.ShapeStyle where Self == SwiftUI.Color {
 @available(macCatalyst, unavailable)
 extension AppKit.NSImage {
 
+    /// The "logo1" asset catalog image.
+    static var logo1: AppKit.NSImage {
+#if !targetEnvironment(macCatalyst)
+        .init(resource: .logo1)
+#else
+        .init()
+#endif
+    }
+
 }
 #endif
 
@@ -104,6 +89,15 @@ extension AppKit.NSImage {
 @available(iOS 17.0, tvOS 17.0, *)
 @available(watchOS, unavailable)
 extension UIKit.UIImage {
+
+    /// The "logo1" asset catalog image.
+    static var logo1: UIKit.UIImage {
+#if !os(watchOS)
+        .init(resource: .logo1)
+#else
+        .init()
+#endif
+    }
 
 }
 #endif
@@ -133,26 +127,6 @@ extension DeveloperToolsSupport.ColorResource {
     }
 
 }
-
-#if canImport(AppKit)
-@available(macOS 14.0, *)
-@available(macCatalyst, unavailable)
-extension AppKit.NSColor {
-
-    private convenience init?(thinnableResource: DeveloperToolsSupport.ColorResource?) {
-#if !targetEnvironment(macCatalyst)
-        if let resource = thinnableResource {
-            self.init(resource: resource)
-        } else {
-            return nil
-        }
-#else
-        return nil
-#endif
-    }
-
-}
-#endif
 
 #if canImport(UIKit)
 @available(iOS 17.0, tvOS 17.0, *)
@@ -225,6 +199,26 @@ extension DeveloperToolsSupport.ImageResource {
     }
 
 }
+
+#if canImport(AppKit)
+@available(macOS 14.0, *)
+@available(macCatalyst, unavailable)
+extension AppKit.NSImage {
+
+    private convenience init?(thinnableResource: DeveloperToolsSupport.ImageResource?) {
+#if !targetEnvironment(macCatalyst)
+        if let resource = thinnableResource {
+            self.init(resource: resource)
+        } else {
+            return nil
+        }
+#else
+        return nil
+#endif
+    }
+
+}
+#endif
 
 #if canImport(UIKit)
 @available(iOS 17.0, tvOS 17.0, *)

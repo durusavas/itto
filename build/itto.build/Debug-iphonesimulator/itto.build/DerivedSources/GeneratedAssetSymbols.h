@@ -6,10 +6,7 @@
 #define AC_SWIFT_PRIVATE
 #endif
 
-/// The resource bundle ID.
-static NSString * const ACBundleID AC_SWIFT_PRIVATE = @"duru.itto";
-
-/// The "bg" asset catalog color resource.
-static NSString * const ACColorNameBg AC_SWIFT_PRIVATE = @"bg";
+/// The "logo1" asset catalog image resource.
+static NSString * const ACImageNameLogo1 AC_SWIFT_PRIVATE = @"logo1";
 
 #undef AC_SWIFT_PRIVATE
