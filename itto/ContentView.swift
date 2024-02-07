@@ -63,7 +63,7 @@ struct ContentView: View {
     
     @State private var showDescSheet = false
     @State private var reportDescription = ""
-    
+    @State private var showAddSubjectsView = false
     
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [20, 25, 30, 35, 40, 45, 50, 55, 60]
@@ -112,7 +112,8 @@ struct ContentView: View {
                                 Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
                             }
                         }
-                        NavigationLink(destination: AddSubjectView()) {
+                        Button() {
+                            showAddSubjectsView = true
                             Text("Add Class")
                             Image(systemName: "plus")
                         }
@@ -169,7 +170,11 @@ struct ContentView: View {
         .animation(.easeInOut, value: timerStarted)
         .sheet(isPresented: $showDescSheet) { // Present the sheet for entering the description
             descriptionSheet
+            
         }
+        .sheet(isPresented: $showingAddSubjectView) {
+                AddSubjectView() // Assuming you have an AddSubjectView to present
+            }
     }
     
     private var descriptionSheet: some View {

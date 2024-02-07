@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreData
 
-
 struct TodayView: View {
     
     @State private var showReselectSubjectsPopup = false
@@ -29,7 +28,7 @@ struct TodayView: View {
     var body: some View {
         NavigationView {
             List {
-               
+                
                 ForEach(dailySubjects, id: \.self) { dailySubject in
                     HStack {
                         Text(dailySubject.subjectName ?? "Unknown Subject")
@@ -99,8 +98,8 @@ struct TodayView: View {
             print("Error deleting completed subjects: \(error), \(error.userInfo)")
         }
     }
-
-
+    
+    
 }
 
 struct CheckboxView: View {

@@ -41,13 +41,13 @@ struct AddSubjectView: View {
             Form {
                 Section {
                     HStack {
-                        TextField("Enter subject name", text: $name)
+                        TextField("Calculus", text: $name)
                             .padding()
-                        ColorPicker("Choose Color", selection: $color)
+                        ColorPicker("", selection: $color)
                     }
                 }
                 Section{
-                                    Text("Choose the days you have this class in.")
+                                    Text("Choose the days you have this class in")
                                         .font(.headline)
                                     DaysPicker(selectedDays: $selectedWeekdays)
                                         
