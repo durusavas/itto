@@ -4,6 +4,10 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Today"
+      },
+      {
+        "comment": "",
         "key": "Timer"
       },
       {

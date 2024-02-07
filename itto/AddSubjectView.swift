@@ -33,8 +33,8 @@ struct AddSubjectView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    @State private var selectedDays: [Day] = []
-    @State private var selectedWeekdays: [Day] = []
+    @State private var selectedDays: [Weekday] = []
+    @State private var selectedWeekdays: [Weekday] = []
     
     var body: some View {
         NavigationView {
@@ -85,7 +85,19 @@ struct AddSubjectView: View {
         newSubject.id = UUID()
         newSubject.name = name
         newSubject.color = colorString
-        newSubject.days =  selectedWeekdays.map { $0.rawValue } as NSObject
+        newSubject.days = selectedWeekdays.map { $0.rawValue } as NSObject
+        
+        // Convert selected weekdays to actual dates and create DailySubjects
+        for day in selectedWeekdays {
+            if let dateForDay = getNextDate(for: day) {
+                let dailySubject = DailySubjects(context: moc)
+                dailySubject.subjectName = name
+                dailySubject.date = dateForDay
+                dailySubject.isCompleted = false
+                // Here you would set up the relationship to newSubject if needed
+                // dailySubject.subject = newSubject
+            }
+        }
         
         do {
             try moc.save()
@@ -109,26 +121,58 @@ struct AddSubjectView: View {
             return false
         }
     }
-    
+    private func getNextDate(for day: Weekday) -> Date?  {
+        let today = Date()
+        var dateComponent = DateComponents()
+        let calendar = Calendar.current
+        
+        // Find the next date for the given day
+        for i in 0..<7 {
+            dateComponent.day = i
+            if let nextDate = calendar.date(byAdding: dateComponent, to: today),
+               calendar.component(.weekday, from: nextDate) == day.weekdayIndex {
+                return nextDate
+            }
+        }
+        return nil
+    }
+
     private func validateInput(name: String, color: Color) -> Bool {
         return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
-enum Day: String, CaseIterable {
-    case  Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+enum Weekday: String, CaseIterable {
+    case monday = "Monday"
+    case tuesday = "Tuesday"
+    case wednesday = "Wednesday"
+    case thursday = "Thursday"
+    case friday = "Friday"
+    case saturday = "Saturday"
+    case sunday = "Sunday"
+    
+    var weekdayIndex: Int {
+        switch self {
+        case .sunday: return 1
+        case .monday: return 2
+        case .tuesday: return 3
+        case .wednesday: return 4
+        case .thursday: return 5
+        case .friday: return 6
+        case .saturday: return 7
+        }
+    }
 }
 
+
 struct DaysPicker: View {
-
-
-    @Binding var selectedDays: [Day]
+    @Binding var selectedDays: [Weekday]
   
     var body: some View {
         VStack{
            
             HStack {
-                ForEach(Day.allCases, id: \.self) { day in
+                ForEach(Weekday.allCases, id: \.self) { day in
                     Text(String(day.rawValue.first!))
                         .bold()
                         .foregroundColor(.white)

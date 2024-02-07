@@ -299,14 +299,28 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 @class NSEntityDescription;
 @class NSManagedObjectContext;
 
-SWIFT_CLASS_NAMED("Report")
-@interface Report : NSManagedObject
+SWIFT_CLASS_NAMED("DailySubjects")
+@interface DailySubjects : NSManagedObject
 - (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
 @end
 
 
 @class NSDate;
 @class NSString;
+
+@interface DailySubjects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSDate * _Nullable date;
+@property (nonatomic) BOOL isCompleted;
+@property (nonatomic, copy) NSString * _Nullable subjectName;
+@end
+
+
+SWIFT_CLASS_NAMED("Report")
+@interface Report : NSManagedObject
+- (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
 
 @interface Report (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSDate * _Nullable date;

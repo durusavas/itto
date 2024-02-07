@@ -18,9 +18,10 @@ class DataController: ObservableObject {
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
             
             // Populate the demo data
-            self.populateDemoData()
+          //  self.populateDemoData()
         }
     }
+    
     func deleteAllData(entity: String) {
         let context = container.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
@@ -38,7 +39,7 @@ class DataController: ObservableObject {
         }
     }
     
-    
+    /*
     // MARK: DEMO DATA
     
     func populateDemoData() {
@@ -56,40 +57,50 @@ class DataController: ObservableObject {
             let reportsCount = try context.count(for: reportRequest)
             if subjectsCount == 0{
                 // Creating demo Subjects
+
                 let subject1 = Subjects(context: context)
                 subject1.color = "R:204, G:0, B:102" // Neon pink
                 subject1.id = UUID()
                 subject1.name = "Introduction to Computer Science"
+                subject1.days = ["Monday", "Wednesday"] as NSObject
 
                 let subject2 = Subjects(context: context)
                 subject2.color = "R:255, G:110, B:64" // Neon orange
                 subject2.id = UUID()
                 subject2.name = "Data Structures and Algorithms"
+                subject2.days = ["Tuesday", "Thursday"] as NSObject
 
                 let subject3 = Subjects(context: context)
                 subject3.color = "R:180, G:0, B:255" // Neon purple
                 subject3.id = UUID()
                 subject3.name = "Operating Systems"
+                subject3.days = ["Wednesday", "Friday"] as NSObject
 
                 let subject4 = Subjects(context: context)
                 subject4.color = "R:64, G:0, B:255" // Neon blue
                 subject4.id = UUID()
                 subject4.name = "Computer Networks"
+                subject4.days = ["Monday", "Thursday"] as NSObject
 
                 let subject5 = Subjects(context: context)
                 subject5.color = "R:255, G:64, B:255" // Neon magenta
                 subject5.id = UUID()
                 subject5.name = "Database System"
+                subject5.days = ["Tuesday", "Friday"] as NSObject
 
                 let subject6 = Subjects(context: context)
                 subject6.color = "R:0, G:170, B:255" // Neon sky blue
                 subject6.id = UUID()
                 subject6.name = "Software Engineering"
+                subject6.days = ["Wednesday"] as NSObject
 
                 let subject7 = Subjects(context: context)
                 subject7.color = "R:255, G:53, B:0" // Neon red
                 subject7.id = UUID()
                 subject7.name = "Artificial Intelligence"
+                subject7.days = ["Thursday", "Saturday"] as NSObject
+
+             
 
 
             }
@@ -277,5 +288,5 @@ class DataController: ObservableObject {
             print("Failed to load or save demo data: \(error.localizedDescription)")
         }
     }
-    
+    */
 }

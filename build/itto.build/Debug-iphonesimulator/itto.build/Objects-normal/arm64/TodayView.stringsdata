@@ -1,0 +1,20 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/TodayView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Today's Subjects"
+      },
+      {
+        "comment": "",
+        "key": "Reselect Days"
+      },
+      {
+        "comment": "",
+        "key": "Done"
+      }
+    ]
+  },
+  "version": 1
+}

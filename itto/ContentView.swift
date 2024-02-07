@@ -66,7 +66,7 @@ struct ContentView: View {
     
     
     let sets = [1, 2, 3, 4, 5, 6]
-    let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+    let times = [20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
     
     var body: some View {
@@ -147,7 +147,7 @@ struct ContentView: View {
                             .padding()
                             .font(.largeTitle)
                             .background(.gray.opacity(0.1))
-                            .cornerRadius(15)
+                            .cornerRadius(10)
                         
                         
                     } else {
