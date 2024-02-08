@@ -112,11 +112,16 @@ struct ContentView: View {
                                 Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
                             }
                         }
-                        Button() {
+                        Button(action: {
                             showAddSubjectsView = true
-                            Text("Add Class")
-                            Image(systemName: "plus")
+                        }) {
+                            HStack {
+                                Text("Add Subject")
+                                Image(systemName: "plus")
+                            }
                         }
+                        .padding()
+
                     } .padding()
                 }
                 
@@ -172,7 +177,7 @@ struct ContentView: View {
             descriptionSheet
             
         }
-        .sheet(isPresented: $showingAddSubjectView) {
+        .sheet(isPresented: $showAddSubjectsView) {
                 AddSubjectView() // Assuming you have an AddSubjectView to present
             }
     }
