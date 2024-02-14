@@ -14,6 +14,8 @@ struct TodayView: View {
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
     
+    @State private var showContentView = false
+    
     // Custom initializer to setup fetch request
     init() {
         // Setup fetch request dynamically
@@ -33,6 +35,11 @@ struct TodayView: View {
                     HStack {
                         Text(dailySubject.subjectName ?? "Unknown Subject")
                             .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
+                    // MARK: FIX 
+                            /*.sheet(isPresented: $showContentView) {
+                                ContentView(chosenSubject: dailySubject.subjectName ?? "")
+                                }
+                             */
                         Spacer()
                         CheckboxView(isChecked: dailySubject.isCompleted, onChanged: { checked in
                             updateCompletionStatus(for: dailySubject, isCompleted: checked)

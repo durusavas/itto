@@ -276,6 +276,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
 @import CoreData;
+@import Foundation;
 #endif
 
 #endif
@@ -340,10 +341,12 @@ SWIFT_CLASS_NAMED("Subjects")
 @class NSUUID;
 
 @interface Subjects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, strong) NSObject * _Nullable days;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, copy) NSArray<NSString *> * _Nullable topics;
 @end
 
 

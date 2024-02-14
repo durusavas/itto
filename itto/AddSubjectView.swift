@@ -11,7 +11,7 @@ extension Color {
     func toRgbString() -> String {
         // Convert Color to UIColor
         let uiColor = UIColor(self)
-
+        
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
@@ -27,11 +27,15 @@ extension Color {
 struct AddSubjectView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
-
+    
     @State private var name = ""
     @State private var color: Color = Color.red
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var categories = ["Project", "Class", "Exam"]
+    @State private var chosenCategory = "Class"
+    
+    @State private var examSubjects: [String] = [""]
     
     @State private var selectedDays: [Weekday] = []
     @State private var selectedWeekdays: [Weekday] = []
@@ -39,6 +43,16 @@ struct AddSubjectView: View {
     var body: some View {
         NavigationView {
             Form {
+                
+                Picker("category", selection: $chosenCategory){
+                    ForEach(categories, id: \.self){ category in
+                        Text("\(category )")
+                        
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
                 Section {
                     HStack {
                         TextField("Calculus", text: $name)
@@ -46,12 +60,29 @@ struct AddSubjectView: View {
                         ColorPicker("", selection: $color)
                     }
                 }
-                Section{
-                                    Text("Choose the days you have this class in")
-                                        .font(.headline)
-                                    DaysPicker(selectedDays: $selectedWeekdays)
-                                        
-                                }
+                Section {
+                    if chosenCategory == "Class" {
+                        Text("Choose the days you have this class in")
+                            .font(.headline)
+                        DaysPicker(selectedDays: $selectedWeekdays)
+                    }
+                    if chosenCategory == "Exam" {
+                        Section {
+                            Text("Write down the subjects you're going to study for this exam:")
+                            
+                            ForEach(0..<examSubjects.count, id: \.self) { index in
+                                TextField("Subject \(index + 1)", text: $examSubjects[index])
+                            }
+                            
+                            Button(action: addTextField) {
+                                Label("Add Subject", systemImage: "plus")
+                            }
+                        }
+                    }
+                }
+                
+                
+                
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -64,7 +95,12 @@ struct AddSubjectView: View {
             .alert(isPresented: $showAlert) {
                 Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
+            
         }
+        
+    }
+    private func addTextField() {
+        examSubjects.append("")
     }
     
     private func saveSubject() {
@@ -86,7 +122,8 @@ struct AddSubjectView: View {
         newSubject.name = name
         newSubject.color = colorString
         newSubject.days = selectedWeekdays.map { $0.rawValue } as NSObject
-        
+        newSubject.category = chosenCategory
+        newSubject.topics = examSubjects
         // Convert selected weekdays to actual dates and create DailySubjects
         for day in selectedWeekdays {
             if let dateForDay = getNextDate(for: day) {
@@ -94,8 +131,6 @@ struct AddSubjectView: View {
                 dailySubject.subjectName = name
                 dailySubject.date = dateForDay
                 dailySubject.isCompleted = false
-                // Here you would set up the relationship to newSubject if needed
-                // dailySubject.subject = newSubject
             }
         }
         
@@ -136,7 +171,7 @@ struct AddSubjectView: View {
         }
         return nil
     }
-
+    
     private func validateInput(name: String, color: Color) -> Bool {
         return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -167,10 +202,10 @@ enum Weekday: String, CaseIterable {
 
 struct DaysPicker: View {
     @Binding var selectedDays: [Weekday]
-  
+    
     var body: some View {
         VStack{
-           
+            
             HStack {
                 ForEach(Weekday.allCases, id: \.self) { day in
                     Text(String(day.rawValue.first!))

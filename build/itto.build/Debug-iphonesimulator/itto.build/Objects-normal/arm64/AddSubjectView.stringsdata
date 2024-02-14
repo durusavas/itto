@@ -8,6 +8,14 @@
       },
       {
         "comment": "",
+        "key": "category"
+      },
+      {
+        "comment": "",
+        "key": "%@"
+      },
+      {
+        "comment": "",
         "key": "Calculus"
       },
       {
@@ -17,6 +25,14 @@
       {
         "comment": "",
         "key": "Choose the days you have this class in"
+      },
+      {
+        "comment": "",
+        "key": "Write down the subjects you're going to study for this exam:"
+      },
+      {
+        "comment": "",
+        "key": "Subject %lld"
       },
       {
         "comment": "",

@@ -69,6 +69,9 @@ struct ContentView: View {
     let times = [20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
     
+    init(chosenSubject: String = " ") {
+         self._chosenSubject = State(initialValue: chosenSubject)
+     }
     var body: some View {
         NavigationView{
             VStack {

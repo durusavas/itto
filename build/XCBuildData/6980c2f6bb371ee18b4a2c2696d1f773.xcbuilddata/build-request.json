@@ -1,16 +1,16 @@
 {
   "buildCommand" : {
-    "command" : "build",
-    "skipDependencies" : false,
-    "style" : "buildAndRun"
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
   },
   "configuredTargets" : [
     {
-      "guid" : "e52a07d9679f437e08635e003e22c14d9837b7fb842744a6c768c6fb3974d4e9"
+      "guid" : "c8c563db99708460371bc6ecf7a64d3c9837b7fb842744a6c768c6fb3974d4e9"
     }
   ],
-  "containerPath" : "/Users/durusavas/Desktop/itto/itto.xcodeproj",
-  "continueBuildingAfterErrors" : false,
+  "containerPath" : "/Users/durusavas/Desktop/ittoworkspace.xcworkspace",
+  "continueBuildingAfterErrors" : true,
   "enableIndexBuildArena" : false,
   "hideShellScriptEnvironment" : false,
   "parameters" : {
@@ -31,9 +31,9 @@
       "buildIntermediatesPath" : "",
       "buildProductsPath" : "",
       "derivedDataPath" : "/Users/durusavas/Library/Developer/Xcode/DerivedData",
-      "indexDataStoreFolderPath" : "/Users/durusavas/Library/Developer/Xcode/DerivedData/itto-faftzznvjedznfelxdsycbkjjfpe/Index.noindex/DataStore",
+      "indexDataStoreFolderPath" : "/Users/durusavas/Library/Developer/Xcode/DerivedData/ittoworkspace-dcaccgtgdtpaieclqahbujjeurjp/Index.noindex/DataStore",
       "indexEnableDataStore" : true,
-      "indexPCHPath" : "/Users/durusavas/Library/Developer/Xcode/DerivedData/itto-faftzznvjedznfelxdsycbkjjfpe/Index.noindex/PrecompiledHeaders",
+      "indexPCHPath" : "/Users/durusavas/Library/Developer/Xcode/DerivedData/ittoworkspace-dcaccgtgdtpaieclqahbujjeurjp/Index.noindex/PrecompiledHeaders",
       "pchPath" : ""
     },
     "configurationName" : "Debug",
