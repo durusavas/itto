@@ -4,59 +4,108 @@
 //
 //  Created by Duru SAVAŞ on 17/11/2023.
 //
-
+// SubjectView.swift
 import SwiftUI
 import CoreData
-import Foundation
 
 struct SubjectView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
+    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     @State private var showAddScreen = false
-    
+    @State private var selectedExam: Subjects?
+
     var body: some View {
         NavigationView {
             VStack {
+                // List for "My Subjects"
                 List {
-                    ForEach(subject, id: \.self) { item in
-                        HStack {
-                            Circle()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(item.color?.toColor() ?? Color.white)
-                            Text(item.name ?? "Unknown")
+                    if !filteredSubjects(category: "Class").isEmpty {
+                        Section(header: Text("My Subjects")) {
+                            ForEach(filteredSubjects(category: "Class"), id: \.self) { item in
+                                SubjectRowView(item: item)
+                            }
+                            .onDelete(perform: deleteSubject)
                         }
+                        
                     }
-                    .onDelete(perform: deleteSubject) // Enables swipe-to-delete
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            showAddScreen.toggle()
-                        } label: {
-                            Label("Add new", systemImage: "plus")
-                        }
+                    // List for "My Exams"
+                    if !filteredSubjects(category: "Exam").isEmpty {
+                       
+                        Section(header: Text("My Exams")) {
+                                              ForEach(filteredSubjects(category: "Exam"), id: \.self) { item in
+                                                  NavigationLink(
+                                                      destination: ExamDetailsView(exam: item),
+                                                      tag: item,
+                                                      selection: $selectedExam
+                                                  ) {
+                                                      SubjectRowView(item: item)
+                                                  }
+                                              }
+                                              .onDelete(perform: deleteSubject)
+                                          }
+                        
+                    }
+                    
+                    // List for "My Projects"
+                    if !filteredSubjects(category: "Project").isEmpty {
+                   
+                            Section(header: Text("My Projects")) {
+                                ForEach(filteredSubjects(category: "Project"), id: \.self) { item in
+                                    SubjectRowView(item: item)
+                                }
+                                .onDelete(perform: deleteSubject)
+                            }
+                        
                     }
                 }
-                .navigationTitle("My Subjects")
-                .sheet(isPresented: $showAddScreen) {
-                    AddSubjectView()
+            }
+            .navigationTitle("Subjects")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showAddScreen.toggle()
+                    } label: {
+                        Label("Add new", systemImage: "plus")
+                    }
                 }
+            }
+            .sheet(isPresented: $showAddScreen) {
+                AddSubjectView()
             }
         }
     }
-    
-// Function to handle the deletion of subjects
+
+    // Function to filter subjects based on category
+    private func filteredSubjects(category: String) -> [Subjects] {
+        return subjects.filter { $0.category == category }
+    }
+
+    // Function to handle the deletion of subjects
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
-            let subjectToDelete = subject[index]
+            let subjectToDelete = subjects[index]
             moc.delete(subjectToDelete)
         }
-        
+
         // Save the context
-        try? moc.save()
+        do {
+            try moc.save()
+        } catch {
+            print("Error saving context after deletion: \(error)")
+        }
     }
+
 }
 
-#Preview {
-    SubjectView()
+struct SubjectRowView: View {
+    let item: Subjects
+
+    var body: some View {
+        HStack {
+            Circle()
+                .frame(width: 20, height: 20)
+                .foregroundColor(item.color?.toColor() ?? Color.white)
+            Text(item.name ?? "Unknown")
+        }
+    }
 }

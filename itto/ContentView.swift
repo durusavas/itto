@@ -60,13 +60,13 @@ struct ContentView: View {
     @State private var timerStarted = false
     
     @State private var navigateToReportView = false
-    
+    @State private var selectedTopic = ""
     @State private var showDescSheet = false
     @State private var reportDescription = ""
     @State private var showAddSubjectsView = false
     
     let sets = [1, 2, 3, 4, 5, 6]
-    let times = [20, 25, 30, 35, 40, 45, 50, 55, 60]
+    let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
     
     init(chosenSubject: String = " ") {
@@ -78,8 +78,8 @@ struct ContentView: View {
                 if(!timerStarted){
                     HStack{
                         VStack {
-                            Text("Sets:")
-                            Picker("Repetitions", selection: $intervalNumber) {
+                            Text("Sets")
+                            Picker("Sets", selection: $intervalNumber) {
                                 ForEach(sets, id: \.self) { number in
                                     Text("\(number)")
                                 }
@@ -89,8 +89,8 @@ struct ContentView: View {
                             .clipped()
                         }
                         VStack {
-                            Text("Break Time:")
-                            Picker("Break Time:", selection: $breakTime) {
+                            Text("Break")
+                            Picker("Break", selection: $breakTime) {
                                 ForEach(breakTimes, id: \.self) { number in
                                     Text("\(number) min")
                                 }
@@ -111,10 +111,12 @@ struct ContentView: View {
                 if(!timerStarted){
                     HStack{
                         Picker("Subject", selection: $chosenSubject) {
-                            ForEach(subjects) { item in
-                                Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                            ForEach(filteredSubjects, id: \.self) { name in
+                                Text(name).tag(name)
                             }
                         }
+
+
                         Button(action: {
                             showAddSubjectsView = true
                         }) {
@@ -184,7 +186,20 @@ struct ContentView: View {
                 AddSubjectView() // Assuming you have an AddSubjectView to present
             }
     }
+    private var filteredSubjects: [String] {
+        let uniqueNames = Set(subjects.compactMap { $0.name })
+        return Array(uniqueNames)
+    }
     
+    var isExamAndClass: Bool {
+        guard let subject = subjects.first(where: { $0.name == chosenSubject }) else {
+            return false
+        }
+        
+        return subject.category == "Exam" || subject.category == "Class"
+    }
+
+
     private var descriptionSheet: some View {
         VStack {
             Text("What have you done? ")
@@ -196,27 +211,72 @@ struct ContentView: View {
                 .padding()
                 .padding()
             
+            if isExamAndClass {
+                Picker("Topics", selection: $selectedTopic) {
+                    if let chosenSubject = subjects.first(where: { $0.name == chosenSubject }),
+                       let subjectTopics = chosenSubject.topics as? Set<String> {
+                        ForEach(subjectTopics.sorted(), id: \.self) { item in
+                            Text(item)
+                        }
+                    }
+                }
+                .frame(width: 200, height: 100)
+                .clipped()
+                .padding()
+            } else {
+                Text("No Topics available")
+            }
+            
             Button("Save") {
-                // Save the report with the description
+                // Save the report with the description and selected topic (if applicable)
                 let newReport = Report(context: moc)
                 newReport.date = timerStartDate
                 newReport.subjectName = chosenSubject
                 newReport.totalTime = Int16(totalWorkTime)
-                newReport.desc = reportDescription  // Save the description
                 
-                if moc.hasChanges {
-                    do {
-                        try moc.save()
-                    } catch {
-                        print("Could not save data: \(error.localizedDescription)")
-                    }
+                if subjects.first(where: { $0.name == chosenSubject })?.category == "Exam" {
+                    newReport.desc = selectedTopic
+                } else {
+                    newReport.desc = reportDescription
                 }
-                showDescSheet = false
+                
+                // Check for duplicates before saving
+                if !isDuplicateSubject() {
+                    if moc.hasChanges {
+                        do {
+                            try moc.save()
+                        } catch {
+                            print("Could not save data: \(error.localizedDescription)")
+                        }
+                    }
+                    showDescSheet = false
+                } else {
+                    // Handle duplicate subject error
+                    // You may want to show an alert or handle it in a way suitable for your app
+                    print("Duplicate subject found!")
+                }
             }
             .padding()
             .cornerRadius(10)
         }
     }
+
+    // Helper function to check for duplicate subjects in different categories
+    // Helper function to check for duplicate subjects with the same name but different categories
+    private func isDuplicateSubject() -> Bool {
+        guard let chosenSubject = subjects.first(where: { $0.name == chosenSubject }) else {
+            return false
+        }
+
+        if chosenSubject.category == "Exam" {
+            // Check for duplicates with the same name and "Exam" category
+            return subjects.filter { $0.name == chosenSubject.name && $0.category == "Exam" }.count > 1
+        } else {
+            // Check for duplicates with the same name and a category other than "Exam"
+            return subjects.filter { $0.name == chosenSubject.name && $0.category != "Exam" }.count > 1
+        }
+    }
+
     
     private func getColorForSelectedSubject() -> Color {
         guard let subjectColorString = subjects.first(where: { $0.name == chosenSubject })?.color else {

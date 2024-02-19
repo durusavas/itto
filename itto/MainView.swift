@@ -10,6 +10,11 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
+            /*ViewController()
+                .tabItem{
+                    Label("View", systemImage: "house" )
+                }
+            */
             TodayView()
                 .tabItem{
                     Label("Today", systemImage: "house" )

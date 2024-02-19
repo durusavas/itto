@@ -1,0 +1,20 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/ReportView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Day"
+      },
+      {
+        "comment": "",
+        "key": "Work Time"
+      },
+      {
+        "comment": "",
+        "key": "%lld mins"
+      }
+    ]
+  },
+  "version": 1
+}

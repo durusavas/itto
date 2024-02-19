@@ -15,6 +15,7 @@
 		B91CA6B22B07AFD00019C898 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B12B07AFD00019C898 /* DataController.swift */; };
 		B91CA6B42B07BE8A0019C898 /* SubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B32B07BE8A0019C898 /* SubjectView.swift */; };
 		B91CA6B62B07C2AC0019C898 /* AddSubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */; };
+		B9474C242B8389DB00F955A3 /* ExamDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9474C232B8389DB00F955A3 /* ExamDetailsView.swift */; };
 		B96CEC1A2B72AD0B0022E488 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CEC192B72AD0B0022E488 /* TodayView.swift */; };
 		B9CD7D922B72A9A300705945 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CD7D912B72A9A300705945 /* SplashScreenView.swift */; };
 		B9EA93672B0AAC6F00083807 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA93662B0AAC6F00083807 /* ReportView.swift */; };
@@ -31,6 +32,7 @@
 		B91CA6B12B07AFD00019C898 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		B91CA6B32B07BE8A0019C898 /* SubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectView.swift; sourceTree = "<group>"; };
 		B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubjectView.swift; sourceTree = "<group>"; };
+		B9474C232B8389DB00F955A3 /* ExamDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamDetailsView.swift; sourceTree = "<group>"; };
 		B96CEC192B72AD0B0022E488 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		B9CD7D912B72A9A300705945 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		B9EA93662B0AAC6F00083807 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				B9CD7D912B72A9A300705945 /* SplashScreenView.swift */,
 				B96CEC192B72AD0B0022E488 /* TodayView.swift */,
 				B91CA6B52B07C2AC0019C898 /* AddSubjectView.swift */,
+				B9474C232B8389DB00F955A3 /* ExamDetailsView.swift */,
 				B91CA6AE2B07AEA20019C898 /* Itto.xcdatamodeld */,
 				B91CA6B12B07AFD00019C898 /* DataController.swift */,
 				B91CA6A42B07AB060019C898 /* Assets.xcassets */,
@@ -170,6 +173,7 @@
 				B9EA93692B0AB3FC00083807 /* MainView.swift in Sources */,
 				B9CD7D922B72A9A300705945 /* SplashScreenView.swift in Sources */,
 				B91CA6B22B07AFD00019C898 /* DataController.swift in Sources */,
+				B9474C242B8389DB00F955A3 /* ExamDetailsView.swift in Sources */,
 				B9EA93672B0AAC6F00083807 /* ReportView.swift in Sources */,
 				B91CA6B42B07BE8A0019C898 /* SubjectView.swift in Sources */,
 				B91CA6B62B07C2AC0019C898 /* AddSubjectView.swift in Sources */,
@@ -309,6 +313,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
+				DEVELOPMENT_TEAM = 78JJZPY36F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -337,6 +342,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
+				DEVELOPMENT_TEAM = 78JJZPY36F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -306,13 +306,16 @@ SWIFT_CLASS_NAMED("DailySubjects")
 @end
 
 
-@class NSDate;
 @class NSString;
+@class NSDate;
+@class NSObject;
 
 @interface DailySubjects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSDate * _Nullable date;
 @property (nonatomic) BOOL isCompleted;
 @property (nonatomic, copy) NSString * _Nullable subjectName;
+@property (nonatomic, strong) NSObject * _Nullable topics;
 @end
 
 
@@ -337,7 +340,6 @@ SWIFT_CLASS_NAMED("Subjects")
 @end
 
 
-@class NSObject;
 @class NSUUID;
 
 @interface Subjects (SWIFT_EXTENSION(itto))

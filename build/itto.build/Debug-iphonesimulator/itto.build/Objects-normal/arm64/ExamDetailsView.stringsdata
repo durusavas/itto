@@ -1,0 +1,24 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/ExamDetailsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Topics"
+      },
+      {
+        "comment": "",
+        "key": "New Topic"
+      },
+      {
+        "comment": "",
+        "key": "Save"
+      },
+      {
+        "comment": "",
+        "key": "Add Topic"
+      }
+    ]
+  },
+  "version": 1
+}

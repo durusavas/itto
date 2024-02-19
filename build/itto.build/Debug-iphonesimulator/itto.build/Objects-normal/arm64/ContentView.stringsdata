@@ -8,11 +8,7 @@
       },
       {
         "comment": "",
-        "key": "Sets:"
-      },
-      {
-        "comment": "",
-        "key": "Repetitions"
+        "key": "Sets"
       },
       {
         "comment": "",
@@ -20,7 +16,7 @@
       },
       {
         "comment": "",
-        "key": "Break Time:"
+        "key": "Break"
       },
       {
         "comment": "",
@@ -60,7 +56,15 @@
       },
       {
         "comment": "",
+        "key": "No Topics available"
+      },
+      {
+        "comment": "",
         "key": "Description"
+      },
+      {
+        "comment": "",
+        "key": "Topics"
       },
       {
         "comment": "",
