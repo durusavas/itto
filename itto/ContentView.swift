@@ -7,6 +7,9 @@
 import SwiftUI
 import CoreData
 import Foundation
+import UserNotifications
+import AVFoundation
+
 
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
@@ -39,10 +42,23 @@ struct CircularProgressView<Content: View>: View {
         .frame(width: 200, height: 200)
     }
 }
+struct TopicPickerItem: View {
+    var text: String
+    var isSelected: Bool
+    
+    var body: some View {
+        Text(text)
+            .foregroundColor(isSelected ? .gray : .black)
+    }
+}
+
+
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
+    @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
+    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
     
     @State private var intervalNumber = 4
     @State private var intervalTime = 30 // Interval time in minutes
@@ -55,10 +71,8 @@ struct ContentView: View {
     @State private var totalWorkTime = 0 // Total work time in seconds
     @State private var timerEndDate: Date?
     @State private var timerStartDate: Date?
-    
     @State private var chosenSubject = ""
     @State private var timerStarted = false
-    
     @State private var navigateToReportView = false
     @State private var selectedTopic = ""
     @State private var showDescSheet = false
@@ -70,10 +84,14 @@ struct ContentView: View {
     let breakTimes = [1, 5, 10, 15, 20]
     
     init(chosenSubject: String = " ") {
-         self._chosenSubject = State(initialValue: chosenSubject)
-     }
+        self._chosenSubject = State(initialValue: chosenSubject)
+        requestNotificationPermissions()
+    }
+    
+    
     var body: some View {
-        NavigationView{
+        NavigationStack{
+            
             VStack {
                 if(!timerStarted){
                     HStack{
@@ -178,6 +196,7 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut, value: timerStarted)
+        
         .sheet(isPresented: $showDescSheet) { // Present the sheet for entering the description
             descriptionSheet
             
@@ -185,19 +204,75 @@ struct ContentView: View {
         .sheet(isPresented: $showAddSubjectsView) {
                 AddSubjectView() // Assuming you have an AddSubjectView to present
             }
+        .onAppear {
+            printReportsData()
+                    // Resume timer when the app appears
+                    resumeTimerIfNeeded()
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    // Update circular view when the app enters the foreground
+                    updateCircularView()
+                    // Resume timer if needed
+                    resumeTimerIfNeeded()
+                }
     }
+    private func printReportsData() {
+        do {
+            let reports = try moc.fetch(Report.fetchRequest()) as [Report]
+            print("Reports Data:")
+            for report in reports {
+                print("Date: \(report.date ?? Date()), Subject: \(report.subjectName ?? "Unknown"), Total Time: \(report.totalTime) seconds, Description: \(report.desc ?? "No description")")
+            }
+        } catch {
+            print("Error fetching Reports: \(error)")
+        }
+    }
+
+    private func resumeTimerIfNeeded() {
+            // Resume timer only if it was running and paused
+            if !timerStarted && !timerIsPaused {
+                resumeTimer()
+            }
+        }
     private var filteredSubjects: [String] {
-        let uniqueNames = Set(subjects.compactMap { $0.name })
-        return Array(uniqueNames)
+        let subjectNames = Set(subjects.compactMap { $0.name })
+        let projectNames = Set(projects.compactMap { $0.name })
+        return Array(subjectNames.union(projectNames))
     }
     
     var isExamAndClass: Bool {
-        guard let subject = subjects.first(where: { $0.name == chosenSubject }) else {
-            return false
-        }
+        // Check if the chosenSubject exists in both Subjects and Exams
+        let subjectExists = subjects.contains(where: { $0.name == chosenSubject })
+        let examExists = exams.contains(where: { $0.name == chosenSubject })
         
-        return subject.category == "Exam" || subject.category == "Class"
+        return subjectExists && examExists
     }
+    
+    func requestNotificationPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if granted {
+                print("Notification permissions granted")
+            } else if let error = error {
+                print("Error requesting notification permissions: \(error.localizedDescription)")
+            }
+        }
+    }
+    func scheduleNotification(message: String, soundName: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "Timer Notification"
+        content.body = message
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundName))
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error.localizedDescription)")
+            }
+        }
+    }
+
 
 
     private var descriptionSheet: some View {
@@ -212,21 +287,23 @@ struct ContentView: View {
                 .padding()
             
             if isExamAndClass {
+          
+                // Add a conditional Picker for "Exam" category
                 Picker("Topics", selection: $selectedTopic) {
-                    if let chosenSubject = subjects.first(where: { $0.name == chosenSubject }),
-                       let subjectTopics = chosenSubject.topics as? Set<String> {
-                        ForEach(subjectTopics.sorted(), id: \.self) { item in
+                    Text("Select Topic").tag("") // Default empty option
+                    if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
+                        // Assuming Exams have a property named 'topics'
+                        ForEach(chosenExam.topicsArray, id: \.self) { item in
                             Text(item)
                         }
                     }
                 }
+
+    
                 .frame(width: 200, height: 100)
                 .clipped()
                 .padding()
-            } else {
-                Text("No Topics available")
             }
-            
             Button("Save") {
                 // Save the report with the description and selected topic (if applicable)
                 let newReport = Report(context: moc)
@@ -234,56 +311,40 @@ struct ContentView: View {
                 newReport.subjectName = chosenSubject
                 newReport.totalTime = Int16(totalWorkTime)
                 
-                if subjects.first(where: { $0.name == chosenSubject })?.category == "Exam" {
-                    newReport.desc = selectedTopic
+                if isExamAndClass {
+                    // If the selected subject is an exam and selectedTopic is not empty, use selectedTopic
+                    newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
                 } else {
+                    // If not, use reportDescription
                     newReport.desc = reportDescription
                 }
-                
+                reportDescription = ""
+
                 // Check for duplicates before saving
-                if !isDuplicateSubject() {
-                    if moc.hasChanges {
-                        do {
-                            try moc.save()
-                        } catch {
-                            print("Could not save data: \(error.localizedDescription)")
-                        }
+                if moc.hasChanges {
+                    do {
+                        try moc.save()
+                    } catch {
+                        print("Could not save data: \(error.localizedDescription)")
                     }
-                    showDescSheet = false
-                } else {
-                    // Handle duplicate subject error
-                    // You may want to show an alert or handle it in a way suitable for your app
-                    print("Duplicate subject found!")
                 }
+                showDescSheet = false
             }
             .padding()
             .cornerRadius(10)
         }
     }
 
-    // Helper function to check for duplicate subjects in different categories
-    // Helper function to check for duplicate subjects with the same name but different categories
-    private func isDuplicateSubject() -> Bool {
-        guard let chosenSubject = subjects.first(where: { $0.name == chosenSubject }) else {
-            return false
-        }
-
-        if chosenSubject.category == "Exam" {
-            // Check for duplicates with the same name and "Exam" category
-            return subjects.filter { $0.name == chosenSubject.name && $0.category == "Exam" }.count > 1
-        } else {
-            // Check for duplicates with the same name and a category other than "Exam"
-            return subjects.filter { $0.name == chosenSubject.name && $0.category != "Exam" }.count > 1
-        }
-    }
-
-    
     private func getColorForSelectedSubject() -> Color {
-        guard let subjectColorString = subjects.first(where: { $0.name == chosenSubject })?.color else {
-            return Color.white // Default color if no subject is selected or color is not set
+        if let subject = subjects.first(where: { $0.name == chosenSubject }) {
+            return subject.color?.toColor() ?? Color.white
+        } else if let project = projects.first(where: { $0.name == chosenSubject }) {
+            return project.color?.toColor() ?? Color.white
+        } else {
+            return Color.white // Default color if no subject or project is selected
         }
-        return subjectColorString.toColor()
     }
+
     
     private var intervalPicker: some View {
         Picker("Interval Time:", selection: $intervalTime) {
@@ -305,17 +366,20 @@ struct ContentView: View {
         let totalDuration = onBreak ? breakTime * 60 : intervalTime * 60
         return totalDuration > 0 ? CGFloat(countdownTime) / CGFloat(totalDuration) : 0
     }
-    
     private func startTimer() {
         timer?.invalidate()
         timerStartDate = Date()
-        countdownTime = intervalTime * 60
+
+        if timerIsPaused {
+            // If the timer was paused, reset countdownTime and totalWorkTime
+            countdownTime = onBreak ? breakTime * 60 : intervalTime * 60
+            totalWorkTime = 0
+            currentInterval = onBreak ? 0 : 1
+        }
+
         timerIsPaused = false
-        onBreak = false
-        currentInterval = 1
-        totalWorkTime = 0
         timerStarted = true
-        
+
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if self.countdownTime > 0 {
                 self.countdownTime -= 1
@@ -323,21 +387,22 @@ struct ContentView: View {
                     self.totalWorkTime += 1
                 }
             } else {
-                // if there is tjrs des repetiton a faire switch to break
                 if self.currentInterval < self.intervalNumber {
                     self.onBreak.toggle()
                     self.countdownTime = self.onBreak ? self.breakTime * 60 : self.intervalTime * 60
-                    if !self.onBreak { // If the next interval is a work interval, increment the interval count.
-                        self.currentInterval += 1
-                    }
+                    self.currentInterval += 1
                 } else {
                     self.timer?.invalidate()
-                    
+                 
                 }
             }
+
+            // Update the circular view
+            self.updateCircularView()
         }
     }
- 
+
+
     private func stopTimer() {
         showDescSheet = true
         timerEndDate = Date()
@@ -350,7 +415,52 @@ struct ContentView: View {
         newReport.date = timerStartDate
         newReport.subjectName = chosenSubject
         newReport.totalTime = Int16(totalWorkTime)
+        
+      
+
     }
+    private func updateCircularView() {
+        if let startDate = timerStartDate {
+            let elapsedTime = Int(Date().timeIntervalSince(startDate))
+            var remainingTime: Int
+
+            if onBreak {
+                let breakStartTime = (currentInterval - 1) * (intervalTime * 60) // Only consider work interval times
+                let breakElapsedTime = elapsedTime - breakStartTime
+                remainingTime = max(breakTime * 60 - breakElapsedTime, 0)
+            } else {
+                let workElapsedTime = elapsedTime - (currentInterval - 1) * (intervalTime * 60 + breakTime * 60)
+                let workDuration = intervalTime * 60
+                remainingTime = max(workDuration - workElapsedTime, 0)
+            }
+
+            countdownTime = remainingTime
+            totalWorkTime = elapsedTime
+            
+            if remainingTime == 0 {
+                        if onBreak {
+                            // Schedule notification for the end of the break
+                            scheduleNotification(message: "Time to take a break!", soundName: "notification_sound.mp3")
+                            
+                            // If there are more intervals, start the next interval
+                            if currentInterval < intervalNumber {
+                                onBreak.toggle()
+                                countdownTime = intervalTime * 60
+                                currentInterval += 1
+                            } else {
+                                // If all intervals are finished, schedule notification for the end of the whole countdown
+                                scheduleNotification(message: "Timer finished!", soundName: "notification_sound.mp3")
+                            }
+                        } else {
+                            // If it's the end of the work interval, schedule notification for the start of the break
+                            scheduleNotification(message: "Break started!", soundName: "notification_sound.mp3")
+                        }
+                    }
+        }
+    }
+
+
+
 
     private func pauseTimer() {
         timer?.invalidate()

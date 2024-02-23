@@ -16,29 +16,21 @@
 		<data>
 		u8U+EJjamYiOU6etH7ozkvfwnVY=
 		</data>
-		<key>GemScene.scn</key>
-		<data>
-		JmUx6xcCM7/B5Gj7qsKaNSx07r4=
-		</data>
 		<key>Info.plist</key>
 		<data>
 		MzoU6XAsL4BFDWUZ2I83WPWxRmQ=
 		</data>
 		<key>Itto.momd/Itto.mom</key>
 		<data>
-		zaIDIqKPOLVFjPIExpA8OLiPl8I=
+		HCsMceM8ZZP+YGRrYrlHfP2J5RI=
 		</data>
 		<key>Itto.momd/VersionInfo.plist</key>
 		<data>
-		bkTu+2RMN0vQ+IBgsR3zMWmnnQM=
+		ScOLA5XlPnmlHFGCBF6+lX6wa6E=
 		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
-		</data>
-		<key>TodayScene.scn</key>
-		<data>
-		pePSASHGvNJyu523nx5kByEnRGc=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -64,32 +56,18 @@
 			J+hqXlmjfyTgVvdDhhLohdLjLWhV8nPTKp17ONUp2+A=
 			</data>
 		</dict>
-		<key>GemScene.scn</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			Drx/h40ix1umNjCpzEM+CdhVlk9gtQa1IwEXRfdPcSc=
-			</data>
-		</dict>
 		<key>Itto.momd/Itto.mom</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AO/PIqqeo8KidvEX5C59dz4ffptbOoWt+MIEHHxo1EE=
+			n9ImGeteVxzbx8CVTZsaUlZjzblRQ47KHJRat/C5rn8=
 			</data>
 		</dict>
 		<key>Itto.momd/VersionInfo.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vt0Voouun1VqVaI8+ARJ+2VdlApocxh4iQyWH2FRz1E=
-			</data>
-		</dict>
-		<key>TodayScene.scn</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			7mkWzsSS6/Yl0Kjt/w3PzUJK/BbNPS83xdfum8+eCjc=
+			CxhXkzwRgdgQ5WNaO+KJMz3RWNRiX+OgLxprKujzGAc=
 			</data>
 		</dict>
 	</dict>

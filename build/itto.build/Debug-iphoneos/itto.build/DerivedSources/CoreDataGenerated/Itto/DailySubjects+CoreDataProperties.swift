@@ -2,7 +2,7 @@
 //  DailySubjects+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 18/02/2024.
+//  Created by Duru SAVAŞ on 22/02/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -17,10 +17,12 @@ extension DailySubjects {
         return NSFetchRequest<DailySubjects>(entityName: "DailySubjects")
     }
 
+    @NSManaged public var category: String?
     @NSManaged public var date: Date?
     @NSManaged public var isCompleted: Bool
     @NSManaged public var subjectName: String?
     @NSManaged public var topics: NSObject?
+    @NSManaged public var topicsCompleted: NSObject?
 
 }
 

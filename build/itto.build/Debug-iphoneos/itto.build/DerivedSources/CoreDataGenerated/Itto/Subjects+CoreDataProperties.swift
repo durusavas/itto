@@ -2,7 +2,7 @@
 //  Subjects+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 18/02/2024.
+//  Created by Duru SAVAŞ on 22/02/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -17,12 +17,10 @@ extension Subjects {
         return NSFetchRequest<Subjects>(entityName: "Subjects")
     }
 
-    @NSManaged public var category: String?
     @NSManaged public var color: String?
     @NSManaged public var days: NSObject?
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
-    @NSManaged public var topics: [String]?
 
 }
 

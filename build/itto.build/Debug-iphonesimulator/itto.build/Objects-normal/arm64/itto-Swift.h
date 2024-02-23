@@ -276,7 +276,6 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
 @import CoreData;
-@import Foundation;
 #endif
 
 #endif
@@ -316,6 +315,40 @@ SWIFT_CLASS_NAMED("DailySubjects")
 @property (nonatomic) BOOL isCompleted;
 @property (nonatomic, copy) NSString * _Nullable subjectName;
 @property (nonatomic, strong) NSObject * _Nullable topics;
+@property (nonatomic, strong) NSObject * _Nullable topicsCompleted;
+@end
+
+
+SWIFT_CLASS_NAMED("Exams")
+@interface Exams : NSManagedObject
+- (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+
+@class NSUUID;
+
+@interface Exams (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable color;
+@property (nonatomic, copy) NSString * _Nullable examName;
+@property (nonatomic, copy) NSUUID * _Nullable id;
+@property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, strong) NSObject * _Nullable topics;
+@end
+
+
+SWIFT_CLASS_NAMED("Projects")
+@interface Projects : NSManagedObject
+- (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+
+@interface Projects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable color;
+@property (nonatomic, strong) NSObject * _Nullable desc;
+@property (nonatomic, copy) NSUUID * _Nullable id;
+@property (nonatomic, copy) NSString * _Nullable name;
 @end
 
 
@@ -340,15 +373,12 @@ SWIFT_CLASS_NAMED("Subjects")
 @end
 
 
-@class NSUUID;
 
 @interface Subjects (SWIFT_EXTENSION(itto))
-@property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, strong) NSObject * _Nullable days;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
-@property (nonatomic, copy) NSArray<NSString *> * _Nullable topics;
 @end
 
 

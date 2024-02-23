@@ -16,12 +16,16 @@ class DataController: ObservableObject {
                 return
             }
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            
-            // Populate the demo data
-           //self.populateDemoData()
+           // self.deleteAllData(entity: "Report")
+           // self.deleteAllData(entity: "Subjects")
+            //self.deleteAllData(entity: "DailySubjects")
+           // self.deleteAllData(entity: "Exams")
+            //self.deleteAllData(entity: "Projects")
+           
+          // self.populateDemoData()
         }
     }
-    /*
+    
     
     func deleteAllData(entity: String) {
         let context = container.viewContext
@@ -71,15 +75,15 @@ class DataController: ObservableObject {
             if subjectsCount == 0 {
                 // Creating demo Subjects
                 
-                let subjectsData: [(name: String, color: String, days: [Weekday], category: String, topics: [String])] = [
-                    ("Introduction to Computer Science", "R:204, G:0, B:102", [.monday, .wednesday], "Class", []),
-                    ("Data Structures and Algorithms", "R:255, G:110, B:64", [.tuesday, .thursday], "Class", []),
-                    ("Operating Systems", "R:180, G:0, B:255", [.wednesday, .friday], "Class", []),
-                    ("Computer Networks", "R:64, G:0, B:255", [.monday, .thursday], "Class", []),
-                    ("Database System", "R:255, G:64, B:255", [.tuesday, .friday], "Project", []),
-                    ("Software Engineering", "R:0, G:170, B:255", [.wednesday], "Exam", []),
-                    ("Artificial Intelligence", "R:255, G:53, B:0", [.thursday, .saturday], "Class", []),
-                    ("Artificial Intelligence", "R:255, G:53, B:0", [], "Exam", ["BİR", "İKİ", "ÜÇ"])
+                let subjectsData: [(name: String, color: String, days: [Weekday])] = [
+                    ("Introduction to Computer Science", "R:204, G:0, B:102", [.monday, .wednesday]),
+                    ("Data Structures and Algorithms", "R:255, G:110, B:64", [.tuesday, .thursday]),
+                    ("Operating Systems", "R:180, G:0, B:255", [.wednesday, .friday]),
+                    ("Computer Networks", "R:64, G:0, B:255", [.monday, .thursday]),
+                    ("Database System", "R:255, G:64, B:255", [.tuesday, .friday]),
+                    ("Software Engineering", "R:0, G:170, B:255", [.wednesday]),
+                    ("Artificial Intelligence", "R:255, G:53, B:0", [.thursday, .saturday]),
+                    ("Artificial Intelligence", "R:255, G:53, B:0", [])
                 ]
                 
                 for subjectData in subjectsData {
@@ -88,8 +92,8 @@ class DataController: ObservableObject {
                     newSubject.name = subjectData.name
                     newSubject.color = subjectData.color
                     newSubject.days = subjectData.days.map { $0.rawValue } as NSObject
-                    newSubject.category = subjectData.category
-                    newSubject.topics = subjectData.topics
+               
+          
                     
                     // Convert selected weekdays to actual dates and create DailySubjects
                     for day in subjectData.days {
@@ -109,5 +113,5 @@ class DataController: ObservableObject {
         }
     }
 
-    */
+    
 }

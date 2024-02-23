@@ -56,10 +56,6 @@
       },
       {
         "comment": "",
-        "key": "No Topics available"
-      },
-      {
-        "comment": "",
         "key": "Description"
       },
       {
@@ -69,6 +65,10 @@
       {
         "comment": "",
         "key": "Save"
+      },
+      {
+        "comment": "",
+        "key": "Select Topic"
       }
     ]
   },

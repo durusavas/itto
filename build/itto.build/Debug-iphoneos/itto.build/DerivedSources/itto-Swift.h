@@ -278,8 +278,6 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
 @import CoreData;
-@import Foundation;
-@import UIKit;
 #endif
 
 #endif
@@ -309,15 +307,50 @@ SWIFT_CLASS_NAMED("DailySubjects")
 @end
 
 
-@class NSDate;
 @class NSString;
+@class NSDate;
 @class NSObject;
 
 @interface DailySubjects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSDate * _Nullable date;
 @property (nonatomic) BOOL isCompleted;
 @property (nonatomic, copy) NSString * _Nullable subjectName;
 @property (nonatomic, strong) NSObject * _Nullable topics;
+@property (nonatomic, strong) NSObject * _Nullable topicsCompleted;
+@end
+
+
+SWIFT_CLASS_NAMED("Exams")
+@interface Exams : NSManagedObject
+- (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+
+@class NSUUID;
+
+@interface Exams (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable color;
+@property (nonatomic, copy) NSString * _Nullable examName;
+@property (nonatomic, copy) NSUUID * _Nullable id;
+@property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, strong) NSObject * _Nullable topics;
+@end
+
+
+SWIFT_CLASS_NAMED("Projects")
+@interface Projects : NSManagedObject
+- (nonnull instancetype)initWithEntity:(NSEntityDescription * _Nonnull)entity insertIntoManagedObjectContext:(NSManagedObjectContext * _Nullable)context OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+
+@interface Projects (SWIFT_EXTENSION(itto))
+@property (nonatomic, copy) NSString * _Nullable color;
+@property (nonatomic, strong) NSObject * _Nullable desc;
+@property (nonatomic, copy) NSUUID * _Nullable id;
+@property (nonatomic, copy) NSString * _Nullable name;
 @end
 
 
@@ -342,32 +375,17 @@ SWIFT_CLASS_NAMED("Subjects")
 @end
 
 
-@class NSUUID;
 
 @interface Subjects (SWIFT_EXTENSION(itto))
-@property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, strong) NSObject * _Nullable days;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
-@property (nonatomic, copy) NSArray<NSString *> * _Nullable topics;
 @end
 
 
 
 
-
-@class SCNView;
-@class NSBundle;
-@class NSCoder;
-
-SWIFT_CLASS("_TtC4itto14ViewController")
-@interface ViewController : UIViewController
-@property (nonatomic, weak) IBOutlet SCNView * _Null_unspecified sceneView;
-- (void)viewDidLoad;
-- (nonnull instancetype)initWithNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil OBJC_DESIGNATED_INITIALIZER;
-- (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder OBJC_DESIGNATED_INITIALIZER;
-@end
 
 #endif
 #if __has_attribute(external_source_symbol)

@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct ittoApp: App {
+  
    // @StateObject private var dataController = DataController() // ben ekledim coredata için
     
     var body: some Scene {

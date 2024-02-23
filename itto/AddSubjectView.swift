@@ -28,24 +28,22 @@ struct AddSubjectView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
-    
+    @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @State private var name = ""
     @State private var color: Color = Color.red
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var categories = ["Project", "Class", "Exam"]
     @State private var chosenCategory = "Class"
-    
+    @State private var examName: String = ""
     @State private var examSubjects: [String] = [""]
     
     @State private var selectedDays: [Weekday] = []
     @State private var selectedWeekdays: [Weekday] = []
     
     var body: some View {
-        NavigationView {
+        NavigationStack{
             Form {
-                
-                
                 Picker("category", selection: $chosenCategory){
                     ForEach(categories, id: \.self){ category in
                         Text("\(category )")
@@ -82,12 +80,15 @@ struct AddSubjectView: View {
                 }
                 if chosenCategory == "Exam" {
                     Section{
-                        Picker("Subject", selection: $name) {
-                            ForEach(getClassSubjects()) { item in
-                                Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                        TextField("Exam name", text:$examName)
+                    }
+                    Section {
+                            Picker("Subject", selection: $name) {
+                                ForEach(subject) { item in
+                                    Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                                }
                             }
                         }
-                    }
                     Section {
                         Text("Topics for this exam:")
                             .font(.headline)
@@ -121,18 +122,7 @@ struct AddSubjectView: View {
         
     }
     
-    private func getClassSubjects() -> [Subjects] {
-        let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "category == %@", "Class")
-        
-        do {
-            let classSubjects = try moc.fetch(fetchRequest)
-            return classSubjects
-        } catch {
-            print("Error fetching class subjects: \(error.localizedDescription)")
-            return []
-        }
-    }
+  
     private func addTextField() {
         examSubjects.append("")
     }
@@ -145,23 +135,39 @@ struct AddSubjectView: View {
         }
         
         let colorString = color.toRgbString()
-        if isDuplicate(name: name, color: colorString, category: chosenCategory) {
+       /* if isDuplicate(name: name, color: colorString) {
             alertMessage = "Duplicate name or color detected. Subject not saved."
             showAlert = true
             return
+        
         }
-        
-        let newSubject = Subjects(context: moc)
-        newSubject.id = UUID()
-        newSubject.name = name
-        newSubject.color = colorString
-        newSubject.days = selectedWeekdays.map { $0.rawValue } as NSObject
-        newSubject.category = chosenCategory
-        newSubject.topics = examSubjects
-        
+        */
+        var newSubject: NSManagedObject
+            if chosenCategory == "Project" {
+                newSubject = Projects(context: moc)
+                
+            } else if chosenCategory == "Exam" {
+                newSubject = Exams(context: moc)
+               
+                if let exam = newSubject as? Exams {
+                    exam.topics = examSubjects as NSObject
+                    exam.examName = examName
+                }
+            } else {
+                newSubject = Subjects(context: moc)
+                if let subject = newSubject as? Subjects {
+                    subject.days = selectedWeekdays.map { $0.rawValue } as NSObject
+                   
+                }
+            }
+            
+        newSubject.setValue(UUID(), forKey: "id")
+        newSubject.setValue(name, forKey: "name")
+        newSubject.setValue(colorString, forKey: "color")
+
         if chosenCategory == "Exam"{
             let dailySubject = DailySubjects(context: moc)
-            dailySubject.subjectName = name
+            dailySubject.subjectName = examName
             dailySubject.date = Date() // You might want to customize this based on your requirements
             dailySubject.isCompleted = false
             dailySubject.category = chosenCategory  // Add this line to set the category
@@ -189,15 +195,15 @@ struct AddSubjectView: View {
             }
         }
         
-        if let matchingSubject = try? moc.fetch(fetchRequestForColor(name: name)) {
-            if let subjectColor = matchingSubject.first?.color {
-                newSubject.color = subjectColor
-            }
+        if let matchingSubject = try? moc.fetch(fetchRequestForColor(name: name)) as? [Subjects],
+           let subjectColor = matchingSubject.first?.color {
+            newSubject.setValue(subjectColor, forKey: "color")
         }
+
         
         do {
             try moc.save()
-            printAllData()
+            //printAllData()
             dismiss()
         } catch {
             alertMessage = "Error saving subject: \(error.localizedDescription)"
@@ -226,10 +232,8 @@ struct AddSubjectView: View {
         do {
             let subjects = try moc.fetch(fetchRequest)
             for subject in subjects {
-                print("Name: \(subject.name ?? "Unknown"), Color: \(subject.color ?? "Unknown"), Category: \(subject.category ?? "Unknown")")
-                if let topics = subject.topics {
-                    print("Topics: \(topics)")
-                }
+                print("Name: \(subject.name ?? "Unknown"), Color: \(subject.color ?? "Unknown")")
+                
                 if let days = subject.days as? [String] {
                     print("Days: \(days.joined(separator: ", "))")
                 }
@@ -259,10 +263,10 @@ struct AddSubjectView: View {
     
     
     
-    
-    private func isDuplicate(name: String, color: String, category: String) -> Bool {
+    /*
+    private func isDuplicate(name: String, color: String) -> Bool {
         let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        let predicate = NSPredicate(format: "name == %@ AND color == %@ AND category == %@", name, color, category)
+        let predicate = NSPredicate(format: "name == %@ AND color == %@", name, color)
         fetchRequest.predicate = predicate
         
         do {
@@ -273,6 +277,7 @@ struct AddSubjectView: View {
             return false
         }
     }
+     */
     private func getNextDate(for day: Weekday) -> Date?  {
         let today = Date()
         var dateComponent = DateComponents()
@@ -319,10 +324,8 @@ enum Weekday: String, CaseIterable {
 
 struct DaysPicker: View {
     @Binding var selectedDays: [Weekday]
-    
     var body: some View {
         VStack{
-            
             HStack {
                 ForEach(Weekday.allCases, id: \.self) { day in
                     Text(String(day.rawValue.first!))
