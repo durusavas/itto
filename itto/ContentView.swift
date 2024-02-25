@@ -367,41 +367,57 @@ struct ContentView: View {
         return totalDuration > 0 ? CGFloat(countdownTime) / CGFloat(totalDuration) : 0
     }
     private func startTimer() {
+        // Invalidate any existing timer
         timer?.invalidate()
         timerStartDate = Date()
-
+        
+        // Initialize for a fresh start if the timer was paused
         if timerIsPaused {
-            // If the timer was paused, reset countdownTime and totalWorkTime
+            // Adjust the logic here if you need to handle a paused state differently
+            // For the first start, this sets the countdown for the first interval or break
             countdownTime = onBreak ? breakTime * 60 : intervalTime * 60
-            totalWorkTime = 0
-            currentInterval = onBreak ? 0 : 1
         }
-
+        
+        // Reset flags for a fresh start
         timerIsPaused = false
         timerStarted = true
-
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.countdownTime > 0 {
-                self.countdownTime -= 1
-                if !self.onBreak {
-                    self.totalWorkTime += 1
+        
+        // Configure the timer
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
+            // Check if the countdown has reached 0
+            if countdownTime > 0 {
+                // Decrement the countdown
+                countdownTime -= 1
+                // Track total work time if not on a break
+                if !onBreak {
+                    totalWorkTime += 1
                 }
             } else {
-                if self.currentInterval < self.intervalNumber {
-                    self.onBreak.toggle()
-                    self.countdownTime = self.onBreak ? self.breakTime * 60 : self.intervalTime * 60
-                    self.currentInterval += 1
+                // Transition logic when countdown reaches 0
+                if onBreak || currentInterval >= intervalNumber {
+                    // If on break or all intervals completed, stop the timer
+                    stopTimer()
                 } else {
-                    self.timer?.invalidate()
-                 
+                    // Transition from work to break or to the next interval
+                    if onBreak {
+                        // Prepare for the next work interval
+                        onBreak = false
+                        countdownTime = intervalTime * 60
+                    } else {
+                        // Time for a break
+                        onBreak = true
+                        countdownTime = breakTime * 60
+                    }
+                    // Increment the interval counter only after a work period
+                    if !onBreak {
+                        currentInterval += 1
+                    }
                 }
             }
-
-            // Update the circular view
-            self.updateCircularView()
+            
+            // Update UI or state as needed, e.g., refreshing a view to show the remaining time
         }
     }
-
 
     private func stopTimer() {
         showDescSheet = true

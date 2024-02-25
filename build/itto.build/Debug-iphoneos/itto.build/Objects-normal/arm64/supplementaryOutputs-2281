@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Report+CoreDataClass.swift":
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataClass.dia"
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataClass.swiftconstvalues"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataClass.o"
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataClass.d"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataClass.swiftdeps"
+"/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Report+CoreDataProperties.swift":
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataProperties.swiftconstvalues"
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataProperties.d"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataProperties.o"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataProperties.swiftdeps"
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Report+CoreDataProperties.dia"
+"/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Projects+CoreDataProperties.swift":
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataProperties.d"
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataProperties.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataProperties.swiftdeps"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataProperties.o"
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataProperties.dia"

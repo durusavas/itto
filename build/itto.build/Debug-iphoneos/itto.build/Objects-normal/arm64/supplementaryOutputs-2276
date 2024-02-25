@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/D/itto/itto/MainView.swift":
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.swiftconstvalues"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.o"
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.dia"
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.d"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.swiftdeps"
+"/Users/durusavas/Desktop/D/itto/itto/SplashScreenView.swift":
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/SplashScreenView.swiftconstvalues"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/SplashScreenView.o"
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/SplashScreenView.dia"
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/SplashScreenView.d"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/SplashScreenView.swiftdeps"
+"/Users/durusavas/Desktop/D/itto/itto/DataController.swift":
+  const-values: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/DataController.swiftconstvalues"
+  diagnostics: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/DataController.dia"
+  object: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/DataController.o"
+  dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/DataController.d"
+  swift-dependencies: "/Users/durusavas/Desktop/D/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/DataController.swiftdeps"

@@ -109,7 +109,7 @@ struct AddSubjectView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: saveSubject) {
-                        Label("Save", systemImage: "save")
+                        Text("Save")
                     }
                 }
             }

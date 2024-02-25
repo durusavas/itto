@@ -105,7 +105,7 @@ struct ReportView: View {
 
     var body: some View {
         NavigationView {
-            if UIDevice.current.orientation.isPortrait {
+           
                 VStack {
                     WeeklyChartView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
                     DailyListView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
@@ -125,30 +125,11 @@ struct ReportView: View {
                         .disabled(weekOffset == 0)
                     }
                 }
-            } else {
-                HStack {
-                    WeeklyChartView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
-                      
-                        .navigationTitle(navigationTitle(for: weekOffset))
-                    Spacer()
-                    DailyListView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
-                        
-                }
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
-                        Button(action: { self.weekOffset -= 1 }) {
-                            Image(systemName: "arrow.left")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: { self.weekOffset += 1 }) {
-                            Image(systemName: "arrow.right")
-                        }
-                        .disabled(weekOffset == 0)
-                    }
-                }
-            }
+             
         }
+        .onAppear {
+                   printReportData(report, subject, project)
+               }
     }
 
     private func weekRange(offset: Int) -> (Date, Date) {
@@ -182,6 +163,25 @@ struct ReportView: View {
             return "This week"
         } else {
             return "\(startString)-\(endString)"
+        }
+    }
+    func printReportData(_ reports: FetchedResults<Report>, _ subjects: FetchedResults<Subjects>, _ projects: FetchedResults<Projects>) {
+        print("Report Data:")
+        for report in reports {
+            print("Date: \(report.date ?? Date())")
+            print("Description: \(report.desc ?? "No description")")
+            print("Subject Name: \(report.subjectName ?? "No subject name")")
+            print("Total Time: \(report.totalTime) minutes")
+            
+            if let subject = subjects.first(where: { $0.name == report.subjectName }) {
+                print("Subject Color: \(subject.color ?? "No color")")
+            }
+            
+            if let project = projects.first(where: { $0.name == report.subjectName }) {
+                print("Project Color: \(project.color ?? "No color")")
+            }
+            
+            print("---")
         }
     }
 }
@@ -303,6 +303,7 @@ struct DailyListView: View {
         }
         return days
     }
+ 
 }
 
 // ... (rest of the code remains the same)
@@ -343,6 +344,7 @@ struct CombinedReport {
         self.subjectId = subject.id ?? UUID()
         self.reportDescription = report.desc ?? ""
     }
+    
  
 
     init(report: Report, project: Projects) {
@@ -369,6 +371,3 @@ extension Date {
     }
 }
 
-#Preview {
-    ReportView()
-}
