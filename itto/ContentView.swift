@@ -1,4 +1,3 @@
-//
 //  ContentView.swift
 //  itto
 //
@@ -18,6 +17,7 @@ struct CircularProgressView<Content: View>: View {
     var content: Content
     var isTimerStarted: Bool
     var accentColor: Color
+    var onBreak: Bool
     
     var body: some View {
         ZStack {
@@ -29,13 +29,14 @@ struct CircularProgressView<Content: View>: View {
             Circle()
                 .trim(from: 0.0, to: progress)
                 .stroke(style: StrokeStyle(lineWidth: 17, lineCap: .round, lineJoin: .round))
-                .foregroundColor(accentColor)
+           
+                .foregroundColor(accentColor.opacity(onBreak ? 0.5 : 1))
                 .rotationEffect(Angle(degrees: 270))
                 .animation(.linear, value: progress)
             
             content
             if isTimerStarted{
-                Text("\(currentInterval) / \(intervalNumber)") // Display the current set number
+                Text("\(currentInterval) / \(intervalNumber)")
                     .offset(y: -40)
             }
         }
@@ -56,37 +57,43 @@ struct TopicPickerItem: View {
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
-    @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
-    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
-    
-    @State private var intervalNumber = 4
-    @State private var intervalTime = 30 // Interval time in minutes
-    @State private var breakTime = 5 // Break time in minutes
-    @State private var timer: Timer?
-    @State private var countdownTime = 0
-    @State private var timerIsPaused = true
-    @State private var onBreak = false
-    @State private var currentInterval = 1 // Track the current interval
-    @State private var totalWorkTime = 0 // Total work time in seconds
-    @State private var timerEndDate: Date?
-    @State private var timerStartDate: Date?
-    @State private var chosenSubject = ""
-    @State private var timerStarted = false
-    @State private var navigateToReportView = false
-    @State private var selectedTopic = ""
-    @State private var showDescSheet = false
-    @State private var reportDescription = ""
-    @State private var showAddSubjectsView = false
-    
-    let sets = [1, 2, 3, 4, 5, 6]
-    let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
-    let breakTimes = [1, 5, 10, 15, 20]
-    
-    init(chosenSubject: String = " ") {
-        self._chosenSubject = State(initialValue: chosenSubject)
-        requestNotificationPermissions()
-    }
+       @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
+       @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
+       @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
+       
+       @State private var intervalNumber = 4
+       @State private var intervalTime = 30 // Interval time in minutes
+       @State private var breakTime = 5 // Break time in minutes
+       @State private var timer: Timer?
+       @State private var countdownTime = 0
+       @State private var timerIsPaused = true
+       @State private var onBreak = false
+       @State private var currentInterval = 1 // Track the current interval
+       @State private var totalWorkTime = 0 // Total work time in seconds
+       @State private var timerEndDate: Date?
+       @State private var timerStartDate: Date?
+       @State private var chosenSubject: String?
+       @State private var timerStarted = false
+       @State private var navigateToReportView = false
+       @State private var selectedTopic = ""
+       @State private var showDescSheet = false
+       @State private var reportDescription = ""
+       @State private var showAddSubjectsView = false
+       
+       private func filteredSubjects() -> [String] {
+           let subjectNames = Set(subjects.compactMap { $0.name })
+           let projectNames = Set(projects.compactMap { $0.name })
+           return Array(subjectNames.union(projectNames))
+       }
+       
+       let sets = [1, 2, 3, 4, 5, 6]
+       let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+       let breakTimes = [1, 5, 10, 15, 20]
+       
+       init() {
+          
+           requestNotificationPermissions()
+       }
     
     
     var body: some View {
@@ -121,18 +128,20 @@ struct ContentView: View {
                     .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
                 }
                 
-                CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted, accentColor: getColorForSelectedSubject())
+                CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted, accentColor: getColorForSelectedSubject(), onBreak: onBreak) // Pass onBreak here
                     .padding()
                     .padding()
-                
+
                 
                 if(!timerStarted){
                     HStack{
                         Picker("Subject", selection: $chosenSubject) {
-                            ForEach(filteredSubjects, id: \.self) { name in
-                                Text(name).tag(name)
+                            Text("None").tag(nil as String?) // Handling nil
+                            ForEach(filteredSubjects(), id: \.self) { name in
+                                Text(name).tag(name as String?) // Ensure tags match the type of chosenSubject
                             }
                         }
+
 
 
                         Button(action: {
@@ -194,6 +203,15 @@ struct ContentView: View {
                     }
                 }
             }
+            .onAppear {
+                //print("Available subjects: \(filteredSubjects())")
+                if let firstSubject = filteredSubjects().first {
+                    self.chosenSubject = firstSubject
+                    //print("Selected subject: \(self.chosenSubject ?? "None")")
+                }
+            }
+
+
         }
         .animation(.easeInOut, value: timerStarted)
         
@@ -205,7 +223,7 @@ struct ContentView: View {
                 AddSubjectView() // Assuming you have an AddSubjectView to present
             }
         .onAppear {
-            printReportsData()
+            // printReportsData()
                     // Resume timer when the app appears
                     resumeTimerIfNeeded()
                 }
@@ -216,7 +234,7 @@ struct ContentView: View {
                     resumeTimerIfNeeded()
                 }
     }
-    private func printReportsData() {
+   /* private func printReportsData() {
         do {
             let reports = try moc.fetch(Report.fetchRequest()) as [Report]
             print("Reports Data:")
@@ -227,6 +245,7 @@ struct ContentView: View {
             print("Error fetching Reports: \(error)")
         }
     }
+    */
 
     private func resumeTimerIfNeeded() {
             // Resume timer only if it was running and paused
@@ -234,11 +253,7 @@ struct ContentView: View {
                 resumeTimer()
             }
         }
-    private var filteredSubjects: [String] {
-        let subjectNames = Set(subjects.compactMap { $0.name })
-        let projectNames = Set(projects.compactMap { $0.name })
-        return Array(subjectNames.union(projectNames))
-    }
+   
     
     var isExamAndClass: Bool {
         // Check if the chosenSubject exists in both Subjects and Exams
@@ -369,55 +384,51 @@ struct ContentView: View {
     private func startTimer() {
         // Invalidate any existing timer
         timer?.invalidate()
-        timerStartDate = Date()
-        
-        // Initialize for a fresh start if the timer was paused
-        if timerIsPaused {
-            // Adjust the logic here if you need to handle a paused state differently
-            // For the first start, this sets the countdown for the first interval or break
-            countdownTime = onBreak ? breakTime * 60 : intervalTime * 60
-        }
-        
-        // Reset flags for a fresh start
+        // Setup initial conditions
+        currentInterval = 1
+        onBreak = false
+        countdownTime = intervalTime * 60
         timerIsPaused = false
         timerStarted = true
+        totalWorkTime = 0
         
         // Configure the timer
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
-            // Check if the countdown has reached 0
-            if countdownTime > 0 {
-                // Decrement the countdown
-                countdownTime -= 1
-                // Track total work time if not on a break
-                if !onBreak {
-                    totalWorkTime += 1
-                }
-            } else {
-                // Transition logic when countdown reaches 0
-                if onBreak || currentInterval >= intervalNumber {
-                    // If on break or all intervals completed, stop the timer
-                    stopTimer()
-                } else {
-                    // Transition from work to break or to the next interval
-                    if onBreak {
-                        // Prepare for the next work interval
-                        onBreak = false
-                        countdownTime = intervalTime * 60
-                    } else {
-                        // Time for a break
-                        onBreak = true
-                        countdownTime = breakTime * 60
-                    }
-                    // Increment the interval counter only after a work period
-                    if !onBreak {
-                        currentInterval += 1
-                    }
-                }
-            }
-            
-            // Update UI or state as needed, e.g., refreshing a view to show the remaining time
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            self.updateTimer()
         }
     }
+
+    private func updateTimer() {
+        if countdownTime > 0 {
+            countdownTime -= 1
+            if !onBreak {
+                totalWorkTime += 1
+            }
+        } else {
+            // Handle the end of an interval or a break
+            if onBreak {
+                // If it was a break, prepare for the next interval
+                currentInterval += 1
+                if currentInterval <= intervalNumber {
+                    onBreak = false
+                    countdownTime = intervalTime * 60
+                    // Schedule a notification for the start of the next interval
+                    scheduleNotification(message: "Starting next interval!", soundName: "notification_sound.mp3")
+                } else {
+                    // If all intervals are completed, end the timer
+                    stopTimer()
+                    scheduleNotification(message: "All intervals completed!", soundName: "notification_sound.mp3")
+                }
+            } else {
+                // If it was an interval, start the break
+                onBreak = true
+                countdownTime = breakTime * 60
+                // Schedule a notification for the start of the break
+                scheduleNotification(message: "Time for a break!", soundName: "notification_sound.mp3")
+            }
+        }
+    }
+
 
     private func stopTimer() {
         showDescSheet = true
@@ -527,5 +538,3 @@ extension String {
         }
     }
 }
-
-

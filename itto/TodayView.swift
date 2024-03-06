@@ -47,7 +47,7 @@ struct TodayView: View {
                 .onAppear {
                     checkForWeeklyReset()
                     deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: moc)
-                    printDailySubjectsData()
+                    //printDailySubjectsData()
                 }
             }
             .sheet(isPresented: $showReselectSubjectsPopup) {
@@ -55,6 +55,7 @@ struct TodayView: View {
             }
         }
     }
+    /*
     private func printDailySubjectsData() {
            
            do {
@@ -67,6 +68,7 @@ struct TodayView: View {
                print("Error fetching DailySubjects: \(error)")
            }
        }
+    */
 
     private func examSection(dailySubject: DailySubjects) -> some View {
         Section {
@@ -118,7 +120,7 @@ struct TodayView: View {
     private func projectSection(dailySubject: DailySubjects) -> some View {
         Section {
             NavigationLink(
-                destination: ContentView(chosenSubject: dailySubject.subjectName ?? ""),
+                destination: ContentView(),
                 label: {
                     HStack {
                         CheckboxView(isChecked: dailySubject.isCompleted) { checked in
@@ -135,7 +137,7 @@ struct TodayView: View {
     private func classSection(dailySubject: DailySubjects) -> some View {
         Section {
             NavigationLink(
-                destination: ContentView(chosenSubject: dailySubject.subjectName ?? ""),
+                destination: ContentView(),
                 label: {
                     HStack {
                         CheckboxView(isChecked: dailySubject.isCompleted) { checked in
@@ -289,7 +291,7 @@ private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], 
     
     
     let calendar = Calendar.current
-    let today = calendar.startOfDay(for: Date())
+    _ = calendar.startOfDay(for: Date())
     
     // Fetch existing DailySubjects for the subject
     let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()

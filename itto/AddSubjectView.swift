@@ -195,7 +195,8 @@ struct AddSubjectView: View {
             }
         }
         
-        if let matchingSubject = try? moc.fetch(fetchRequestForColor(name: name)) as? [Subjects],
+        
+        if let matchingSubject = try? moc.fetch(fetchRequestForColor(name: name)),
            let subjectColor = matchingSubject.first?.color {
             newSubject.setValue(subjectColor, forKey: "color")
         }
@@ -203,7 +204,6 @@ struct AddSubjectView: View {
         
         do {
             try moc.save()
-            //printAllData()
             dismiss()
         } catch {
             alertMessage = "Error saving subject: \(error.localizedDescription)"
@@ -217,14 +217,7 @@ struct AddSubjectView: View {
         return fetchRequest
     }
     
-    // Add this function inside your AddSubjectView struct
-    private func printAllData() {
-        print("Subjects:")
-        printSubjects()
-        
-        print("\nDailySubjects:")
-        printDailySubjects()
-    }
+    
     
     private func printSubjects() {
         let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()

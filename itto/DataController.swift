@@ -16,12 +16,12 @@ class DataController: ObservableObject {
                 return
             }
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            self.deleteAllData(entity: "Report")
-            self.deleteAllData(entity: "Subjects")
-            self.deleteAllData(entity: "DailySubjects")
-            self.deleteAllData(entity: "Exams")
-            self.deleteAllData(entity: "Projects")
-           self.populateDemoData()
+            //self.deleteAllData(entity: "Report")
+            //self.deleteAllData(entity: "Subjects")
+            //self.deleteAllData(entity: "DailySubjects")
+            //self.deleteAllData(entity: "Exams")
+            //self.deleteAllData(entity: "Projects")
+           //self.populateDemoData()
         }
     }
     
@@ -60,7 +60,7 @@ class DataController: ObservableObject {
         
         return nil
     }
-    
+    /*
     func populateDemoData() {
         let context = container.viewContext
         // Check if the data already exists to avoid duplicates
@@ -149,10 +149,11 @@ class DataController: ObservableObject {
                    }
                    
                    // Adjust to the previous week's Monday
-                   guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: currentWeekStart) else {
-                       fatalError("Failed to calculate the start date of the past week.")
-                   }
-                   
+            guard Calendar.current.date(byAdding: .day, value: 1, to: currentWeekStart) != nil else {
+                fatalError("Failed to calculate the start date of the past week.")
+            }
+            // Use startDate as needed here
+
                    // Adjust to the previous week's Sunday
             guard Calendar.current.date(byAdding: .day, value: 6, to: currentWeekStart) != nil else {
                        fatalError("Failed to calculate the end date of the past week.")
@@ -178,13 +179,12 @@ class DataController: ObservableObject {
                          
                        }
                    }
-                   
-                  
-
-                
+            
                 try context.save()
             } catch {
                 print("Failed to load or save demo data: \(error.localizedDescription)")
             }
+
     }
+*/
 }
