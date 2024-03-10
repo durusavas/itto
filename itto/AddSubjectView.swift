@@ -85,7 +85,7 @@ struct AddSubjectView: View {
                     Section {
                             Picker("Subject", selection: $name) {
                                 ForEach(subject) { item in
-                                    Text(item.name ?? "Unknown").tag(item.name ?? "Unknown")
+                                    Text(item.name ?? "Unknown")
                                 }
                             }
                         }
@@ -218,7 +218,7 @@ struct AddSubjectView: View {
     }
     
     
-    
+    /*
     private func printSubjects() {
         let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
         
@@ -253,7 +253,7 @@ struct AddSubjectView: View {
             print("Error fetching daily subjects: \(error.localizedDescription)")
         }
     }
-    
+    */
     
     
     /*

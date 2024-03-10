@@ -125,16 +125,6 @@
     "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
     "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
   },
-  "/Users/durusavas/Desktop/itto/DemoView.swift" : {
-    "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.swiftconstvalues",
-    "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.d",
-    "diagnostics" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.dia",
-    "index-unit-output-path" : "/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.o",
-    "llvm-bc" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.bc",
-    "object" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.o",
-    "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView.swiftdeps",
-    "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DemoView~partial.swiftmodule"
-  },
   "/Users/durusavas/Desktop/itto/itto/AddSubjectView.swift" : {
     "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/AddSubjectView.swiftconstvalues",
     "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/AddSubjectView.d",

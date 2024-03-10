@@ -4,8 +4,8 @@
 //
 //  Created by Duru SAVAŞ on 17/11/2023.
 //
-// SubjectView.swift
-// SubjectView.swift
+
+
 import SwiftUI
 import CoreData
 
@@ -20,7 +20,6 @@ struct SubjectView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // List for "My Subjects"
                 List {
                     // "My Subjects" Section
                     if !subjects.isEmpty {

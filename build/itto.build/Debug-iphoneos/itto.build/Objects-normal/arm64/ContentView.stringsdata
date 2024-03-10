@@ -4,10 +4,6 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "%lld / %lld"
-      },
-      {
-        "comment": "",
         "key": "Sets"
       },
       {
@@ -73,6 +69,10 @@
       {
         "comment": "",
         "key": "Select Topic"
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld"
       }
     ]
   },

@@ -16,11 +16,11 @@ class DataController: ObservableObject {
                 return
             }
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            //self.deleteAllData(entity: "Report")
-            //self.deleteAllData(entity: "Subjects")
-            //self.deleteAllData(entity: "DailySubjects")
-            //self.deleteAllData(entity: "Exams")
-            //self.deleteAllData(entity: "Projects")
+            self.deleteAllData(entity: "Report")
+           self.deleteAllData(entity: "Subjects")
+            self.deleteAllData(entity: "DailySubjects")
+            self.deleteAllData(entity: "Exams")
+            self.deleteAllData(entity: "Projects")
            //self.populateDemoData()
         }
     }

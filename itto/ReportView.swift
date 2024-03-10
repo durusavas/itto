@@ -186,7 +186,6 @@ struct ReportView: View {
     }
 }
 
-// Daily List View
 struct DailyListView: View {
     var weekOffset: Int
     var reports: FetchedResults<Report>
@@ -210,20 +209,20 @@ struct DailyListView: View {
                 .disabled(currentDayOffset >= 6)
             }
             List {
-                ForEach(filteredSubjectsForDay(), id: \.subject.id) { subjectWithTotalTime in
+                ForEach(filteredItemsForDay(), id: \.id) { ItemWithTotalTime in
                     VStack(alignment: .leading) {
                         HStack {
                             Circle()
                                 .frame(width: 20, height: 20)
-                                .foregroundColor(subjectWithTotalTime.subject.color?.toColor() ?? Color.white)
-                            Text(subjectWithTotalTime.subject.name ?? "Unknown")
+                                .foregroundColor(ItemWithTotalTime.color.toColor())
+                            Text(ItemWithTotalTime.name)
                             Spacer()
-                            Text("\(subjectWithTotalTime.totalTime/60) mins")
+                            Text("\(ItemWithTotalTime.totalTime/60) mins")
                         }
 
                         // Only add descriptions if they exist
-                        if !subjectWithTotalTime.descriptions.isEmpty {
-                            ForEach(subjectWithTotalTime.descriptions, id: \.self) { description in
+                        if !ItemWithTotalTime.descriptions.isEmpty {
+                            ForEach(ItemWithTotalTime.descriptions, id: \.self) { description in
                                 Text(description)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
@@ -259,22 +258,35 @@ struct DailyListView: View {
         return formatter.string(from: date)
     }
 
-    private func filteredSubjectsForDay() -> [SubjectWithTotalTime] {
+    private func filteredItemsForDay() -> [ItemWithTotalTime] {
         let currentDate = daysOfTheWeek(start: weekRange(offset: weekOffset).0)[currentDayOffset]
         let currentDayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
 
-        return subjects.flatMap { subject -> [SubjectWithTotalTime] in
-            guard let subjectName = subject.name else { return [] }
-            let subjectReports = currentDayReports.filter { $0.subjectName == subjectName }
-            let totalMinutes = subjectReports.map { Int($0.totalTime) }.reduce(0, +)
-            let descriptions = subjectReports.map { $0.reportDescription }
-            if totalMinutes > 0 {
-                return [SubjectWithTotalTime(subject: subject, totalTime: totalMinutes, descriptions: descriptions)]
+        // Create a dictionary to hold combined data for both subjects and projects
+        var combinedItems = [String: ItemWithTotalTime]()
+
+        // Process reports to aggregate information
+        for report in currentDayReports {
+            let itemName = report.subjectName
+            let itemID = report.subjectId
+            let itemColor = report.subjectColor
+            let itemTime = Int(report.totalTime)
+            let itemDescription = report.reportDescription
+
+            if let existingItem = combinedItems[itemName] {
+                // Update existing item with new time and descriptions
+                let updatedTime = existingItem.totalTime + itemTime
+                let updatedDescriptions = existingItem.descriptions + [itemDescription]
+                combinedItems[itemName] = ItemWithTotalTime(name: itemName, color: itemColor, totalTime: updatedTime, descriptions: updatedDescriptions, id: itemID)
             } else {
-                return []
+                // Add new item
+                combinedItems[itemName] = ItemWithTotalTime(name: itemName, color: itemColor, totalTime: itemTime, descriptions: [itemDescription], id: itemID)
             }
         }
+
+        return Array(combinedItems.values)
     }
+
 
     private func weekRange(offset: Int) -> (Date, Date) {
         let calendar = Calendar(identifier: .gregorian)
@@ -306,15 +318,14 @@ struct DailyListView: View {
  
 }
 
-// ... (rest of the code remains the same)
-
-
-
-struct SubjectWithTotalTime {
-    let subject: Subjects
+struct ItemWithTotalTime {
+    let name: String
+    let color: String
     let totalTime: Int
     let descriptions: [String]
+    let id: UUID // Ensure each item can be uniquely identified, as needed
 }
+
 
 // Combined Report Struct
 struct CombinedReport {
@@ -370,4 +381,3 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-

@@ -348,7 +348,6 @@ SWIFT_CLASS_NAMED("Projects")
 
 @interface Projects (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSString * _Nullable color;
-@property (nonatomic, strong) NSObject * _Nullable desc;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
 @end
