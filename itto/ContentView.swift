@@ -46,6 +46,16 @@ struct ContentView: View {
     
     init() {
         requestNotificationPermissions()
+        
+        func requestNotificationPermissions() {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+                if granted {
+                    // Notification permissions granted
+                } else if let error = error {
+                    print("Error requesting notification permissions: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     var body: some View {
@@ -219,11 +229,11 @@ struct ContentView: View {
         }
     }
     
-    func scheduleNotification(message: String, soundName: String) {
+    func scheduleNotification(message: String) {
         let content = UNMutableNotificationContent()
         content.title = "Timer Notification"
-        content.body = message
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundName))
+        content.body = message  // Change the message here
+        content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -234,7 +244,9 @@ struct ContentView: View {
             }
         }
     }
-    
+
+
+
     private var descriptionSheet: some View {
         VStack {
             Text("What have you done? ")
@@ -347,21 +359,22 @@ struct ContentView: View {
                     onBreak = false
                     countdownTime = intervalTime * 60
                     // Schedule a notification for the start of the next interval
-                    scheduleNotification(message: "Starting next interval!", soundName: "notification_sound.mp3")
+                    scheduleNotification(message: "Starting next interval!")
                 } else {
                     // If all intervals are completed, end the timer
                     stopTimer()
-                    scheduleNotification(message: "All intervals completed!", soundName: "notification_sound.mp3")
+                    scheduleNotification(message: "The timer is over!") // Notification for timer completion
                 }
             } else {
                 // If it was an interval, start the break
                 onBreak = true
                 countdownTime = breakTime * 60
                 // Schedule a notification for the start of the break
-                scheduleNotification(message: "Time for a break!", soundName: "notification_sound.mp3")
+                scheduleNotification(message: "Time for a break!")
             }
         }
     }
+
     
     private func stopTimer() {
         timerEndDate = Date()
@@ -392,20 +405,20 @@ struct ContentView: View {
             if remainingTime == 0 {
                 if onBreak {
                     // Schedule notification for the end of the break
-                    scheduleNotification(message: "Time to take a break!", soundName: "notification_sound.mp3")
+                    scheduleNotification(message: "Time to take a break!")
                     
-                    // If there are more intervals, start the next interval
+                    // If there are more intervals,x start the next interval
                     if currentInterval < intervalNumber {
                         onBreak.toggle()
                         countdownTime = intervalTime * 60
                         currentInterval += 1
                     } else {
                         // If all intervals are finished, schedule notification for the end of the whole countdown
-                        scheduleNotification(message: "Timer finished!", soundName: "notification_sound.mp3")
+                        scheduleNotification(message: "Timer finished!")
                     }
                 } else {
                     // If it's the end of the work interval, schedule notification for the start of the break
-                    scheduleNotification(message: "Break started!", soundName: "notification_sound.mp3")
+                    scheduleNotification(message: "Break started!")
                 }
             }
         }

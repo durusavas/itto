@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Exams+CoreDataClass.swift":
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataClass.o"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataClass.dia"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataClass.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataClass.swiftdeps"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataClass.d"
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Projects+CoreDataClass.swift":
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataClass.d"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataClass.o"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataClass.dia"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataClass.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Projects+CoreDataClass.swiftdeps"
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/DerivedSources/CoreDataGenerated/Itto/Exams+CoreDataProperties.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataProperties.dia"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataProperties.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataProperties.swiftdeps"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataProperties.o"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/Exams+CoreDataProperties.d"
