@@ -95,57 +95,38 @@ struct WeeklyChartView: View {
     }
 }
 
-
-
 struct ReportView: View {
-    @FetchRequest(sortDescriptors: []) var report: FetchedResults<Report>
-    @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
-    @FetchRequest(sortDescriptors: []) var project: FetchedResults<Projects>
+    @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
+    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
+    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
     @State private var weekOffset = 0
 
     var body: some View {
         NavigationView {
-           
-                VStack {
-                    WeeklyChartView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
-                    DailyListView(weekOffset: weekOffset, reports: report, subjects: subject, projects: project)
-                        .frame(maxWidth: .infinity)
-                }
-                .navigationTitle(navigationTitle(for: weekOffset))
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
-                        Button(action: { self.weekOffset -= 1 }) {
-                            Image(systemName: "arrow.left")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: { self.weekOffset += 1 }) {
-                            Image(systemName: "arrow.right")
-                        }
-                        .disabled(weekOffset == 0)
+            VStack {
+                WeeklyChartView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
+                DailyListView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
+                    .frame(maxWidth: .infinity)
+            }
+            .navigationTitle(navigationTitle(for: weekOffset))
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
+                    Button(action: { self.weekOffset -= 1 }) {
+                        Image(systemName: "arrow.left")
                     }
                 }
-             
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: { self.weekOffset += 1 }) {
+                        Image(systemName: "arrow.right")
+                    }
+                    .disabled(weekOffset == 0)
+                }
+            }
         }
         .onAppear {
-                   printReportData(report, subject, project)
-               }
-    }
-
-    private func weekRange(offset: Int) -> (Date, Date) {
-        let calendar = Calendar(identifier: .gregorian)
-        let currentDate = Date()
-        guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
-            return (currentDate, currentDate)
+            // Ensure data is properly fetched and initialized
+            printReportData(reports, subjects, projects)
         }
-        var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
-        // Check if the startOfWeek is Sunday and adjust
-        if calendar.component(.weekday, from: startOfWeek) == 1 {
-            startOfWeek = calendar.date(byAdding: .day, value: 1, to: startOfWeek)!
-        }
-        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
-
-        return (startOfWeek, endOfWeek)
     }
 
     private func navigationTitle(for weekOffset: Int) -> String {
@@ -165,7 +146,8 @@ struct ReportView: View {
             return "\(startString)-\(endString)"
         }
     }
-    func printReportData(_ reports: FetchedResults<Report>, _ subjects: FetchedResults<Subjects>, _ projects: FetchedResults<Projects>) {
+
+    private func printReportData(_ reports: FetchedResults<Report>, _ subjects: FetchedResults<Subjects>, _ projects: FetchedResults<Projects>) {
         print("Report Data:")
         for report in reports {
             print("Date: \(report.date ?? Date())")
@@ -184,7 +166,24 @@ struct ReportView: View {
             print("---")
         }
     }
+
+    private func weekRange(offset: Int) -> (Date, Date) {
+        let calendar = Calendar(identifier: .gregorian)
+        let currentDate = Date()
+        guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
+            return (currentDate, currentDate)
+        }
+        var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
+        // Check if the startOfWeek is Sunday and adjust
+        if calendar.component(.weekday, from: startOfWeek) == 1 {
+            startOfWeek = calendar.date(byAdding: .day, value: 1, to: startOfWeek)!
+        }
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
+
+        return (startOfWeek, endOfWeek)
+    }
 }
+
 
 struct DailyListView: View {
     var weekOffset: Int
@@ -232,7 +231,16 @@ struct DailyListView: View {
                 }
             }
         }
+        .onAppear {
+            // Adjust currentDayOffset to the current day of the week
+            let calendar = Calendar(identifier: .gregorian)
+            let today = Date()
+            let startOfWeek = weekRange(offset: weekOffset).0
+            let daysOffset = calendar.dateComponents([.day], from: startOfWeek, to: today).day ?? 0
+            currentDayOffset = daysOffset
+        }
     }
+
     var combinedReports: [CombinedReport] {
         var combinedList: [CombinedReport] = []
         for reportItem in reports {
@@ -315,7 +323,6 @@ struct DailyListView: View {
         }
         return days
     }
- 
 }
 
 struct ItemWithTotalTime {
