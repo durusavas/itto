@@ -64,8 +64,8 @@ struct ContentView: View {
                 if(!timerStarted){
                     HStack{
                         VStack {
-                            Text("Sets")
-                            Picker("Sets", selection: $intervalNumber) {
+                            Text(LocalizedStringKey("Sets"))
+                            Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
                                 ForEach(sets, id: \.self) { number in
                                     Text("\(number)")
                                 }
@@ -75,8 +75,8 @@ struct ContentView: View {
                             .clipped()
                         }
                         VStack {
-                            Text("Break")
-                            Picker("Break", selection: $breakTime) {
+                            Text(LocalizedStringKey("Break"))
+                            Picker(LocalizedStringKey("Break"), selection: $breakTime) {
                                 ForEach(breakTimes, id: \.self) { number in
                                     Text("\(number) min")
                                 }
@@ -97,8 +97,8 @@ struct ContentView: View {
                 
                 if(!timerStarted){
                     HStack{
-                        Picker("Subject", selection: $chosenSubject) {
-                            Text("Choose").tag(nil as String?) // Handling nil
+                        Picker(LocalizedStringKey("Subject"), selection: $chosenSubject) {
+                            Text(LocalizedStringKey("Choose")).tag(nil as String?) // Handling nil
                             ForEach(filteredSubjects(), id: \.self) { name in
                                 Text(name).tag(name as String?) // Ensure tags match the type of chosenSubject
                             }
@@ -182,7 +182,7 @@ struct ContentView: View {
             AddSubjectView()
         }
         .onAppear {
-            printReportsData()
+            //printReportsData()
             // Resume timer when the app appears
             resumeTimerIfNeeded()
         }
@@ -193,17 +193,17 @@ struct ContentView: View {
             resumeTimerIfNeeded()
         }
     }
-    private func printReportsData() {
-        do {
-            let reports = try moc.fetch(Report.fetchRequest()) as [Report]
-            print("Reports Data:")
-            for report in reports {
-                print("Date: \(report.date ?? Date()), Subject: \(report.subjectName ?? "Unknown"), Total Time: \(report.totalTime) seconds, Description: \(report.desc ?? "No description")")
-            }
-        } catch {
-            print("Error fetching Reports: \(error)")
-        }
-    }
+//    private func printReportsData() {
+//        do {
+//            let reports = try moc.fetch(Report.fetchRequest()) as [Report]
+//            print("Reports Data:")
+//            for report in reports {
+//                print("Date: \(report.date ?? Date()), Subject: \(report.subjectName ?? "Unknown"), Total Time: \(report.totalTime) seconds, Description: \(report.desc ?? "No description")")
+//            }
+//        } catch {
+//            print("Error fetching Reports: \(error)")
+//        }
+//    }
     private func resumeTimerIfNeeded() {
         // Resume timer only if it was running and paused
         if !timerStarted && !timerIsPaused {
@@ -230,8 +230,8 @@ struct ContentView: View {
     
     func scheduleNotification(message: String) {
         let content = UNMutableNotificationContent()
-        content.title = "Timer Notification"
-        content.body = message  // Change the message here
+        content.title = NSLocalizedString("timer_notification_title", comment: "Timer Notification")
+        content.body = NSLocalizedString(message, comment: "Notification message")
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
@@ -248,18 +248,18 @@ struct ContentView: View {
 
     private var descriptionSheet: some View {
         VStack {
-            Text("What have you done? ")
+            Text(LocalizedStringKey("What?"))
                 .font(.largeTitle)
                 .padding()
             
-            TextField("Description", text: $reportDescription)
+            TextField(LocalizedStringKey("Description"), text: $reportDescription)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .padding()
             
             if isExamAndClass {
-                Picker("Topics", selection: $selectedTopic) {
-                    Text("Select Topic").tag("")
+                Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
+                    Text(LocalizedStringKey("select_topic")).tag("")
                     if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
                         ForEach(chosenExam.topicsArray, id: \.self) { item in
                             Text(item)
@@ -270,7 +270,7 @@ struct ContentView: View {
                 .clipped()
                 .padding()
             }
-            Button("Save") {
+            Button(LocalizedStringKey("Save")) {
                 let newReport = Report(context: moc)
                 newReport.date = timerStartDate
                 newReport.subjectName = chosenSubject
@@ -310,7 +310,7 @@ struct ContentView: View {
     }
     
     private var intervalPicker: some View {
-        Picker("Interval Time:", selection: $intervalTime) {
+        Picker(LocalizedStringKey("interval_time"), selection: $intervalTime) {
             ForEach(times, id: \.self) { number in
                 Text("\(number)")
             }
@@ -404,8 +404,7 @@ struct ContentView: View {
             if remainingTime == 0 {
                 if onBreak {
                     // Schedule notification for the end of the break
-                    scheduleNotification(message: "Time to take a break!")
-                    
+                    scheduleNotification(message: "end_break_message")
                     // If there are more intervals,x start the next interval
                     if currentInterval < intervalNumber {
                         onBreak.toggle()
@@ -413,11 +412,11 @@ struct ContentView: View {
                         currentInterval += 1
                     } else {
                         // If all intervals are finished, schedule notification for the end of the whole countdown
-                        scheduleNotification(message: "Timer finished!")
+                        scheduleNotification(message: "finish_message")
                     }
                 } else {
                     // If it's the end of the work interval, schedule notification for the start of the break
-                    scheduleNotification(message: "Break started!")
+                    scheduleNotification(message: "break_message")
                 }
             }
         }

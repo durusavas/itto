@@ -1,0 +1,67 @@
+/* 
+  Localizable.strings
+  itto
+
+  Created by Duru SAVAŞ on 30/06/2024.
+  
+*/
+// ContentView
+"Sets" = "Sets";
+"Break" = "Break";
+"Choose" = "Choose";
+"Start" = "Start";
+"Pause" = "Pause";
+"Stop" = "Stop";
+"What?" = "What have you done?";
+"Subject" = "Subject";
+"timer_notification_title" = "Timer Notification";
+"Description" = "Description";
+"Topics" = "Topics";
+"select_topic" = "Select Topic";
+"Save" = "Save";
+"interval_time" = "Interval Time";
+"break_message" = "Time to take a break!";
+"finish_message" = "Timer has finished";
+"end_break_message" = "Back to work!";
+
+//MainView
+"Today" = "Today";
+"Timer" = "Timer";
+"Subjects" = "Subjects";
+"Report" = "Report";
+
+//SubjectView
+"my_classes" = "My Classes";
+"my_exams" = "My Exams";
+"my_projects" = "My Projects";
+"subjects" = "Subjects";
+"add_new" = "Add new";
+
+
+//ReportView
+"this_week" = "This week";
+
+//AddSubjectView
+"category" = "Category";
+"project_name" = "Project Name";
+"class_name" = "Class Name";
+"choose_days" = "Choose the days you have this class";
+"exam_name" = "Exam Name";
+"topics_for_exam" = "Topics for this exam:";
+"add_topic" = "Add Topic";
+"save" = "Save";
+"add_subject" = "Add Subject";
+"error" = "Error";
+"ok" = "OK";
+
+// ExamDetailsView
+"new_topic" = "New Topic";
+"save" = "Save";
+"exam_details" = "Exam Details";
+
+
+// TodayView
+"today_view_title" = "Tod(o)ay";
+"reselect_days" = "Reselect Days";
+"done" = "Done";
+

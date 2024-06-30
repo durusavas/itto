@@ -1,0 +1,66 @@
+/* 
+  Localizable.strings
+  itto
+
+  Created by Duru SAVAŞ on 30/06/2024.
+  
+*/
+
+// ContentView
+"Sets" = "Séries";
+"Break" = "Pause";
+"Choose" = "Choisir";
+"Start" = "Démarrer";
+"Pause" = "Pause";
+"Stop" = "Arrêter";
+"What?" = "Qu'avez-vous fait ?";
+"Subject" = "Sujet";
+"timer_notification_title" = "Notification de minuterie";
+"Description" = "Description";
+"Topics" = "Sujets";
+"select_topic" = "Sélectionner un sujet";
+"Save" = "Enregistrer";
+"interval_time" = "Temps d'intervalle";
+"break_message" = "Il est temps de faire une pause!";
+"finish_message" = "Le minuteur est terminé";
+"end_break_message" = "Retour au travail!";
+
+//MainView
+"Today" = "Aujourd'hui";
+"Timer" = "Minuteur";
+"Subjects" = "Sujets";
+"Report" = "Rapport";
+
+//SubjectView
+"my_classes" = "Mes cours";
+"my_exams" = "Mes examens";
+"my_projects" = "Mes projets";
+"subjects" = "Sujets";
+"add_new" = "Ajouter";
+
+//ReportView
+"this_week" = "Cette semaine";
+
+//AddSubjectView
+"category" = "Catégorie";
+"project_name" = "Nom du projet";
+"class_name" = "Nom du cours";
+"choose_days" = "Choisissez les jours où vous avez ce cours";
+"exam_name" = "Nom de l'examen";
+"topics_for_exam" = "Sujets pour cet examen :";
+"add_topic" = "Ajouter un sujet";
+"save" = "Enregistrer";
+"add_subject" = "Ajouter un sujet";
+"error" = "Erreur";
+"ok" = "OK";
+
+// ExamDetailsView
+"new_topic" = "Nouveau Sujet";
+"save" = "Enregistrer";
+"exam_details" = "Détails de l'examen";
+
+//TodayView
+"today_view_title" = "Aujourd'hui";
+"reselect_days" = "Réselectionner les jours";
+"done" = "Terminé";
+

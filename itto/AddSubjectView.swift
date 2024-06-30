@@ -9,17 +9,12 @@ import CoreData
 
 extension Color {
     func toRgbString() -> String {
-        // Convert Color to UIColor
         let uiColor = UIColor(self)
-        
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        
         uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
-        // Format RGB components into a string
         return String(format: "R: %.0f, G: %.0f, B: %.0f", red * 255, green * 255, blue * 255)
     }
 }
@@ -37,171 +32,141 @@ struct AddSubjectView: View {
     @State private var chosenCategory = "Class"
     @State private var examName: String = ""
     @State private var examSubjects: [String] = [""]
-    
     @State private var selectedDays: [Weekday] = []
     @State private var selectedWeekdays: [Weekday] = []
-    
+
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             Form {
-                Picker("category", selection: $chosenCategory){
-                    ForEach(categories, id: \.self){ category in
-                        Text("\(category )")
-                        
+                Picker("category", selection: $chosenCategory) {
+                    ForEach(categories, id: \.self) { category in
+                        Text(LocalizedStringKey(category.lowercased()))
                     }
                 }
                 .pickerStyle(.segmented)
                 .padding()
-                
-                if chosenCategory == "Project"{
-                    
+
+                if chosenCategory == "Project" {
                     Section {
                         HStack {
-                            TextField("Project Name", text: $name)
+                            TextField(LocalizedStringKey("project_name"), text: $name)
                                 .padding()
                             ColorPicker("", selection: $color)
                         }
                     }
-                    
                 }
-                
+
                 if chosenCategory == "Class" {
                     Section {
                         HStack {
-                            TextField("Calculus", text: $name)
+                            TextField(LocalizedStringKey("class_name"), text: $name)
                                 .padding()
                             ColorPicker("", selection: $color)
                         }
                     }
-                    
-                    Text("Choose the days you have this class in")
+
+                    Text(LocalizedStringKey("choose_days"))
                         .font(.headline)
                     DaysPicker(selectedDays: $selectedWeekdays)
                 }
+
                 if chosenCategory == "Exam" {
-                    Section{
-                        TextField("Exam name", text:$examName)
+                    Section {
+                        TextField(LocalizedStringKey("exam_name"), text: $examName)
                     }
                     Section {
-                            Picker("Subject", selection: $name) {
-                                ForEach(subject) { item in
-                                    Text(item.name ?? "Unknown")
-                                }
+                        Picker(LocalizedStringKey("Subject"), selection: $name) {
+                            ForEach(subject) { item in
+                                Text(item.name ?? "Unknown")
                             }
                         }
+                    }
                     Section {
-                        Text("Topics for this exam:")
+                        Text(LocalizedStringKey("topics_for_exam"))
                             .font(.headline)
                         ForEach(0..<examSubjects.count, id: \.self) { index in
-                            TextField("Topic \(index + 1)", text: $examSubjects[index])
+                            TextField(LocalizedStringKey("Topic \(index + 1)"), text: $examSubjects[index])
                         }
-                        
-                        
                     }
-                    Section{
+                    Section {
                         Button(action: addTextField) {
-                            Label("Add Topic", systemImage: "plus")
+                            Label(LocalizedStringKey("add_topic"), systemImage: "plus")
                         }
                     }
                 }
-                
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: saveSubject) {
-                        Text("Save")
+                        Text(LocalizedStringKey("save"))
                     }
                 }
             }
-            .navigationTitle("Add Subject")
+            .navigationTitle(LocalizedStringKey("add_subject"))
             .alert(isPresented: $showAlert) {
-                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(LocalizedStringKey("error")), message: Text(alertMessage), dismissButton: .default(Text(LocalizedStringKey("ok"))))
             }
-            
         }
-        
     }
-    
-  
+
     private func addTextField() {
         examSubjects.append("")
     }
-    
+
     private func saveSubject() {
         guard validateInput(name: name, color: color) else {
             alertMessage = "Invalid input: Name and color are required."
             showAlert = true
             return
         }
-        
+
         let colorString = color.toRgbString()
-       /* if isDuplicate(name: name, color: colorString) {
-            alertMessage = "Duplicate name or color detected. Subject not saved."
-            showAlert = true
-            return
-        
-        }
-        */
         var newSubject: NSManagedObject
-            if chosenCategory == "Project" {
-                newSubject = Projects(context: moc)
-                
-            } else if chosenCategory == "Exam" {
-                newSubject = Exams(context: moc)
-               
-                if let exam = newSubject as? Exams {
-                    exam.topics = examSubjects as NSObject
-                    exam.examName = examName
-                }
-            } else {
-                newSubject = Subjects(context: moc)
-                if let subject = newSubject as? Subjects {
-                    subject.days = selectedWeekdays.map { $0.rawValue } as NSObject
-                   
-                }
+        if chosenCategory == "Project" {
+            newSubject = Projects(context: moc)
+        } else if chosenCategory == "Exam" {
+            newSubject = Exams(context: moc)
+            if let exam = newSubject as? Exams {
+                exam.topics = examSubjects as NSObject
+                exam.examName = examName
             }
-            
+        } else {
+            newSubject = Subjects(context: moc)
+            if let subject = newSubject as? Subjects {
+                subject.days = selectedWeekdays.map { $0.rawValue } as NSObject
+            }
+        }
+
         newSubject.setValue(UUID(), forKey: "id")
         newSubject.setValue(name, forKey: "name")
         newSubject.setValue(colorString, forKey: "color")
 
-        if chosenCategory == "Exam"{
+        if chosenCategory == "Exam" {
             let dailySubject = DailySubjects(context: moc)
             dailySubject.subjectName = examName
-            dailySubject.date = Date() // You might want to customize this based on your requirements
+            dailySubject.date = Date()
             dailySubject.isCompleted = false
-            dailySubject.category = chosenCategory  // Add this line to set the category
+            dailySubject.category = chosenCategory
             dailySubject.topics = examSubjects as NSObject
-        }
-        else if  chosenCategory == "Project" {
+        } else if chosenCategory == "Project" {
             let dailySubject = DailySubjects(context: moc)
             dailySubject.subjectName = name
-            dailySubject.date = Date() // You might want to customize this based on your requirements
+            dailySubject.date = Date()
             dailySubject.isCompleted = false
-            dailySubject.category = chosenCategory  // Add this line to set the categor
-            
-        }
-        else {
-            // If it's not an exam, save DailySubjects for each selected weekday
+            dailySubject.category = chosenCategory
+        } else {
             for day in selectedWeekdays {
                 if let dateForDay = getNextDate(for: day) {
                     let dailySubject = DailySubjects(context: moc)
                     dailySubject.subjectName = name
                     dailySubject.date = dateForDay
                     dailySubject.isCompleted = false
-                    dailySubject.category = chosenCategory  // Add this line to set the category
+                    dailySubject.category = chosenCategory
                     dailySubject.topics = examSubjects as NSObject
                 }
             }
         }
-        
-        
-        if let matchingSubject = try? moc.fetch(fetchRequestForColor(name: name)),
-           let subjectColor = matchingSubject.first?.color {
-            newSubject.setValue(subjectColor, forKey: "color")
-        }
 
-        
         do {
             try moc.save()
             dismiss()
@@ -210,73 +175,12 @@ struct AddSubjectView: View {
             showAlert = true
         }
     }
-    
-    private func fetchRequestForColor(name: String) -> NSFetchRequest<Subjects> {
-        let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "name == %@", name)
-        return fetchRequest
-    }
-    
-    
-    /*
-    private func printSubjects() {
-        let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        
-        do {
-            let subjects = try moc.fetch(fetchRequest)
-            for subject in subjects {
-                print("Name: \(subject.name ?? "Unknown"), Color: \(subject.color ?? "Unknown")")
-                
-                if let days = subject.days as? [String] {
-                    print("Days: \(days.joined(separator: ", "))")
-                }
-                print("----")
-            }
-        } catch {
-            print("Error fetching subjects: \(error.localizedDescription)")
-        }
-    }
-    
-    private func printDailySubjects() {
-        let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        
-        do {
-            let dailySubjects = try moc.fetch(fetchRequest)
-            for dailySubject in dailySubjects {
-                print("Subject Name: \(dailySubject.subjectName ?? "Unknown"), Date: \(dailySubject.date ?? Date()), Completed: \(dailySubject.isCompleted), category: \(dailySubject.category ?? "None")")
-                if let topics = dailySubject.topics as? [String] {
-                    print("Topics: \(topics)")
-                }
-                print("----")
-            }
-        } catch {
-            print("Error fetching daily subjects: \(error.localizedDescription)")
-        }
-    }
-    */
-    
-    
-    /*
-    private func isDuplicate(name: String, color: String) -> Bool {
-        let fetchRequest: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        let predicate = NSPredicate(format: "name == %@ AND color == %@", name, color)
-        fetchRequest.predicate = predicate
-        
-        do {
-            let matchingSubjects = try moc.fetch(fetchRequest)
-            return !matchingSubjects.isEmpty
-        } catch {
-            print("Error fetching subjects: \(error.localizedDescription)")
-            return false
-        }
-    }
-     */
-    private func getNextDate(for day: Weekday) -> Date?  {
+
+    private func getNextDate(for day: Weekday) -> Date? {
         let today = Date()
         var dateComponent = DateComponents()
         let calendar = Calendar.current
-        
-        // Find the next date for the given day
+
         for i in 0..<7 {
             dateComponent.day = i
             if let nextDate = calendar.date(byAdding: dateComponent, to: today),
@@ -286,7 +190,7 @@ struct AddSubjectView: View {
         }
         return nil
     }
-    
+
     private func validateInput(name: String, color: Color) -> Bool {
         return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -300,7 +204,7 @@ enum Weekday: String, CaseIterable {
     case friday = "Friday"
     case saturday = "Saturday"
     case sunday = "Sunday"
-    
+
     var weekdayIndex: Int {
         switch self {
         case .sunday: return 1
@@ -314,11 +218,10 @@ enum Weekday: String, CaseIterable {
     }
 }
 
-
 struct DaysPicker: View {
     @Binding var selectedDays: [Weekday]
     var body: some View {
-        VStack{
+        VStack {
             HStack {
                 ForEach(Weekday.allCases, id: \.self) { day in
                     Text(String(day.rawValue.first!))
@@ -328,13 +231,12 @@ struct DaysPicker: View {
                         .background(selectedDays.contains(day) ? Color.cyan.cornerRadius(10) : Color.gray.cornerRadius(10))
                         .onTapGesture {
                             if selectedDays.contains(day) {
-                                selectedDays.removeAll(where: {$0 == day})
+                                selectedDays.removeAll(where: { $0 == day })
                             } else {
                                 selectedDays.append(day)
                             }
                         }
                 }
-                
             }
             .padding()
         }

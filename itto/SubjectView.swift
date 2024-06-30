@@ -23,7 +23,7 @@ struct SubjectView: View {
                 List {
                     // "My Subjects" Section
                     if !subjects.isEmpty {
-                        Section(header: Text("My Classes")) {
+                        Section(header: Text(LocalizedStringKey("my_classes"))) {
                             ForEach(subjects, id: \.self) { item in
                                 HStack {
                                     Circle()
@@ -31,15 +31,13 @@ struct SubjectView: View {
                                         .foregroundColor(item.color?.toColor() ?? Color.white)
                                     Text(item.name ?? "Unknown")
                                 }
-
                             }
                             .onDelete(perform: deleteSubject)
                         }
                     }
                     // "My Exams" Section
-                    
                     if !exams.isEmpty {
-                        Section(header: Text("My Exams")) {
+                        Section(header: Text(LocalizedStringKey("my_exams"))) {
                             ForEach(exams, id: \.self) { exam in
                                 NavigationLink(
                                     destination: ExamDetailsView(exam: exam),
@@ -56,12 +54,9 @@ struct SubjectView: View {
                             .onDelete(perform: deleteSubject)
                         }
                     }
-
-
-                    
                     // "My Projects" Section
                     if !projects.isEmpty {
-                        Section(header: Text("My Projects")) {
+                        Section(header: Text(LocalizedStringKey("my_projects"))) {
                             ForEach(projects, id: \.self) { item in
                                 HStack {
                                     Circle()
@@ -69,20 +64,19 @@ struct SubjectView: View {
                                         .foregroundColor(item.color?.toColor() ?? Color.white)
                                     Text(item.name ?? "Unknown")
                                 }
-
                             }
                             .onDelete(perform: deleteSubject)
                         }
                     }
                 }
             }
-            .navigationTitle("Subjects")
+            .navigationTitle(LocalizedStringKey("subjects"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showAddScreen.toggle()
                     } label: {
-                        Label("Add new", systemImage: "plus")
+                        Label(LocalizedStringKey("add_new"), systemImage: "plus")
                     }
                 }
             }
@@ -91,13 +85,13 @@ struct SubjectView: View {
             }
         }
     }
+
     // Function to handle the deletion of subjects
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
             let subjectToDelete = subjects[index]
             moc.delete(subjectToDelete)
         }
-
         // Save the context
         do {
             try moc.save()
@@ -106,4 +100,3 @@ struct SubjectView: View {
         }
     }
 }
-

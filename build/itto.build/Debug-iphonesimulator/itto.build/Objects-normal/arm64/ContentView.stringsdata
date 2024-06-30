@@ -20,7 +20,7 @@
       },
       {
         "comment": "",
-        "key": "Interval Time:"
+        "key": "interval_time"
       },
       {
         "comment": "",
@@ -32,7 +32,7 @@
       },
       {
         "comment": "",
-        "key": "What have you done? "
+        "key": "What?"
       },
       {
         "comment": "",
@@ -48,7 +48,7 @@
       },
       {
         "comment": "",
-        "key": "Select Topic"
+        "key": "select_topic"
       },
       {
         "comment": "",

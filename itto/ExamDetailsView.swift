@@ -18,8 +18,8 @@ struct ExamDetailsView: View {
             // Display exam details
             Text(exam.examName ?? "")
                 .font(.largeTitle)
-                .lineLimit(1) // Limit text to a single line
-                     .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
                 .padding()
             
             List {
@@ -31,40 +31,35 @@ struct ExamDetailsView: View {
                 }
                 Section {
                     HStack {
-                        TextField("New Topic", text: $newTopic)
+                        TextField(LocalizedStringKey("new_topic"), text: $newTopic)
                             .padding(.horizontal)
                         Button(action: addTopic) {
-                            Text("Save")
+                            Text(LocalizedStringKey("save"))
                         }
                         .padding()
                     }
                 }
             }
-          
             .padding()
         }
-        .navigationTitle(exam.name ?? "Exam Details")
-        
-        
+        .navigationTitle(exam.name ?? NSLocalizedString("exam_details", comment: "Exam Details"))
     }
 
     private func deleteTopic(at offsets: IndexSet) {
         if let topics = exam.topics as? NSMutableArray {
-              topics.removeObjects(at: offsets)
-              exam.topics = topics as NSObject
-              saveChanges()
+            topics.removeObjects(at: offsets)
+            exam.topics = topics as NSObject
+            saveChanges()
 
-              // Delete corresponding DailySubjects
-              deleteDailySubjects(topics: offsets.map { topics[$0] as! String })
-          }
-      }
+            // Delete corresponding DailySubjects
+            deleteDailySubjects(topics: offsets.map { topics[$0] as! String })
+        }
+    }
 
     private func addTopic() {
         if !newTopic.isEmpty {
-            // Add a new DailySubject for the added topic
             addDailySubject(topic: newTopic)
 
-            // Now update the exam topics
             if var topics = exam.topics as? [String] {
                 topics.append(newTopic)
                 exam.topics = topics as NSObject
@@ -73,9 +68,6 @@ struct ExamDetailsView: View {
             }
         }
     }
-
-
-
 
     private func saveChanges() {
         do {
@@ -99,7 +91,6 @@ struct ExamDetailsView: View {
                     dailySubject.topics = remainingTopics
                 }
 
-                // If no topics remain, delete the entire DailySubject
                 if let remainingTopics = dailySubject.topics as? [String], remainingTopics.isEmpty {
                     managedObjectContext.delete(dailySubject)
                 }
@@ -109,8 +100,6 @@ struct ExamDetailsView: View {
             print("Error deleting DailySubjects: \(error)")
         }
     }
-
-
 
     private func addDailySubject(topic: String) {
         guard let managedObjectContext = exam.managedObjectContext else { return }
@@ -122,20 +111,16 @@ struct ExamDetailsView: View {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
 
             if let existingDailySubject = dailySubjects.first {
-                // DailySubject with the same subjectName and category already exists
                 if var existingTopics = existingDailySubject.topics as? [String] {
-                    // Append the new topic to the existing topics array
                     existingTopics.append(topic)
                     existingDailySubject.topics = existingTopics as NSObject
                 } else {
-                    // If topics is nil or not of the expected type, create a new array with the new topic
                     existingDailySubject.topics = [topic] as NSObject
                 }
             } else {
-                // Create a new DailySubject since one does not exist with the same subjectName and category
                 let dailySubject = DailySubjects(context: managedObjectContext)
                 dailySubject.subjectName = exam.examName
-                dailySubject.date = Date() // Adjust as needed
+                dailySubject.date = Date()
                 dailySubject.isCompleted = false
                 dailySubject.category = "Exam"
                 dailySubject.topics = [topic] as NSObject
@@ -163,7 +148,6 @@ struct ExamDetailsView: View {
             print("Error fetching DailySubjects: \(error)")
         }
     }
-
 }
 
 extension Exams {

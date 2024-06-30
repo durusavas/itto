@@ -10,29 +10,24 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
-            /*ViewController()
-                .tabItem{
-                    Label("View", systemImage: "house" )
-                }
-            */
             TodayView()
                 .tabItem{
-                    Label("Today", systemImage: "house" )
+                    Label(LocalizedStringKey("Today"), systemImage: "house" )
                 }
             
             ContentView()
                 .tabItem {
-                    Label("Timer", systemImage: "timer")
+                    Label(LocalizedStringKey("Timer"), systemImage: "timer")
                     
                 }
             SubjectView()
                 .tabItem {
-                    Label("Subjects", systemImage: "list.bullet")
+                    Label(LocalizedStringKey("Subjects"), systemImage: "list.bullet")
                     
                 }
             ReportView()
                 .tabItem {
-                    Label("Report", systemImage: "chart.bar.fill")
+                    Label(LocalizedStringKey("Report"), systemImage: "chart.bar.fill")
                 }
         }
         .accentColor(.blue)

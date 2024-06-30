@@ -1,0 +1,66 @@
+/* 
+  Localizable.strings
+  itto
+
+  Created by Duru SAVAŞ on 30/06/2024.
+  
+*/
+
+// ContentView
+"Sets" = "Setler";
+"Break" = "Ara";
+"Choose" = "Seç";
+"Start" = "Başlat";
+"Pause" = "Duraklat";
+"Stop" = "Durdur";
+"What?" = "Ne yaptın?";
+"Subject" = "Konu";
+"timer_notification_title" = "Zamanlayıcı Bildirimi";
+"Description" = "Açıklama";
+"Topics" = "Konular";
+"select_topic" = "Konu Seç";
+"Save" = "Kaydet";
+"interval_time" = "Aralık Süresi";
+"break_message" = "Ara verme zamanı!";
+"finish_message" = "Zamanlayıcı bitti";
+"end_break_message" = "İşe geri dön!";
+
+//MainView
+"Today" = "Bugün";
+"Timer" = "Zamanlayıcı";
+"Subjects" = "Konular";
+"Report" = "Rapor";
+
+//SubjectView
+"my_classes" = "Derslerim";
+"my_exams" = "Sınavlarım";
+"my_projects" = "Projelerim";
+"subjects" = "Konular";
+"add_new" = "Ekle";
+
+//ReportView
+"this_week" = "Bu hafta";
+
+// AddSubjectView
+"category" = "Kategori";
+"project_name" = "Proje Adı";
+"class_name" = "Ders Adı";
+"choose_days" = "Bu dersi aldığınız günleri seçin";
+"exam_name" = "Sınav Adı";
+"topics_for_exam" = "Bu sınavın konuları:";
+"add_topic" = "Konu Ekle";
+"save" = "Kaydet";
+"add_subject" = "Konu Ekle";
+"error" = "Hata";
+"ok" = "Tamam";
+
+// ExamDetailsView
+"new_topic" = "Yeni Konu";
+"save" = "Kaydet";
+"exam_details" = "Sınav Detayları";
+
+//TodayView
+"today_view_title" = "Bugün";
+"reselect_days" = "Günleri Tekrar Seç";
+"done" = "Tamam";
+

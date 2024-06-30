@@ -9,21 +9,17 @@ import SwiftUI
 import CoreData
 
 struct TodayView: View {
-    
     @State private var showReselectSubjectsPopup = false
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
-    
-    // Custom initializer to setup fetch request
+
     init() {
-        // Setup fetch request dynamically
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \DailySubjects.date, ascending: true)]
         fetchRequest.predicate = TodayView.todayPredicate()
-        
-        // Initialize _dailySubjects with the dynamic fetch request
         _dailySubjects = FetchRequest<DailySubjects>(fetchRequest: fetchRequest)
     }
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -43,11 +39,10 @@ struct TodayView: View {
                         }
                     }
                 }
-                .navigationTitle("Tod(o)ay")
+                .navigationTitle(LocalizedStringKey("today_view_title"))
                 .onAppear {
                     checkForWeeklyReset()
                     deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: moc)
-                    //printDailySubjectsData()
                 }
             }
             .sheet(isPresented: $showReselectSubjectsPopup) {
@@ -55,20 +50,6 @@ struct TodayView: View {
             }
         }
     }
-    /*
-    private func printDailySubjectsData() {
-           
-           do {
-             
-               print("DailySubjects Data:")
-               for dailySubject in dailySubjects {
-                   print("Subject Name: \(dailySubject.subjectName ?? "Unknown"), Topics: \(dailySubject.topics as? [String] ?? ["No topics"]), Date: \(dailySubject.date ?? Date()), Is Completed: \(dailySubject.isCompleted), Completed Topics: \(dailySubject.topicsCompleted as? [String] ?? ["No completed topics"])")
-               }
-           } catch {
-               print("Error fetching DailySubjects: \(error)")
-           }
-       }
-    */
 
     private func examSection(dailySubject: DailySubjects) -> some View {
         Section {
@@ -94,24 +75,20 @@ struct TodayView: View {
     private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String, isCompleted: Bool) {
         moc.performAndWait {
             withAnimation {
-                // Update the completed topics array based on user interaction
                 var completedTopics = dailySubject.topicsCompleted as? [String] ?? []
                 if isCompleted {
                     completedTopics.append(topic)
                 } else {
                     completedTopics.removeAll { $0 == topic }
                 }
-
                 dailySubject.topicsCompleted = completedTopics as NSObject
 
-                // Check if all topics are completed, then set isCompleted to true
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
 
                 if allTopicsCompleted {
                     moc.delete(dailySubject)
                 }
-
                 try? moc.save()
             }
         }
@@ -151,7 +128,6 @@ struct TodayView: View {
         }
     }
 
-    
     private static func todayPredicate() -> NSPredicate {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -162,65 +138,58 @@ struct TodayView: View {
             NSPredicate(format: "date < %@ AND isCompleted == %@", argumentArray: [today, NSNumber(value: false)])
         ])
     }
-    private var groupedDailySubjects: [String: [DailySubjects]] {
-           Dictionary(grouping: dailySubjects, by: { $0.category ?? "" })
-       }
 
-    
+    private var groupedDailySubjects: [String: [DailySubjects]] {
+        Dictionary(grouping: dailySubjects, by: { $0.category ?? "" })
+    }
+
     private static let lastReselectKey = "LastReselectDate"
 
-       private func checkForWeeklyReset() {
-           let calendar = Calendar.current
-           let today = calendar.startOfDay(for: Date())
+    private func checkForWeeklyReset() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
 
-           if calendar.component(.weekday, from: Date()) == 2 { // Checks if today is Monday
-               // Check if the user has already reselected subjects this week
-               if let lastReselectDate = UserDefaults.standard.value(forKey: TodayView.lastReselectKey) as? Date {
-                   // If the last reselect was more than a week ago, show the ReselectSubjectsView
-                   if calendar.dateComponents([.weekOfYear], from: lastReselectDate, to: today).weekOfYear ?? 0 >= 1 {
-                       showReselectSubjectsPopup = true
-                       // Update the last reselect date to the current date
-                       UserDefaults.standard.set(today, forKey: TodayView.lastReselectKey)
-                   }
-               } else {
-                   // If there is no stored last reselect date, show the ReselectSubjectsView
-                   showReselectSubjectsPopup = true
-                   // Save the current date as the last reselect date
-                   UserDefaults.standard.set(today, forKey: TodayView.lastReselectKey)
-               }
-           }
-       }
+        if calendar.component(.weekday, from: Date()) == 2 {
+            if let lastReselectDate = UserDefaults.standard.value(forKey: TodayView.lastReselectKey) as? Date {
+                if calendar.dateComponents([.weekOfYear], from: lastReselectDate, to: today).weekOfYear ?? 0 >= 1 {
+                    showReselectSubjectsPopup = true
+                    UserDefaults.standard.set(today, forKey: TodayView.lastReselectKey)
+                }
+            } else {
+                showReselectSubjectsPopup = true
+                UserDefaults.standard.set(today, forKey: TodayView.lastReselectKey)
+            }
+        }
+    }
+
     private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String? = nil, isCompleted: Bool) {
         moc.performAndWait {
             withAnimation {
-                // Update the completed topics array based on user interaction
                 var completedTopics = dailySubject.topicsCompleted as? [String] ?? []
                 if isCompleted {
                     completedTopics.append(topic ?? "")
                 } else {
                     completedTopics.removeAll { $0 == topic }
                 }
-
                 dailySubject.topicsCompleted = completedTopics as NSObject
-
-                // Check if all topics are completed, then set isCompleted to true
+                
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
-                
+
                 if isCompleted {
-                              moc.delete(dailySubject)
-                          }
+                    moc.delete(dailySubject)
+                }
                 try? moc.save()
             }
         }
     }
+
     private func deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: NSManagedObjectContext) {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let weekday = calendar.component(.weekday, from: today)
-        let endOfWeekDay = 1 // Set to 1 for Sunday, 2 for Monday, etc., according to your week start day
+        let endOfWeekDay = 1
         
-        // Check if today is the end of the week day
         guard weekday == endOfWeekDay else { return }
         
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
@@ -236,8 +205,6 @@ struct TodayView: View {
             print("Error deleting completed subjects: \(error), \(error.userInfo)")
         }
     }
-    
-    
 }
 
 struct CheckboxView: View {
@@ -250,7 +217,6 @@ struct CheckboxView: View {
             .frame(width: 24, height: 24)
             .foregroundColor(isChecked ? .blue : .gray)
             .onTapGesture {
-            
                 self.isChecked.toggle()
                 self.onChanged(self.isChecked)
             }
@@ -279,21 +245,18 @@ struct ReselectSubjectsView: View {
                     }
                 }
             }
-            .navigationTitle("Reselect Days")
-            .navigationBarItems(trailing: Button("Done") {
+            .navigationTitle(LocalizedStringKey("reselect_days"))
+            .navigationBarItems(trailing: Button(LocalizedStringKey("done")) {
                 isPresented = false
             })
         }
     }
 }
+
 private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], moc: NSManagedObjectContext) {
-    // Assuming 'category' is accessed through a relationship or another property in Subjects
-    
-    
     let calendar = Calendar.current
     _ = calendar.startOfDay(for: Date())
     
-    // Fetch existing DailySubjects for the subject
     let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
     fetchRequest.predicate = NSPredicate(format: "subjectName == %@", subject.name ?? "")
     
@@ -302,24 +265,18 @@ private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], 
         
         for day in newDays {
             if let nextDate = getNextDate(for: day) {
-                // Check if there is already a DailySubject for the selected day
                 if let dailySubject = existingDailySubjects.first(where: { $0.date == nextDate }) {
-                    // Update the existing DailySubject
-                    dailySubject.isCompleted = false // Reset completion status for the new day
-                    // You might want to update other properties as needed
+                    dailySubject.isCompleted = false
                 } else {
-                    // Create a new DailySubject for the selected day
                     let dailySubject = DailySubjects(context: moc)
                     dailySubject.subjectName = subject.name
                     dailySubject.date = nextDate
                     dailySubject.isCompleted = false
-                    dailySubject.category = "Class" // Set the category accordingly
-                    // Set other properties as needed
+                    dailySubject.category = "Class"
                 }
             }
         }
         
-        // Delete DailySubjects for days that are no longer selected
         let daysToRemove = existingDailySubjects.filter { dailySubject in
             !newDays.contains(Weekday(rawValue: dailySubject.date?.weekdayString ?? "") ?? .monday)
         }
@@ -335,14 +292,11 @@ private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], 
     }
 }
 
-
-
-private func getNextDate(for day: Weekday) -> Date?  {
+private func getNextDate(for day: Weekday) -> Date? {
     let today = Date()
     var dateComponent = DateComponents()
     let calendar = Calendar.current
     
-    // Find the next date for the given day
     for i in 0..<7 {
         dateComponent.day = i
         if let nextDate = calendar.date(byAdding: dateComponent, to: today),
@@ -360,7 +314,6 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
-
 
 enum Day: String, CaseIterable, Hashable {
     case sunday = "Sunday"
@@ -397,4 +350,3 @@ struct DayPicker: View {
         }
     }
 }
-

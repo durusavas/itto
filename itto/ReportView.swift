@@ -141,7 +141,7 @@ struct ReportView: View {
         let endString = dateFormatter.string(from: endOfWeek)
 
         if weekOffset == 0 {
-            return "This week"
+            return NSLocalizedString("this_week", comment: "This week")
         } else {
             return "\(startString)-\(endString)"
         }

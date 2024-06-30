@@ -4,11 +4,11 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Add Subject"
+        "key": "add_subject"
       },
       {
         "comment": "",
-        "key": "Choose the days you have this class in"
+        "key": "choose_days"
       },
       {
         "comment": "",
@@ -16,11 +16,7 @@
       },
       {
         "comment": "",
-        "key": "%@"
-      },
-      {
-        "comment": "",
-        "key": "Project Name"
+        "key": "project_name"
       },
       {
         "comment": "",
@@ -28,11 +24,11 @@
       },
       {
         "comment": "",
-        "key": "Calculus"
+        "key": "class_name"
       },
       {
         "comment": "",
-        "key": "Exam name"
+        "key": "exam_name"
       },
       {
         "comment": "",
@@ -40,7 +36,7 @@
       },
       {
         "comment": "",
-        "key": "Topics for this exam:"
+        "key": "topics_for_exam"
       },
       {
         "comment": "",
@@ -48,19 +44,19 @@
       },
       {
         "comment": "",
-        "key": "Add Topic"
+        "key": "add_topic"
       },
       {
         "comment": "",
-        "key": "Save"
+        "key": "save"
       },
       {
         "comment": "",
-        "key": "Error"
+        "key": "error"
       },
       {
         "comment": "",
-        "key": "OK"
+        "key": "ok"
       }
     ]
   },
