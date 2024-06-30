@@ -2,7 +2,7 @@
 //  Projects+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 07/03/2024.
+//  Created by Duru SAVAŞ on 30/06/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -18,7 +18,6 @@ extension Projects {
     }
 
     @NSManaged public var color: String?
-    @NSManaged public var desc: NSObject?
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
 

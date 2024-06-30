@@ -98,7 +98,7 @@ struct ContentView: View {
                 if(!timerStarted){
                     HStack{
                         Picker("Subject", selection: $chosenSubject) {
-                            Text("None").tag(nil as String?) // Handling nil
+                            Text("Choose").tag(nil as String?) // Handling nil
                             ForEach(filteredSubjects(), id: \.self) { name in
                                 Text(name).tag(name as String?) // Ensure tags match the type of chosenSubject
                             }
@@ -108,62 +108,61 @@ struct ContentView: View {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
                         }
-                        Button(action: {
-                            showAddSubjectsView = true
-                        }) {
-                            HStack {
-                                Text("Add Subject")
-                                Image(systemName: "plus")
-                            }
-                        }
-                        .padding()
+                      
                         
                     } .padding()
                 }
                 
-                VStack{
+                HStack{
                     if timerIsPaused && timerStarted {
-                        Button("Resume Timer") {
+                        Button(action: {
                             resumeTimer()
+                        }) {
+                            Image(systemName: "play.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(100)
                         }
-                        .padding()
-                        .background(.gray.opacity(0.1))
-                        .cornerRadius(15)
                         
                     }
                     
                     if(!timerIsPaused){
-                        Button("Pause Timer"){
-                            pauseTimer()
-                        }
-                        .padding()
-                        
-                        .background(.gray.opacity(0.1))
-                        .cornerRadius(15)
+                        Button(action: {
+                                pauseTimer()
+                            }) {
+                                Image(systemName: "pause.fill")
+                                    .font(.largeTitle)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(100)
+                            }
                     }
                     
                     if timerIsPaused && !timerStarted {
-                        Button("Start Timer") {
+                        Button(action: {
                             startTimer()
-                        }     .foregroundColor(.blue)
-                            .padding()
-                            .font(.largeTitle)
-                            .background(.gray.opacity(0.1))
-                            .cornerRadius(10)
-                        
-                        
-                    } else {
-                        Button("Stop Timer") {
-                            stopTimer()
-                            
-                            
+                        }) {
+                            Image(systemName: "play.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(100)
                         }
-                        .foregroundColor(.blue)
-                        .padding()
-                        .font(.title2)
-                        .background(.gray.opacity(0.1))
-                        .cornerRadius(10)
-                        .padding()
+                    } else {
+                        Button(action: {
+                                stopTimer()
+                            }) {
+                                Image(systemName: "stop.circle.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.blue)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(100)
+                                    .padding()
+                            }
                     }
                 }
             }
@@ -474,9 +473,10 @@ struct CircularProgressView<Content: View>: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(lineWidth: 25)
+                .stroke(lineWidth: 30)
                 .opacity(0.1)
                 .foregroundColor(Color.gray)
+                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 2)
             
             Circle()
                 .trim(from: 0.0, to: progress)

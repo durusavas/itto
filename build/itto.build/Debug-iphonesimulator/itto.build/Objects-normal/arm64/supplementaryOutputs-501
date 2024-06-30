@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/itto/MainView.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.dia"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.swiftdeps"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.o"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.swiftconstvalues"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.d"
+"/Users/durusavas/Desktop/itto/itto/DataController.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.d"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.swiftdeps"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.o"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.swiftconstvalues"
+"/Users/durusavas/Desktop/itto/itto/SplashScreenView.swift":
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.o"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.d"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.dia"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.swiftdeps"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.swiftconstvalues"

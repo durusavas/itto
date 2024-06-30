@@ -4,10 +4,6 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "%lld / %lld"
-      },
-      {
-        "comment": "",
         "key": "Sets"
       },
       {
@@ -32,27 +28,7 @@
       },
       {
         "comment": "",
-        "key": "None"
-      },
-      {
-        "comment": "",
-        "key": "Add Subject"
-      },
-      {
-        "comment": "",
-        "key": "Resume Timer"
-      },
-      {
-        "comment": "",
-        "key": "Pause Timer"
-      },
-      {
-        "comment": "",
-        "key": "Start Timer"
-      },
-      {
-        "comment": "",
-        "key": "Stop Timer"
+        "key": "Choose"
       },
       {
         "comment": "",
@@ -73,6 +49,10 @@
       {
         "comment": "",
         "key": "Select Topic"
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld"
       }
     ]
   },
