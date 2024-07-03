@@ -12,45 +12,57 @@ struct TodayView: View {
     @State private var showReselectSubjectsPopup = false
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
-
+    
     init() {
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \DailySubjects.date, ascending: true)]
         fetchRequest.predicate = TodayView.todayPredicate()
         _dailySubjects = FetchRequest<DailySubjects>(fetchRequest: fetchRequest)
     }
-
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                List {
-                    ForEach(groupedDailySubjects.map { ($0.key, $0.value) }, id: \.0) { category, subjects in
-                        Section(header: Text(category)) {
-                            ForEach(subjects, id: \.self) { dailySubject in
-                                switch category {
-                                case "Exam":
-                                    examSection(dailySubject: dailySubject)
-                                case "Project":
-                                    projectSection(dailySubject: dailySubject)
-                                default:
-                                    classSection(dailySubject: dailySubject)
+            ZStack {
+                Color(red: 1/255, green: 28/255, blue: 40/255)
+                    .ignoresSafeArea()
+                
+                VStack {
+                    List {
+                        ForEach(groupedDailySubjects.map { ($0.key, $0.value) }, id: \.0) { category, subjects in
+                            Section(header: Text(category)
+                                .foregroundColor(Color.accentColor)) {
+                                ForEach(subjects, id: \.self) { dailySubject in
+                                    switch category {
+                                    case "Exam":
+                                        examSection(dailySubject: dailySubject)
+                                    case "Project":
+                                        projectSection(dailySubject: dailySubject)
+                                    default:
+                                        classSection(dailySubject: dailySubject)
+                                    }
+                                    
                                 }
                             }
+                            
+                                                       .listRowBackground(Color(red: 1/255, green: 28/255, blue: 40/255)) // Set background for sections
+                                                   
                         }
                     }
+                    .listStyle(PlainListStyle()) // Use PlainListStyle to avoid grouped background
+                  
                 }
                 .navigationTitle(LocalizedStringKey("today_view_title"))
                 .onAppear {
                     checkForWeeklyReset()
                     deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: moc)
                 }
-            }
-            .sheet(isPresented: $showReselectSubjectsPopup) {
-                ReselectSubjectsView(isPresented: $showReselectSubjectsPopup)
+                .sheet(isPresented: $showReselectSubjectsPopup) {
+                    ReselectSubjectsView(isPresented: $showReselectSubjectsPopup)
+                }
             }
         }
     }
-
+    
     private func examSection(dailySubject: DailySubjects) -> some View {
         Section {
             Text(dailySubject.subjectName ?? "")
@@ -66,12 +78,12 @@ struct TodayView: View {
             }
         }
     }
-
+    
     private func isTopicCompleted(dailySubject: DailySubjects, topic: String) -> Bool {
         guard let completedTopics = dailySubject.topicsCompleted as? [String] else { return false }
         return completedTopics.contains(topic)
     }
-
+    
     private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String, isCompleted: Bool) {
         moc.performAndWait {
             withAnimation {
@@ -82,10 +94,10 @@ struct TodayView: View {
                     completedTopics.removeAll { $0 == topic }
                 }
                 dailySubject.topicsCompleted = completedTopics as NSObject
-
+                
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
-
+                
                 if allTopicsCompleted {
                     moc.delete(dailySubject)
                 }
@@ -93,7 +105,7 @@ struct TodayView: View {
             }
         }
     }
-
+    
     private func projectSection(dailySubject: DailySubjects) -> some View {
         Section {
             NavigationLink(
@@ -110,7 +122,7 @@ struct TodayView: View {
             )
         }
     }
-
+    
     private func classSection(dailySubject: DailySubjects) -> some View {
         Section {
             NavigationLink(
@@ -127,7 +139,7 @@ struct TodayView: View {
             )
         }
     }
-
+    
     private static func todayPredicate() -> NSPredicate {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -138,17 +150,17 @@ struct TodayView: View {
             NSPredicate(format: "date < %@ AND isCompleted == %@", argumentArray: [today, NSNumber(value: false)])
         ])
     }
-
+    
     private var groupedDailySubjects: [String: [DailySubjects]] {
         Dictionary(grouping: dailySubjects, by: { $0.category ?? "" })
     }
-
+    
     private static let lastReselectKey = "LastReselectDate"
-
+    
     private func checkForWeeklyReset() {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-
+        
         if calendar.component(.weekday, from: Date()) == 2 {
             if let lastReselectDate = UserDefaults.standard.value(forKey: TodayView.lastReselectKey) as? Date {
                 if calendar.dateComponents([.weekOfYear], from: lastReselectDate, to: today).weekOfYear ?? 0 >= 1 {
@@ -161,7 +173,7 @@ struct TodayView: View {
             }
         }
     }
-
+    
     private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String? = nil, isCompleted: Bool) {
         moc.performAndWait {
             withAnimation {
@@ -175,7 +187,7 @@ struct TodayView: View {
                 
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
-
+                
                 if isCompleted {
                     moc.delete(dailySubject)
                 }
@@ -183,7 +195,7 @@ struct TodayView: View {
             }
         }
     }
-
+    
     private func deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: NSManagedObjectContext) {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -230,6 +242,10 @@ struct ReselectSubjectsView: View {
     
     var body: some View {
         NavigationView {
+            ZStack {
+                           Color(red: 0/255, green: 50/255, blue: 108/255)
+                               .ignoresSafeArea()
+                           
             List {
                 ForEach(subjects) { subject in
                     Section(header: Text(subject.name ?? "Unknown")) {
@@ -250,6 +266,7 @@ struct ReselectSubjectsView: View {
                 isPresented = false
             })
         }
+    }
     }
 }
 

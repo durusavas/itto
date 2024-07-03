@@ -18,7 +18,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		7XbNVuwiEo3DLkms/hdQW7KhFQM=
+		2OQBAPsXmvid6ypECaR2Xt/tQg0=
 		</data>
 		<key>Itto.momd/Itto.mom</key>
 		<data>
@@ -32,10 +32,41 @@
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
 		</data>
+		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<data>
+		bqrzUbb1ubFUNrR0ww0wIUdlkDA=
+		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
 		f38SXHne9FIo9miMz1EA9XaCjkc=
 		</data>
+		<key>en.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			sgMzGjVBdf1FJZfmHGCJ91xY3Aw=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>fr.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			wa/AR/Zly2kQLHCjFLnImUC7F9E=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>tr.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			qUAbs462cHXOaio3BvUuWVYRaZE=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -74,12 +105,46 @@
 			XYSacxECKZs4UVI/tqaKNyZBdt3Yu7WsM8v2F6/6jLI=
 			</data>
 		</dict>
+		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ylBNQS5o3rSDMoMLi9uc36DBXOjwdHOQ0X79ysl5T+c=
+			</data>
+		</dict>
 		<key>embedded.mobileprovision</key>
 		<dict>
 			<key>hash2</key>
 			<data>
 			AHWU6qoOnNvx7QO4Jm/Vi8tEOlbBU2AOublgUByw+BQ=
 			</data>
+		</dict>
+		<key>en.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			pCxJcstZHh0i8152ejsei0MwuBD3/aS90MldSJ9uNGg=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>fr.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			qWIAFarjQhJ5cbulxO1r9FhtNKpFc/s4K+dPtgPW+EQ=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>tr.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			0qXa2FQOFZbM8e3sr+qTnJ3iXw1bhzcCppaRd+NfJ6c=
+			</data>
+			<key>optional</key>
+			<true/>
 		</dict>
 	</dict>
 	<key>rules</key>

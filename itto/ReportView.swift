@@ -103,6 +103,10 @@ struct ReportView: View {
 
     var body: some View {
         NavigationView {
+            ZStack{
+                Color(red: 1/255, green: 28/255, blue: 40/255)// Example values, adjust as needed
+                               .ignoresSafeArea()
+
             VStack {
                 WeeklyChartView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
                 DailyListView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
@@ -122,6 +126,7 @@ struct ReportView: View {
                     .disabled(weekOffset == 0)
                 }
             }
+        }
         }
         .onAppear {
             // Ensure data is properly fetched and initialized
@@ -194,6 +199,7 @@ struct DailyListView: View {
     @State private var currentDayOffset = 0
 
     var body: some View {
+        
         VStack {
             HStack {
                 Button(action: { self.currentDayOffset -= 1 }) {
@@ -240,6 +246,7 @@ struct DailyListView: View {
             currentDayOffset = daysOffset
         }
     }
+    
 
     var combinedReports: [CombinedReport] {
         var combinedList: [CombinedReport] = []

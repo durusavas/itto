@@ -21,7 +21,7 @@ class DataController: ObservableObject {
             self.deleteAllData(entity: "DailySubjects")
             self.deleteAllData(entity: "Exams")
             self.deleteAllData(entity: "Projects")
-           //self.populateDemoData()
+           self.populateDemoData()
         }
     }
     
@@ -60,7 +60,7 @@ class DataController: ObservableObject {
         
         return nil
     }
-    /*
+   
     func populateDemoData() {
         let context = container.viewContext
         // Check if the data already exists to avoid duplicates
@@ -146,7 +146,13 @@ class DataController: ObservableObject {
             // Get the start date of the current week
                    guard let currentWeekStart = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else {
                        fatalError("Failed to calculate the start date of the current week.")
+                       
                    }
+            
+            guard let startDate = Calendar.current.date(byAdding: .day, value: 1, to: currentWeekStart) else {
+                            fatalError("Failed to calculate the start date of the past week.")
+                        }
+                        
                    
                    // Adjust to the previous week's Monday
             guard Calendar.current.date(byAdding: .day, value: 1, to: currentWeekStart) != nil else {
@@ -186,5 +192,5 @@ class DataController: ObservableObject {
             }
 
     }
-*/
+
 }

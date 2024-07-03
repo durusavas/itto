@@ -20,7 +20,7 @@
       },
       {
         "comment": "",
-        "key": "Interval Time:"
+        "key": "interval_time"
       },
       {
         "comment": "",
@@ -28,31 +28,11 @@
       },
       {
         "comment": "",
-        "key": "None"
+        "key": "Choose"
       },
       {
         "comment": "",
-        "key": "Add Subject"
-      },
-      {
-        "comment": "",
-        "key": "Resume Timer"
-      },
-      {
-        "comment": "",
-        "key": "Pause Timer"
-      },
-      {
-        "comment": "",
-        "key": "Start Timer"
-      },
-      {
-        "comment": "",
-        "key": "Stop Timer"
-      },
-      {
-        "comment": "",
-        "key": "What have you done? "
+        "key": "What?"
       },
       {
         "comment": "",
@@ -68,7 +48,7 @@
       },
       {
         "comment": "",
-        "key": "Select Topic"
+        "key": "select_topic"
       },
       {
         "comment": "",

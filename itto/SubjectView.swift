@@ -5,7 +5,6 @@
 //  Created by Duru SAVAŞ on 17/11/2023.
 //
 
-
 import SwiftUI
 import CoreData
 
@@ -19,69 +18,79 @@ struct SubjectView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                List {
-                    // "My Subjects" Section
-                    if !subjects.isEmpty {
-                        Section(header: Text(LocalizedStringKey("my_classes"))) {
-                            ForEach(subjects, id: \.self) { item in
-                                HStack {
-                                    Circle()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(item.color?.toColor() ?? Color.white)
-                                    Text(item.name ?? "Unknown")
-                                }
-                            }
-                            .onDelete(perform: deleteSubject)
-                        }
-                    }
-                    // "My Exams" Section
-                    if !exams.isEmpty {
-                        Section(header: Text(LocalizedStringKey("my_exams"))) {
-                            ForEach(exams, id: \.self) { exam in
-                                NavigationLink(
-                                    destination: ExamDetailsView(exam: exam),
-                                    label: {
-                                        HStack {
-                                            Circle()
-                                                .frame(width: 20, height: 20)
-                                                .foregroundColor(exam.color?.toColor() ?? Color.white)
-                                            Text(exam.examName ?? "Unknown")
-                                        }
+            ZStack {
+                Color(red: 1/255, green: 28/255, blue: 40/255)
+                    .ignoresSafeArea()
+                
+                VStack {
+                    List {
+                        // "My Subjects" Section
+                        if !subjects.isEmpty {
+                            Section(header: Text(LocalizedStringKey("my_classes"))) {
+                                ForEach(subjects, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 20, height: 20)
+                                            .foregroundColor(item.color?.toColor() ?? Color.white)
+                                        Text(item.name ?? "Unknown")
                                     }
-                                )
-                            }
-                            .onDelete(perform: deleteSubject)
-                        }
-                    }
-                    // "My Projects" Section
-                    if !projects.isEmpty {
-                        Section(header: Text(LocalizedStringKey("my_projects"))) {
-                            ForEach(projects, id: \.self) { item in
-                                HStack {
-                                    Circle()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(item.color?.toColor() ?? Color.white)
-                                    Text(item.name ?? "Unknown")
                                 }
+                                .onDelete(perform: deleteSubject)
                             }
-                            .onDelete(perform: deleteSubject)
+                        }
+                        // "My Exams" Section
+                        if !exams.isEmpty {
+                            Section(header: Text(LocalizedStringKey("my_exams"))) {
+                                ForEach(exams, id: \.self) { exam in
+                                    NavigationLink(
+                                        destination: ExamDetailsView(exam: exam),
+                                        label: {
+                                            HStack {
+                                                Circle()
+                                                    .frame(width: 20, height: 20)
+                                                    .foregroundColor(exam.color?.toColor() ?? Color.white)
+                                                Text(exam.examName ?? "Unknown")
+                                            }
+                                        }
+                                    )
+                                }
+                                .onDelete(perform: deleteSubject)
+                            }
+                        }
+                        // "My Projects" Section
+                        if !projects.isEmpty {
+                            Section(header: Text(LocalizedStringKey("my_projects"))) {
+                                ForEach(projects, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 20, height: 20)
+                                            .foregroundColor(item.color?.toColor() ?? Color.white)
+                                        Text(item.name ?? "Unknown")
+                                    }
+                                }
+                                .onDelete(perform: deleteSubject)
+                            }
+                            .listRowBackground(Color(red: 1/255, green: 28/255, blue: 40/255))
+                        }
+                        
+                    }
+                    
+   
+                  
+                }
+                .navigationTitle(LocalizedStringKey("subjects"))
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showAddScreen.toggle()
+                        } label: {
+                            Label(LocalizedStringKey("add_new"), systemImage: "plus")
                         }
                     }
                 }
-            }
-            .navigationTitle(LocalizedStringKey("subjects"))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showAddScreen.toggle()
-                    } label: {
-                        Label(LocalizedStringKey("add_new"), systemImage: "plus")
-                    }
+                .sheet(isPresented: $showAddScreen) {
+                    AddSubjectView()
                 }
-            }
-            .sheet(isPresented: $showAddScreen) {
-                AddSubjectView()
             }
         }
     }

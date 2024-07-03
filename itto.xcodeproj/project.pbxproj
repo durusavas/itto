@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,10 @@
 		B9474C242B8389DB00F955A3 /* ExamDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9474C232B8389DB00F955A3 /* ExamDetailsView.swift */; };
 		B96CEC1A2B72AD0B0022E488 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96CEC192B72AD0B0022E488 /* TodayView.swift */; };
 		B9BD2AF22C319E18007BD6B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9BD2AF02C319E18007BD6B3 /* Localizable.strings */; };
+		B9BD2AF62C31D7DF007BD6B3 /* Screenshot 2024-06-30 at 21.13.43.png in Resources */ = {isa = PBXBuildFile; fileRef = B9BD2AF52C31D7DF007BD6B3 /* Screenshot 2024-06-30 at 21.13.43.png */; };
+		B9BD2AFB2C3434F3007BD6B3 /* OldStandardTT-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9BD2AF82C3434F3007BD6B3 /* OldStandardTT-Regular.ttf */; };
+		B9BD2AFC2C3434F3007BD6B3 /* OldStandardTT-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9BD2AF92C3434F3007BD6B3 /* OldStandardTT-Bold.ttf */; };
+		B9BD2AFD2C3434F3007BD6B3 /* OldStandardTT-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9BD2AFA2C3434F3007BD6B3 /* OldStandardTT-Italic.ttf */; };
 		B9CD7D922B72A9A300705945 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CD7D912B72A9A300705945 /* SplashScreenView.swift */; };
 		B9EA93672B0AAC6F00083807 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA93662B0AAC6F00083807 /* ReportView.swift */; };
 		B9EA93692B0AB3FC00083807 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EA93682B0AB3FC00083807 /* MainView.swift */; };
@@ -38,6 +42,11 @@
 		B9BD2AF12C319E18007BD6B3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B9BD2AF32C319E4E007BD6B3 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B9BD2AF42C319E4F007BD6B3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B9BD2AF52C31D7DF007BD6B3 /* Screenshot 2024-06-30 at 21.13.43.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screenshot 2024-06-30 at 21.13.43.png"; sourceTree = "<group>"; };
+		B9BD2AF82C3434F3007BD6B3 /* OldStandardTT-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OldStandardTT-Regular.ttf"; sourceTree = "<group>"; };
+		B9BD2AF92C3434F3007BD6B3 /* OldStandardTT-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OldStandardTT-Bold.ttf"; sourceTree = "<group>"; };
+		B9BD2AFA2C3434F3007BD6B3 /* OldStandardTT-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OldStandardTT-Italic.ttf"; sourceTree = "<group>"; };
+		B9BD2AFE2C343BA4007BD6B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B9CD7D912B72A9A300705945 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		B9EA93662B0AAC6F00083807 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		B9EA93682B0AB3FC00083807 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -58,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				B91CA69F2B07AB040019C898 /* itto */,
+				B9BD2AF52C31D7DF007BD6B3 /* Screenshot 2024-06-30 at 21.13.43.png */,
 				B91CA69E2B07AB040019C898 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,6 +83,7 @@
 		B91CA69F2B07AB040019C898 /* itto */ = {
 			isa = PBXGroup;
 			children = (
+				B9BD2AFE2C343BA4007BD6B3 /* Info.plist */,
 				B91CA6A02B07AB040019C898 /* ittoApp.swift */,
 				B91CA6A22B07AB040019C898 /* ContentView.swift */,
 				B9EA93682B0AB3FC00083807 /* MainView.swift */,
@@ -102,9 +113,20 @@
 		B9BD2AEF2C319DF9007BD6B3 /* Ressources */ = {
 			isa = PBXGroup;
 			children = (
+				B9BD2AF72C3434CA007BD6B3 /* Font */,
 				B9BD2AF02C319E18007BD6B3 /* Localizable.strings */,
 			);
 			path = Ressources;
+			sourceTree = "<group>";
+		};
+		B9BD2AF72C3434CA007BD6B3 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				B9BD2AF92C3434F3007BD6B3 /* OldStandardTT-Bold.ttf */,
+				B9BD2AFA2C3434F3007BD6B3 /* OldStandardTT-Italic.ttf */,
+				B9BD2AF82C3434F3007BD6B3 /* OldStandardTT-Regular.ttf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,7 +167,7 @@
 				};
 			};
 			buildConfigurationList = B91CA6982B07AB040019C898 /* Build configuration list for PBXProject "itto" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -172,7 +194,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9BD2AF62C31D7DF007BD6B3 /* Screenshot 2024-06-30 at 21.13.43.png in Resources */,
 				B91CA6A82B07AB060019C898 /* Preview Assets.xcassets in Resources */,
+				B9BD2AFC2C3434F3007BD6B3 /* OldStandardTT-Bold.ttf in Resources */,
+				B9BD2AFB2C3434F3007BD6B3 /* OldStandardTT-Regular.ttf in Resources */,
+				B9BD2AFD2C3434F3007BD6B3 /* OldStandardTT-Italic.ttf in Resources */,
 				B9BD2AF22C319E18007BD6B3 /* Localizable.strings in Resources */,
 				B91CA6A52B07AB060019C898 /* Assets.xcassets in Resources */,
 			);
@@ -220,6 +246,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor1;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -283,6 +310,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor1;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -338,13 +366,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor1;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
 				DEVELOPMENT_TEAM = JR7NT4WF82;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = itto/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -368,13 +397,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor1;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"itto/Preview Content\"";
 				DEVELOPMENT_TEAM = JR7NT4WF82;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = itto/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

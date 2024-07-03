@@ -4,23 +4,23 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Subjects"
+        "key": "subjects"
       },
       {
         "comment": "",
-        "key": "My Classes"
+        "key": "my_classes"
       },
       {
         "comment": "",
-        "key": "My Exams"
+        "key": "my_exams"
       },
       {
         "comment": "",
-        "key": "My Projects"
+        "key": "my_projects"
       },
       {
         "comment": "",
-        "key": "Add new"
+        "key": "add_new"
       }
     ]
   },

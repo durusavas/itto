@@ -60,6 +60,10 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack{
+            ZStack{
+                Color(red: 1/255, green: 28/255, blue: 40/255)
+                               .ignoresSafeArea()
+
             VStack {
                 if(!timerStarted){
                     HStack{
@@ -108,7 +112,7 @@ struct ContentView: View {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
                         }
-                      
+                        
                         
                     } .padding()
                 }
@@ -130,14 +134,14 @@ struct ContentView: View {
                     
                     if(!timerIsPaused){
                         Button(action: {
-                                pauseTimer()
-                            }) {
-                                Image(systemName: "pause.fill")
-                                    .font(.largeTitle)
-                                    .padding()
-                                    .background(Color.gray.opacity(0.1))
-                                    .cornerRadius(100)
-                            }
+                            pauseTimer()
+                        }) {
+                            Image(systemName: "pause.fill")
+                                .font(.largeTitle)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(100)
+                        }
                     }
                     
                     if timerIsPaused && !timerStarted {
@@ -153,16 +157,16 @@ struct ContentView: View {
                         }
                     } else {
                         Button(action: {
-                                stopTimer()
-                            }) {
-                                Image(systemName: "stop.circle.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.blue)
-                                    .padding()
-                                    .background(Color.gray.opacity(0.1))
-                                    .cornerRadius(100)
-                                    .padding()
-                            }
+                            stopTimer()
+                        }) {
+                            Image(systemName: "stop.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(100)
+                                .padding()
+                        }
                     }
                 }
             }
@@ -171,6 +175,7 @@ struct ContentView: View {
                     self.chosenSubject = firstSubject
                 }
             }
+        }
         }
         .animation(.easeInOut, value: timerStarted)
         

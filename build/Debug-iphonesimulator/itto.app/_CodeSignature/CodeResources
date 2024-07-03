@@ -14,11 +14,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		ZQVfF5hBvOP9xA8IvtiZcHHZpZY=
+		XQU++6kPZbe4SRm950uIv1f/MG4=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		12diC72XKRqXY/EivOsq/8gXchg=
+		YCWx/KT/UOK+tvZzvQVSQzrFntg=
 		</data>
 		<key>Itto.momd/Itto.mom</key>
 		<data>
@@ -28,9 +28,25 @@
 		<data>
 		udYul+WLwOaouEtuV9+P6lngseE=
 		</data>
+		<key>OldStandardTT-Bold.ttf</key>
+		<data>
+		qZGrXxiZVD0pdLQjesjuK7e1AKQ=
+		</data>
+		<key>OldStandardTT-Italic.ttf</key>
+		<data>
+		MBJjkw9K7siixgydZgFOOeVBv9w=
+		</data>
+		<key>OldStandardTT-Regular.ttf</key>
+		<data>
+		K/DsGCMGbeJwH1FccZ14wlc8K/0=
+		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
+		</data>
+		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<data>
+		bqrzUbb1ubFUNrR0ww0wIUdlkDA=
 		</data>
 		<key>en.lproj/Localizable.strings</key>
 		<dict>
@@ -80,7 +96,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8bnilLWnKlBUrixq17zA+8cznZ3qtvqpgyge2Bg3IfA=
+			b1Xqziwindwe2PjA8DPhKyxI2ypSzML6jbtcUYXofZc=
 			</data>
 		</dict>
 		<key>Itto.momd/Itto.mom</key>
@@ -95,6 +111,34 @@
 			<key>hash2</key>
 			<data>
 			XYSacxECKZs4UVI/tqaKNyZBdt3Yu7WsM8v2F6/6jLI=
+			</data>
+		</dict>
+		<key>OldStandardTT-Bold.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			h5vXtkGf1OODfiMCGrPH+tb+KGYOb4qL5j7PWNPF6dk=
+			</data>
+		</dict>
+		<key>OldStandardTT-Italic.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			AUQT8dgqwRRmC9kALI8dIw59qG/gm+VA+OAf+q8EZ2U=
+			</data>
+		</dict>
+		<key>OldStandardTT-Regular.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			AIDauOa3gYHkpv45lMbtNitMXyxuQ1H8GOTnzbw+Bnw=
+			</data>
+		</dict>
+		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ylBNQS5o3rSDMoMLi9uc36DBXOjwdHOQ0X79ysl5T+c=
 			</data>
 		</dict>
 		<key>en.lproj/Localizable.strings</key>

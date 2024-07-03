@@ -3,7 +3,18 @@
 <plist version="1.0">
 <dict>
 	<key>colors</key>
-	<array/>
+	<array>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/durusavas/Desktop/itto/itto/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameAccentColor1</string>
+			<key>relativePath</key>
+			<string>./AccentColor1.colorset</string>
+			<key>swiftSymbol</key>
+			<string>accentColor1</string>
+		</dict>
+	</array>
 	<key>images</key>
 	<array>
 		<dict>

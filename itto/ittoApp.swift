@@ -9,8 +9,10 @@ import SwiftUI
 
 @main
 struct ittoApp: App {
-  
-   // @StateObject private var dataController = DataController() // ben ekledim coredata için
+    init() {
+            UIView.appearance().overrideUserInterfaceStyle = .dark
+        
+        }
     
     var body: some Scene {
         WindowGroup {

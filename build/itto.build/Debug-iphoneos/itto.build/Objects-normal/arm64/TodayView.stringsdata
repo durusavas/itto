@@ -4,15 +4,15 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Tod(o)ay"
+        "key": "today_view_title"
       },
       {
         "comment": "",
-        "key": "Reselect Days"
+        "key": "reselect_days"
       },
       {
         "comment": "",
-        "key": "Done"
+        "key": "done"
       }
     ]
   },

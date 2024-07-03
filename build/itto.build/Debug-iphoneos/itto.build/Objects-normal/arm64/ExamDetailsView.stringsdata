@@ -4,11 +4,11 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "New Topic"
+        "key": "new_topic"
       },
       {
         "comment": "",
-        "key": "Save"
+        "key": "save"
       }
     ]
   },
