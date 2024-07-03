@@ -311,6 +311,7 @@ SWIFT_CLASS_NAMED("DailySubjects")
 
 @interface DailySubjects (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSString * _Nullable category;
+@property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, copy) NSDate * _Nullable date;
 @property (nonatomic) BOOL isCompleted;
 @property (nonatomic, copy) NSString * _Nullable subjectName;

@@ -15,7 +15,7 @@ struct SubjectView: View {
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
     @State private var showAddScreen = false
     @State private var selectedExam: Subjects?
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -29,11 +29,11 @@ struct SubjectView: View {
                             Section(header: Text(LocalizedStringKey("my_classes"))) {
                                 ForEach(subjects, id: \.self) { item in
                                     HStack {
-                                        Circle()
-                                            .frame(width: 20, height: 20)
-                                            .foregroundColor(item.color?.toColor() ?? Color.white)
+                                        GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
+                                                                                   .frame(width: 20, height: 20)
                                         Text(item.name ?? "Unknown")
                                     }
+                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
                                 }
                                 .onDelete(perform: deleteSubject)
                             }
@@ -46,13 +46,13 @@ struct SubjectView: View {
                                         destination: ExamDetailsView(exam: exam),
                                         label: {
                                             HStack {
-                                                Circle()
-                                                    .frame(width: 20, height: 20)
-                                                    .foregroundColor(exam.color?.toColor() ?? Color.white)
+                                                GradientCircleView(baseColor: exam.color?.toColor() ?? Color.white)
+                                                                                           .frame(width: 20, height: 20)
                                                 Text(exam.examName ?? "Unknown")
                                             }
                                         }
                                     )
+                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
                                 }
                                 .onDelete(perform: deleteSubject)
                             }
@@ -62,21 +62,21 @@ struct SubjectView: View {
                             Section(header: Text(LocalizedStringKey("my_projects"))) {
                                 ForEach(projects, id: \.self) { item in
                                     HStack {
-                                        Circle()
-                                            .frame(width: 20, height: 20)
-                                            .foregroundColor(item.color?.toColor() ?? Color.white)
+                                        GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
+                                                                                   .frame(width: 20, height: 20)
                                         Text(item.name ?? "Unknown")
                                     }
+                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255)) 
                                 }
                                 .onDelete(perform: deleteSubject)
                             }
-                            .listRowBackground(Color(red: 1/255, green: 28/255, blue: 40/255))
+                           
                         }
                         
                     }
                     
-   
-                  
+                    
+                    
                 }
                 .navigationTitle(LocalizedStringKey("subjects"))
                 .toolbar {
@@ -94,7 +94,7 @@ struct SubjectView: View {
             }
         }
     }
-
+    
     // Function to handle the deletion of subjects
     private func deleteSubject(at offsets: IndexSet) {
         for index in offsets {
@@ -109,3 +109,5 @@ struct SubjectView: View {
         }
     }
 }
+
+

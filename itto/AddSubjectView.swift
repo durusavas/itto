@@ -148,12 +148,14 @@ struct AddSubjectView: View {
             dailySubject.isCompleted = false
             dailySubject.category = chosenCategory
             dailySubject.topics = examSubjects as NSObject
+            dailySubject.color = colorString  // Set color
         } else if chosenCategory == "Project" {
             let dailySubject = DailySubjects(context: moc)
             dailySubject.subjectName = name
             dailySubject.date = Date()
             dailySubject.isCompleted = false
             dailySubject.category = chosenCategory
+            dailySubject.color = colorString  // Set color
         } else {
             for day in selectedWeekdays {
                 if let dateForDay = getNextDate(for: day) {
@@ -162,7 +164,7 @@ struct AddSubjectView: View {
                     dailySubject.date = dateForDay
                     dailySubject.isCompleted = false
                     dailySubject.category = chosenCategory
-                    dailySubject.topics = examSubjects as NSObject
+                    dailySubject.color = colorString  // Set color
                 }
             }
         }

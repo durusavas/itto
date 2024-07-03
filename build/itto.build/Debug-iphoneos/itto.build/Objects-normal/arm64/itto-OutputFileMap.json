@@ -165,6 +165,16 @@
     "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.swiftdeps",
     "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView~partial.swiftmodule"
   },
+  "/Users/durusavas/Desktop/itto/itto/GradientCircleView.swift" : {
+    "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.swiftconstvalues",
+    "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.d",
+    "diagnostics" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.dia",
+    "index-unit-output-path" : "/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.o",
+    "llvm-bc" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.bc",
+    "object" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.o",
+    "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.swiftdeps",
+    "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView~partial.swiftmodule"
+  },
   "/Users/durusavas/Desktop/itto/itto/ittoApp.swift" : {
     "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ittoApp.swiftconstvalues",
     "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ittoApp.d",

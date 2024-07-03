@@ -12,6 +12,7 @@ struct TodayView: View {
     @State private var showReselectSubjectsPopup = false
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
+   
     
     init() {
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
@@ -19,37 +20,37 @@ struct TodayView: View {
         fetchRequest.predicate = TodayView.todayPredicate()
         _dailySubjects = FetchRequest<DailySubjects>(fetchRequest: fetchRequest)
     }
+    private let categoryOrder = ["exam", "project", "class"]
     
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(red: 1/255, green: 28/255, blue: 40/255)
+                Color(red: 15/255, green: 20/255, blue: 33/255)
                     .ignoresSafeArea()
                 
                 VStack {
                     List {
-                        ForEach(groupedDailySubjects.map { ($0.key, $0.value) }, id: \.0) { category, subjects in
-                            Section(header: Text(category)
-                                .foregroundColor(Color.accentColor)) {
+                        ForEach(sortedGroupedDailySubjects(), id: \.0) { category, subjects in
+                            Section(header: Text(LocalizedStringKey(category))
+                                .foregroundColor(Color.accentColor1)) {
                                 ForEach(subjects, id: \.self) { dailySubject in
                                     switch category {
-                                    case "Exam":
+                                    case "exam":
                                         examSection(dailySubject: dailySubject)
-                                    case "Project":
+                                    case "project":
                                         projectSection(dailySubject: dailySubject)
                                     default:
                                         classSection(dailySubject: dailySubject)
                                     }
-                                    
                                 }
                             }
-                            
-                                                       .listRowBackground(Color(red: 1/255, green: 28/255, blue: 40/255)) // Set background for sections
-                                                   
+                            .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255)) // Set background for sections
                         }
+                        .background(Color(red: 15/255, green: 20/255, blue: 33/255)) // Ensure list background matches
+                        .scrollContentBackground(.hidden) // Hides default background of the list
                     }
-                    .listStyle(PlainListStyle()) // Use PlainListStyle to avoid grouped background
-                  
+
+
                 }
                 .navigationTitle(LocalizedStringKey("today_view_title"))
                 .onAppear {
@@ -62,14 +63,24 @@ struct TodayView: View {
             }
         }
     }
-    
+    private func sortedGroupedDailySubjects() -> [(String, [DailySubjects])] {
+        let groupedSubjects = groupedDailySubjects
+        return groupedSubjects.sorted {
+            guard let firstIndex = categoryOrder.firstIndex(of: $0.key.lowercased()),
+                  let secondIndex = categoryOrder.firstIndex(of: $1.key.lowercased()) else {
+                return false
+            }
+            return firstIndex < secondIndex
+        }
+    }
+
     private func examSection(dailySubject: DailySubjects) -> some View {
-        Section {
+        VStack(alignment: .leading) {
             Text(dailySubject.subjectName ?? "")
                 .font(.headline)
             ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
                 HStack {
-                    CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic)) { checked in
+                    CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
                         updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
                     }
                     Text(topic)
@@ -78,6 +89,8 @@ struct TodayView: View {
             }
         }
     }
+
+
     
     private func isTopicCompleted(dailySubject: DailySubjects, topic: String) -> Bool {
         guard let completedTopics = dailySubject.topicsCompleted as? [String] else { return false }
@@ -107,38 +120,26 @@ struct TodayView: View {
     }
     
     private func projectSection(dailySubject: DailySubjects) -> some View {
-        Section {
-            NavigationLink(
-                destination: ContentView(),
-                label: {
-                    HStack {
-                        CheckboxView(isChecked: dailySubject.isCompleted) { checked in
-                            updateCompletionStatus(for: dailySubject, isCompleted: checked)
-                        }
-                        Text(dailySubject.subjectName ?? "Unknown Subject")
-                            .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
-                    }
-                }
-            )
+        HStack {
+            CheckboxView(isChecked: dailySubject.isCompleted, color: dailySubject.color?.toColor() ?? .blue) { checked in
+                updateCompletionStatus(for: dailySubject, isCompleted: checked)
+            }
+            Text(dailySubject.subjectName ?? "Unknown Subject")
+                .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
         }
     }
+
     
     private func classSection(dailySubject: DailySubjects) -> some View {
-        Section {
-            NavigationLink(
-                destination: ContentView(),
-                label: {
-                    HStack {
-                        CheckboxView(isChecked: dailySubject.isCompleted) { checked in
-                            updateCompletionStatus(for: dailySubject, isCompleted: checked)
-                        }
-                        Text(dailySubject.subjectName ?? "Unknown Subject")
-                            .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
-                    }
-                }
-            )
+        HStack {
+            CheckboxView(isChecked: dailySubject.isCompleted, color: dailySubject.color?.toColor() ?? .blue) { checked in
+                updateCompletionStatus(for: dailySubject, isCompleted: checked)
+            }
+            Text(dailySubject.subjectName ?? "Unknown Subject")
+                .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
         }
     }
+
     
     private static func todayPredicate() -> NSPredicate {
         let calendar = Calendar.current
@@ -152,9 +153,9 @@ struct TodayView: View {
     }
     
     private var groupedDailySubjects: [String: [DailySubjects]] {
-        Dictionary(grouping: dailySubjects, by: { $0.category ?? "" })
+        Dictionary(grouping: dailySubjects, by: { $0.category?.lowercased() ?? "" })
     }
-    
+
     private static let lastReselectKey = "LastReselectDate"
     
     private func checkForWeeklyReset() {
@@ -221,19 +222,21 @@ struct TodayView: View {
 
 struct CheckboxView: View {
     @State var isChecked: Bool
+    let color: Color
     let onChanged: (Bool) -> Void
     
     var body: some View {
-        Image(systemName: isChecked ? "checkmark.square" : "square")
+        Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
             .resizable()
-            .frame(width: 24, height: 24)
-            .foregroundColor(isChecked ? .blue : .gray)
+            .frame(width: 20, height: 20)
+            .foregroundColor(color)
             .onTapGesture {
                 self.isChecked.toggle()
                 self.onChanged(self.isChecked)
             }
     }
 }
+
 
 struct ReselectSubjectsView: View {
     @Environment(\.managedObjectContext) private var moc

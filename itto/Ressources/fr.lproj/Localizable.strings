@@ -64,3 +64,6 @@
 "reselect_days" = "Réselectionner les jours";
 "done" = "Terminé";
 
+"exam" = "Examens";
+"project" = "Projets";
+"class" = "Courses";

@@ -61,7 +61,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             ZStack{
-                Color(red: 1/255, green: 28/255, blue: 40/255)
+                Color(red: 15/255, green: 20/255, blue: 33/255)
                                .ignoresSafeArea()
 
             VStack {
@@ -69,9 +69,12 @@ struct ContentView: View {
                     HStack{
                         VStack {
                             Text(LocalizedStringKey("Sets"))
+                                .foregroundColor(Color.accentColor1)
                             Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
                                 ForEach(sets, id: \.self) { number in
                                     Text("\(number)")
+                                        .foregroundColor(Color.accentColor1)
+                                    
                                 }
                             }
                             .pickerStyle(WheelPickerStyle())
@@ -80,9 +83,11 @@ struct ContentView: View {
                         }
                         VStack {
                             Text(LocalizedStringKey("Break"))
+                                .foregroundColor(Color.accentColor1)
                             Picker(LocalizedStringKey("Break"), selection: $breakTime) {
                                 ForEach(breakTimes, id: \.self) { number in
-                                    Text("\(number) min")
+                                    Text("\(number)")
+                                        .foregroundColor(Color.accentColor1)
                                 }
                             }
                             .pickerStyle(WheelPickerStyle())
@@ -103,8 +108,10 @@ struct ContentView: View {
                     HStack{
                         Picker(LocalizedStringKey("Subject"), selection: $chosenSubject) {
                             Text(LocalizedStringKey("Choose")).tag(nil as String?) // Handling nil
+                                .foregroundColor(Color.accentColor1)
                             ForEach(filteredSubjects(), id: \.self) { name in
-                                Text(name).tag(name as String?) // Ensure tags match the type of chosenSubject
+                                Text(name).tag(name as String?)
+                                    .foregroundColor(Color.accentColor1)
                             }
                         }
                         .onChange(of: chosenSubject) {oldValue, newValue in
@@ -112,8 +119,7 @@ struct ContentView: View {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
                         }
-                        
-                        
+
                     } .padding()
                 }
                 
@@ -124,7 +130,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "play.fill")
                                 .font(.largeTitle)
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color.accentColor1)
                                 .padding()
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
@@ -141,6 +147,7 @@ struct ContentView: View {
                                 .padding()
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
+                                .foregroundColor(Color.accentColor1)
                         }
                     }
                     
@@ -150,7 +157,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "play.fill")
                                 .font(.largeTitle)
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color.accentColor1)
                                 .padding()
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
@@ -161,7 +168,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "stop.circle.fill")
                                 .font(.largeTitle)
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color.accentColor1)
                                 .padding()
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
@@ -252,6 +259,7 @@ struct ContentView: View {
 
 
     private var descriptionSheet: some View {
+        
         VStack {
             Text(LocalizedStringKey("What?"))
                 .font(.largeTitle)
@@ -265,6 +273,7 @@ struct ContentView: View {
             if isExamAndClass {
                 Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
                     Text(LocalizedStringKey("select_topic")).tag("")
+                        .foregroundColor(Color.accentColor1)
                     if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
                         ForEach(chosenExam.topicsArray, id: \.self) { item in
                             Text(item)
@@ -318,6 +327,7 @@ struct ContentView: View {
         Picker(LocalizedStringKey("interval_time"), selection: $intervalTime) {
             ForEach(times, id: \.self) { number in
                 Text("\(number)")
+                    .foregroundColor(Color.accentColor1)
             }
         }
         .pickerStyle(WheelPickerStyle())
@@ -513,15 +523,12 @@ struct TopicPickerItem: View {
 
 extension String {
     func toColor() -> Color {
-        let rgbValues = self.split(separator: ",")
-            .map { $0.split(separator: ":").last }
-            .compactMap { $0 }
-            .map { Double($0.trimmingCharacters(in: .whitespaces)) ?? 0 }
-        
-        if rgbValues.count == 3 {
-            return Color(red: rgbValues[0] / 255, green: rgbValues[1] / 255, blue: rgbValues[2] / 255)
-        } else {
-            return Color.white // Default color in case of parsing failure
+        let components = self.replacingOccurrences(of: " ", with: "").split(separator: ",").map { String($0) }
+        let rgbValues = components.map { component -> CGFloat in
+            let value = component.split(separator: ":")[1]
+            return CGFloat(Double(value) ?? 0) / 255.0
         }
+        return Color(red: rgbValues[0], green: rgbValues[1], blue: rgbValues[2])
     }
 }
+

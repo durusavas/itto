@@ -104,7 +104,7 @@ struct ReportView: View {
     var body: some View {
         NavigationView {
             ZStack{
-                Color(red: 1/255, green: 28/255, blue: 40/255)// Example values, adjust as needed
+                Color(red: 15/255, green: 20/255, blue: 33/255)
                                .ignoresSafeArea()
 
             VStack {
@@ -217,9 +217,9 @@ struct DailyListView: View {
                 ForEach(filteredItemsForDay(), id: \.id) { ItemWithTotalTime in
                     VStack(alignment: .leading) {
                         HStack {
-                            Circle()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(ItemWithTotalTime.color.toColor())
+                            GradientCircleView(baseColor: ItemWithTotalTime.color.toColor())
+                                                                       .frame(width: 20, height: 20)
+                       
                             Text(ItemWithTotalTime.name)
                             Spacer()
                             Text("\(ItemWithTotalTime.totalTime/60) mins")
