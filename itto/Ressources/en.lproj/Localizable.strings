@@ -58,7 +58,7 @@
 "new_topic" = "New Topic";
 "save" = "Save";
 "exam_details" = "Exam Details";
-
+"project_details" = "Project Details";
 
 // TodayView
 "today_view_title" = "Tod(o)ay";
@@ -68,3 +68,6 @@
 "exam" = "Exams";
 "project" = "Projects";
 "class" = "Classes";
+
+
+"Interval" = "Interval";

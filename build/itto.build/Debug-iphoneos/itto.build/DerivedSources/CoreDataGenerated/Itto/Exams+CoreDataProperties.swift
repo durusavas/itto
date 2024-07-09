@@ -2,7 +2,7 @@
 //  Exams+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 03/07/2024.
+//  Created by Duru SAVAŞ on 08/07/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -20,6 +20,7 @@ extension Exams {
     @NSManaged public var color: String?
     @NSManaged public var examName: String?
     @NSManaged public var id: UUID?
+    @NSManaged public var importance: String?
     @NSManaged public var name: String?
     @NSManaged public var topics: NSObject?
 

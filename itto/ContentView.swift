@@ -3,6 +3,7 @@
 //
 //  Created by Duru SAVAŞ on 17/11/2023.
 //
+
 import SwiftUI
 import CoreData
 import Foundation
@@ -10,10 +11,20 @@ import UserNotifications
 import AVFoundation
 
 struct ContentView: View {
+    
     @Environment(\.managedObjectContext) var moc
+    
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
+    @FetchRequest(
+        entity: DailySubjects.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \DailySubjects.date, ascending: true)],
+        predicate: NSPredicate(format: "date >= %@", Calendar.current.startOfDay(for: Date()) as CVarArg)
+    ) var dailySubjects: FetchedResults<DailySubjects>
+    
+    
+    
     @State private var selectedAccentColor: Color = Color.white
     @State private var intervalNumber = 4
     @State private var intervalTime = 30 // Interval time in minutes
@@ -22,8 +33,8 @@ struct ContentView: View {
     @State private var countdownTime = 0
     @State private var timerIsPaused = true
     @State private var onBreak = false
-    @State private var currentInterval = 1 // Track the current interval
-    @State private var totalWorkTime = 0 // Total work time in seconds
+    @State private var currentInterval = 1
+    @State private var totalWorkTime = 0
     @State private var timerEndDate: Date?
     @State private var timerStartDate: Date?
     @State private var chosenSubject: String?
@@ -40,13 +51,13 @@ struct ContentView: View {
         let projectNames = Set(projects.compactMap { $0.name })
         return Array(subjectNames.union(projectNames))
     }
+    
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
     
     init() {
         requestNotificationPermissions()
-        
         func requestNotificationPermissions() {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
                 if granted {
@@ -59,53 +70,111 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack{
-            ZStack{
-                Color(red: 15/255, green: 20/255, blue: 33/255)
-                               .ignoresSafeArea()
-
+        NavigationStack {
+            
+            
+            
             VStack {
-                if(!timerStarted){
-                    HStack{
-                        VStack {
-                            Text(LocalizedStringKey("Sets"))
-                                .foregroundColor(Color.accentColor1)
-                            Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
-                                ForEach(sets, id: \.self) { number in
-                                    Text("\(number)")
-                                        .foregroundColor(Color.accentColor1)
-                                    
+                if !timerStarted {
+                    
+                    
+                    VStack{
+                        HStack {
+                            VStack {
+                                Text(LocalizedStringKey("Sets"))
+                                //  .foregroundColor(Color.accentColor1)
+                                Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
+                                    ForEach(sets, id: \.self) { number in
+                                        Text("\(number)")
+                                        
+                                    }
                                 }
+                                .pickerStyle(WheelPickerStyle())
+                                .frame(width: 70, height: 100)
+                                .clipped()
+                                .padding()
+                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
+                                .cornerRadius(100)
                             }
-                            .pickerStyle(WheelPickerStyle())
-                            .frame(width: 100, height: 100)
-                            .clipped()
+                            VStack{
+                                Text(LocalizedStringKey("Interval"))
+                                // .foregroundColor(Color.accentColor1)
+                                
+                                Picker(LocalizedStringKey("Interval"), selection: $intervalTime) {
+                                    ForEach(times, id: \.self) { number in
+                                        Text("\(number)")
+                                    }
+                                }
+                                .pickerStyle(WheelPickerStyle())
+                                .frame(width: 70, height: 100)
+                                .clipped()
+                                .padding()
+                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
+                                .cornerRadius(100)
+                                
+                                
+                                
+                            }
+                            
+                            
+                            
+                            VStack {
+                                Text(LocalizedStringKey("Break"))
+                                // .foregroundColor(Color.accentColor1)
+                                Picker(LocalizedStringKey("Break"), selection: $breakTime) {
+                                    ForEach(breakTimes, id: \.self) { number in
+                                        Text("\(number)")
+                                        
+                                    }
+                                }
+                                .pickerStyle(WheelPickerStyle())
+                                .frame(width: 70, height: 100)
+                                .clipped()
+                                .padding()
+                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
+                                .cornerRadius(100)
+                            }
                         }
-                        VStack {
-                            Text(LocalizedStringKey("Break"))
-                                .foregroundColor(Color.accentColor1)
-                            Picker(LocalizedStringKey("Break"), selection: $breakTime) {
-                                ForEach(breakTimes, id: \.self) { number in
-                                    Text("\(number)")
-                                        .foregroundColor(Color.accentColor1)
-                                }
-                            }
-                            .pickerStyle(WheelPickerStyle())
-                            .frame(width: 100, height: 100)
-                            .clipped()
+                        
+                        
+                    }
+                    .padding(30)
+                    MainCircleView(colors: getDailySubjectColors(for: Date())) {
+                        Button(action: {
+                            startTimer()
+                        }) {
+                            Image(systemName: "play.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(Color.white)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(100)
                         }
                     }
+                    .padding()
+                    .padding()
+                    
+                    
                     .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
                 }
                 
-                CircularProgressView(progress: progressValue(), currentInterval: currentInterval, intervalNumber: intervalNumber, content: (!timerStarted && timerIsPaused) ? AnyView(intervalPicker) : AnyView(countdownView), isTimerStarted: timerStarted, accentColor: selectedAccentColor, onBreak: onBreak)
-                
+                if timerStarted{
+                    CircularProgressView(
+                        progress: progressValue(),
+                        currentInterval: currentInterval,
+                        intervalNumber: intervalNumber,
+                        content: AnyView(timerStarted ? countdownView as! Text : Text("")),
+                        isTimerStarted: timerStarted,
+                        accentColor: selectedAccentColor,
+                        onBreak: onBreak
+                    )
                     .padding()
                     .padding()
-                
-                
-                if(!timerStarted){
-                    HStack{
+                    
+                    
+                }
+                if !timerStarted {
+                    HStack {
                         Picker(LocalizedStringKey("Subject"), selection: $chosenSubject) {
                             Text(LocalizedStringKey("Choose")).tag(nil as String?) // Handling nil
                                 .foregroundColor(Color.accentColor1)
@@ -114,16 +183,16 @@ struct ContentView: View {
                                     .foregroundColor(Color.accentColor1)
                             }
                         }
-                        .onChange(of: chosenSubject) {oldValue, newValue in
+                        .onChange(of: chosenSubject) { oldValue, newValue in
                             if !timerStarted {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
                         }
-
-                    } .padding()
+                    }
+                    .padding()
                 }
                 
-                HStack{
+                HStack {
                     if timerIsPaused && timerStarted {
                         Button(action: {
                             resumeTimer()
@@ -135,10 +204,9 @@ struct ContentView: View {
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
                         }
-                        
                     }
                     
-                    if(!timerIsPaused){
+                    if !timerIsPaused {
                         Button(action: {
                             pauseTimer()
                         }) {
@@ -151,18 +219,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    if timerIsPaused && !timerStarted {
-                        Button(action: {
-                            startTimer()
-                        }) {
-                            Image(systemName: "play.fill")
-                                .font(.largeTitle)
-                                .foregroundColor(Color.accentColor1)
-                                .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(100)
-                        }
-                    } else {
+                    if !timerIsPaused && timerStarted {
                         Button(action: {
                             stopTimer()
                         }) {
@@ -182,51 +239,33 @@ struct ContentView: View {
                     self.chosenSubject = firstSubject
                 }
             }
-        }
+            
         }
         .animation(.easeInOut, value: timerStarted)
-        
         .sheet(isPresented: $showDescSheet) {
             descriptionSheet
-            
         }
         .sheet(isPresented: $showAddSubjectsView) {
             AddSubjectView()
         }
         .onAppear {
-            //printReportsData()
-            // Resume timer when the app appears
             resumeTimerIfNeeded()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            // Update circular view when the app enters the foreground
             updateCircularView()
-            // Resume timer if needed
             resumeTimerIfNeeded()
         }
     }
-//    private func printReportsData() {
-//        do {
-//            let reports = try moc.fetch(Report.fetchRequest()) as [Report]
-//            print("Reports Data:")
-//            for report in reports {
-//                print("Date: \(report.date ?? Date()), Subject: \(report.subjectName ?? "Unknown"), Total Time: \(report.totalTime) seconds, Description: \(report.desc ?? "No description")")
-//            }
-//        } catch {
-//            print("Error fetching Reports: \(error)")
-//        }
-//    }
+    
     private func resumeTimerIfNeeded() {
-        // Resume timer only if it was running and paused
         if !timerStarted && !timerIsPaused {
             resumeTimer()
         }
     }
+    
     var isExamAndClass: Bool {
-        // Check if the chosenSubject exists in both Subjects and Exams
         let subjectExists = subjects.contains(where: { $0.name == chosenSubject })
         let examExists = exams.contains(where: { $0.name == chosenSubject })
-        
         return subjectExists && examExists
     }
     
@@ -255,11 +294,14 @@ struct ContentView: View {
             }
         }
     }
-
-
-
+    private func getDailySubjectColors(for date: Date) -> [Color] {
+        let calendar = Calendar.current
+        let filteredSubjects = dailySubjects.filter { calendar.isDate($0.date ?? Date(), inSameDayAs: date) }
+        let colors = filteredSubjects.compactMap { $0.color?.toColor() }
+        return colors.isEmpty ? [Color.gray, Color.blue] : colors // Fallback colors if no subjects found
+    }
+    
     private var descriptionSheet: some View {
-        
         VStack {
             Text(LocalizedStringKey("What?"))
                 .font(.largeTitle)
@@ -291,14 +333,12 @@ struct ContentView: View {
                 newReport.totalTime = Int16(totalWorkTime)
                 
                 if isExamAndClass {
-                    // If the selected subject is an exam and selectedTopic is not empty, use selectedTopic
                     newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
                 } else {
-                    // If not, use reportDescription
                     newReport.desc = reportDescription
                 }
                 reportDescription = ""
-            
+                
                 if moc.hasChanges {
                     do {
                         try moc.save()
@@ -323,18 +363,6 @@ struct ContentView: View {
         }
     }
     
-    private var intervalPicker: some View {
-        Picker(LocalizedStringKey("interval_time"), selection: $intervalTime) {
-            ForEach(times, id: \.self) { number in
-                Text("\(number)")
-                    .foregroundColor(Color.accentColor1)
-            }
-        }
-        .pickerStyle(WheelPickerStyle())
-        .frame(width: 100, height: 100)
-        .clipped()
-    }
-    
     private var countdownView: some View {
         Text(timeString(time: countdownTime))
             .font(.largeTitle)
@@ -344,6 +372,7 @@ struct ContentView: View {
         let totalDuration = onBreak ? breakTime * 60 : intervalTime * 60
         return totalDuration > 0 ? CGFloat(countdownTime) / CGFloat(totalDuration) : 0
     }
+    
     private func startTimer() {
         timerStartDate = Date()
         timer?.invalidate()
@@ -354,7 +383,6 @@ struct ContentView: View {
         timerStarted = true
         totalWorkTime = 0
         
-        // Configure the timer
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             self.updateTimer()
         }
@@ -372,23 +400,18 @@ struct ContentView: View {
                 if currentInterval <= intervalNumber {
                     onBreak = false
                     countdownTime = intervalTime * 60
-                    // Schedule a notification for the start of the next interval
                     scheduleNotification(message: "Starting next interval!")
                 } else {
-                    // If all intervals are completed, end the timer
                     stopTimer()
-                    scheduleNotification(message: "The timer is over!") // Notification for timer completion
+                    scheduleNotification(message: "The timer is over!")
                 }
             } else {
-                // If it was an interval, start the break
                 onBreak = true
                 countdownTime = breakTime * 60
-                // Schedule a notification for the start of the break
                 scheduleNotification(message: "Time for a break!")
             }
         }
     }
-
     
     private func stopTimer() {
         timerEndDate = Date()
@@ -398,13 +421,14 @@ struct ContentView: View {
         timerStarted = false
         showDescSheet = true
     }
+    
     private func updateCircularView() {
         if let startDate = timerStartDate {
             let elapsedTime = Int(Date().timeIntervalSince(startDate))
             var remainingTime: Int
             
             if onBreak {
-                let breakStartTime = (currentInterval - 1) * (intervalTime * 60) // Only consider work interval times
+                let breakStartTime = (currentInterval - 1) * (intervalTime * 60)
                 let breakElapsedTime = elapsedTime - breakStartTime
                 remainingTime = max(breakTime * 60 - breakElapsedTime, 0)
             } else {
@@ -418,27 +442,20 @@ struct ContentView: View {
             
             if remainingTime == 0 {
                 if onBreak {
-                    // Schedule notification for the end of the break
                     scheduleNotification(message: "end_break_message")
-                    // If there are more intervals,x start the next interval
                     if currentInterval < intervalNumber {
                         onBreak.toggle()
                         countdownTime = intervalTime * 60
                         currentInterval += 1
                     } else {
-                        // If all intervals are finished, schedule notification for the end of the whole countdown
                         scheduleNotification(message: "finish_message")
                     }
                 } else {
-                    // If it's the end of the work interval, schedule notification for the start of the break
                     scheduleNotification(message: "break_message")
                 }
             }
         }
     }
-    
-    
-    
     
     private func pauseTimer() {
         timer?.invalidate()
@@ -462,18 +479,44 @@ struct ContentView: View {
                     }
                 } else {
                     self.timer?.invalidate()
-                    
                 }
             }
         }
     }
+    
     private func timeString(time: Int) -> String {
         let minutes = time / 60
         let seconds = time % 60
         return "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
     }
-    
 }
+
+struct CircularGradientBackground: ViewModifier {
+    var colors: [Color]
+    
+    func body(content: Content) -> some View {
+        content
+        
+            .background(
+                Circle()
+                
+                    .fill(LinearGradient(
+                        gradient: Gradient(colors: colors),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+            )
+        
+    }
+}
+
+extension View {
+    func circularGradientBackground(colors: [Color]) -> some View {
+        self.modifier(CircularGradientBackground(colors: colors))
+    }
+}
+
+
 
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
@@ -495,13 +538,13 @@ struct CircularProgressView<Content: View>: View {
             Circle()
                 .trim(from: 0.0, to: progress)
                 .stroke(style: StrokeStyle(lineWidth: 17, lineCap: .round, lineJoin: .round))
-            
                 .foregroundColor(accentColor.opacity(onBreak ? 0.5 : 1))
                 .rotationEffect(Angle(degrees: 270))
                 .animation(.linear, value: progress)
             
             content
-            if isTimerStarted{
+            
+            if isTimerStarted {
                 Text("\(currentInterval) / \(intervalNumber)")
                     .offset(y: -40)
             }
@@ -509,6 +552,7 @@ struct CircularProgressView<Content: View>: View {
         .frame(width: 200, height: 200)
     }
 }
+
 struct TopicPickerItem: View {
     var text: String
     var isSelected: Bool
@@ -518,8 +562,6 @@ struct TopicPickerItem: View {
             .foregroundColor(isSelected ? .gray : .black)
     }
 }
-
-
 
 extension String {
     func toColor() -> Color {
@@ -531,4 +573,6 @@ extension String {
         return Color(red: rgbValues[0], green: rgbValues[1], blue: rgbValues[2])
     }
 }
-
+#Preview {
+    ContentView()
+}

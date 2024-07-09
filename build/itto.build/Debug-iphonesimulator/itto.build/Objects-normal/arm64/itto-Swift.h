@@ -313,6 +313,7 @@ SWIFT_CLASS_NAMED("DailySubjects")
 @property (nonatomic, copy) NSString * _Nullable category;
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, copy) NSDate * _Nullable date;
+@property (nonatomic, copy) NSString * _Nullable importance;
 @property (nonatomic) BOOL isCompleted;
 @property (nonatomic, copy) NSString * _Nullable subjectName;
 @property (nonatomic, strong) NSObject * _Nullable topics;
@@ -333,6 +334,7 @@ SWIFT_CLASS_NAMED("Exams")
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, copy) NSString * _Nullable examName;
 @property (nonatomic, copy) NSUUID * _Nullable id;
+@property (nonatomic, copy) NSString * _Nullable importance;
 @property (nonatomic, copy) NSString * _Nullable name;
 @property (nonatomic, strong) NSObject * _Nullable topics;
 @end
@@ -345,10 +347,12 @@ SWIFT_CLASS_NAMED("Projects")
 
 
 
+
 @interface Projects (SWIFT_EXTENSION(itto))
 @property (nonatomic, copy) NSString * _Nullable color;
 @property (nonatomic, copy) NSUUID * _Nullable id;
 @property (nonatomic, copy) NSString * _Nullable name;
+@property (nonatomic, strong) NSObject * _Nullable topics;
 @end
 
 

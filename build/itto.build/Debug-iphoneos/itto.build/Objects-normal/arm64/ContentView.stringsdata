@@ -4,6 +4,14 @@
     "Localizable": [
       {
         "comment": "",
+        "key": ""
+      },
+      {
+        "comment": "",
+        "key": "Today's colors"
+      },
+      {
+        "comment": "",
         "key": "Sets"
       },
       {
@@ -12,11 +20,11 @@
       },
       {
         "comment": "",
-        "key": "Break"
+        "key": "Interval"
       },
       {
         "comment": "",
-        "key": "interval_time"
+        "key": "Break"
       },
       {
         "comment": "",

@@ -4,6 +4,18 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Red"
+      },
+      {
+        "comment": "",
+        "key": "Orange"
+      },
+      {
+        "comment": "",
+        "key": "Yellow"
+      },
+      {
+        "comment": "",
         "key": "new_topic"
       },
       {

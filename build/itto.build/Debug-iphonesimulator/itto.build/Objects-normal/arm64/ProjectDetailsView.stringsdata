@@ -1,0 +1,16 @@
+{
+  "source": "/Users/durusavas/Desktop/itto/itto/ProjectDetailsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "new_topic"
+      },
+      {
+        "comment": "",
+        "key": "save"
+      }
+    ]
+  },
+  "version": 1
+}

@@ -62,8 +62,11 @@ struct WeeklyChartView: View {
             }
             .frame(width: 300, height: 300)
             .padding()
-            .padding()
+          //  .background(Color(red: 15/255, green: 20/255, blue: 33/255)) // Frame background color
+            .cornerRadius(10) // Rounded corners for the frame
+            .shadow(radius: 5) // Optional: shadow for better effect
         }
+        .padding() // Outer padding to separate from other views
     }
 
     private func weekRange(offset: Int) -> (Date, Date) {
@@ -95,6 +98,7 @@ struct WeeklyChartView: View {
     }
 }
 
+
 struct ReportView: View {
     @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
@@ -103,9 +107,6 @@ struct ReportView: View {
 
     var body: some View {
         NavigationView {
-            ZStack{
-                Color(red: 15/255, green: 20/255, blue: 33/255)
-                               .ignoresSafeArea()
 
             VStack {
                 WeeklyChartView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
@@ -126,7 +127,7 @@ struct ReportView: View {
                     .disabled(weekOffset == 0)
                 }
             }
-        }
+        
         }
         .onAppear {
             // Ensure data is properly fetched and initialized
@@ -217,8 +218,8 @@ struct DailyListView: View {
                 ForEach(filteredItemsForDay(), id: \.id) { ItemWithTotalTime in
                     VStack(alignment: .leading) {
                         HStack {
-                            GradientCircleView(baseColor: ItemWithTotalTime.color.toColor())
-                                                                       .frame(width: 20, height: 20)
+                         GradientCircleView(baseColor: ItemWithTotalTime.color.toColor())
+                                .frame(width: 20, height: 20)
                        
                             Text(ItemWithTotalTime.name)
                             Spacer()
@@ -235,7 +236,9 @@ struct DailyListView: View {
                         }
                     }
                 }
+                .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
             }
+            
         }
         .onAppear {
             // Adjust currentDayOffset to the current day of the week

@@ -21,7 +21,6 @@ struct SubjectView: View {
             ZStack {
                 Color(red: 1/255, green: 28/255, blue: 40/255)
                     .ignoresSafeArea()
-                
                 VStack {
                     List {
                         // "My Subjects" Section
@@ -29,8 +28,8 @@ struct SubjectView: View {
                             Section(header: Text(LocalizedStringKey("my_classes"))) {
                                 ForEach(subjects, id: \.self) { item in
                                     HStack {
-                                        GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
-                                                                                   .frame(width: 20, height: 20)
+                                    GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
+                                            .frame(width: 20, height: 20)
                                         Text(item.name ?? "Unknown")
                                     }
                                     .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
@@ -43,7 +42,7 @@ struct SubjectView: View {
                             Section(header: Text(LocalizedStringKey("my_exams"))) {
                                 ForEach(exams, id: \.self) { exam in
                                     NavigationLink(
-                                        destination: ExamDetailsView(exam: exam),
+                                        destination: ExamDetailsView(exam: exam, color:exam.color?.toColor() ?? Color.white),
                                         label: {
                                             HStack {
                                                 GradientCircleView(baseColor: exam.color?.toColor() ?? Color.white)
@@ -60,13 +59,18 @@ struct SubjectView: View {
                         // "My Projects" Section
                         if !projects.isEmpty {
                             Section(header: Text(LocalizedStringKey("my_projects"))) {
-                                ForEach(projects, id: \.self) { item in
-                                    HStack {
-                                        GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
-                                                                                   .frame(width: 20, height: 20)
-                                        Text(item.name ?? "Unknown")
-                                    }
-                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255)) 
+                                ForEach(projects, id: \.self) { project in
+                                    NavigationLink(
+                                        destination: ProjectDetailsView(project: project, color:project.color?.toColor() ?? Color.white),
+                                        label: {
+                                            HStack {
+                                                GradientCircleView(baseColor: project.color?.toColor() ?? Color.white)
+                                                    .frame(width: 20, height: 20)
+                                                Text(project.name ?? "Unknown")
+                                            }
+                                        }
+                                        )
+                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
                                 }
                                 .onDelete(perform: deleteSubject)
                             }
@@ -74,9 +78,6 @@ struct SubjectView: View {
                         }
                         
                     }
-                    
-                    
-                    
                 }
                 .navigationTitle(LocalizedStringKey("subjects"))
                 .toolbar {

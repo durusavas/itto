@@ -74,21 +74,19 @@ struct TodayView: View {
         }
     }
 
-    private func examSection(dailySubject: DailySubjects) -> some View {
-        VStack(alignment: .leading) {
-            Text(dailySubject.subjectName ?? "")
-                .font(.headline)
-            ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
-                HStack {
-                    CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
-                        updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
-                    }
-                    Text(topic)
-                        .foregroundColor(isTopicCompleted(dailySubject: dailySubject, topic: topic) ? .gray : .primary)
-                }
-            }
+    private func importanceColor(_ importance: String) -> Color? {
+        switch importance {
+        case "Red":
+            return .red
+        case "Orange":
+            return .orange
+        case "Yellow":
+            return .yellow
+        default:
+            return nil
         }
     }
+    
 
 
     
@@ -119,15 +117,46 @@ struct TodayView: View {
         }
     }
     
-    private func projectSection(dailySubject: DailySubjects) -> some View {
-        HStack {
-            CheckboxView(isChecked: dailySubject.isCompleted, color: dailySubject.color?.toColor() ?? .blue) { checked in
-                updateCompletionStatus(for: dailySubject, isCompleted: checked)
+    private func examSection(dailySubject: DailySubjects) -> some View {
+        VStack(alignment: .leading) {
+            Text(dailySubject.subjectName ?? "")
+                .font(.headline)
+            ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
+                HStack {
+                  
+                    CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
+                        updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
+                    }
+                    Text(topic)
+                        .foregroundColor(isTopicCompleted(dailySubject: dailySubject, topic: topic) ? .gray : .primary)
+                    
+                    Spacer()
+                    // Show importance indicator if it exists
+                    if let importance = dailySubject.importance, let importanceColor = importanceColor(importance) {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(importanceColor)
+                    }
+                }
             }
-            Text(dailySubject.subjectName ?? "Unknown Subject")
-                .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
         }
     }
+
+    private func projectSection(dailySubject: DailySubjects) -> some View {
+        VStack(alignment: .leading) {
+            Text(dailySubject.subjectName ?? "")
+                .font(.headline)
+            ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
+                HStack {
+                    CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
+                        updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
+                    }
+                    Text(topic)
+                        .foregroundColor(isTopicCompleted(dailySubject: dailySubject, topic: topic) ? .gray : .primary)
+                }
+            }
+        }
+    }
+
 
     
     private func classSection(dailySubject: DailySubjects) -> some View {
@@ -245,10 +274,6 @@ struct ReselectSubjectsView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                           Color(red: 0/255, green: 50/255, blue: 108/255)
-                               .ignoresSafeArea()
-                           
             List {
                 ForEach(subjects) { subject in
                     Section(header: Text(subject.name ?? "Unknown")) {
@@ -263,15 +288,17 @@ struct ReselectSubjectsView: View {
                         ))
                     }
                 }
+                .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
             }
             .navigationTitle(LocalizedStringKey("reselect_days"))
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button(LocalizedStringKey("done")) {
                 isPresented = false
             })
         }
     }
     }
-}
+
 
 private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], moc: NSManagedObjectContext) {
     let calendar = Calendar.current

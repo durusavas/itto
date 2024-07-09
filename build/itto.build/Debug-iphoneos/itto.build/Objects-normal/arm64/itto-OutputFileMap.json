@@ -195,6 +195,16 @@
     "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView.swiftdeps",
     "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainView~partial.swiftmodule"
   },
+  "/Users/durusavas/Desktop/itto/itto/ProjectDetailsView.swift" : {
+    "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.swiftconstvalues",
+    "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.d",
+    "diagnostics" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.dia",
+    "index-unit-output-path" : "/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.o",
+    "llvm-bc" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.bc",
+    "object" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.o",
+    "swift-dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView.swiftdeps",
+    "swiftmodule" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ProjectDetailsView~partial.swiftmodule"
+  },
   "/Users/durusavas/Desktop/itto/itto/ReportView.swift" : {
     "const-values" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.swiftconstvalues",
     "dependencies" : "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.d",

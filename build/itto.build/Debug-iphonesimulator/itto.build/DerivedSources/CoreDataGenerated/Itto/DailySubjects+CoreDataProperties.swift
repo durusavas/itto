@@ -2,7 +2,7 @@
 //  DailySubjects+CoreDataProperties.swift
 //  
 //
-//  Created by Duru SAVAŞ on 03/07/2024.
+//  Created by Duru SAVAŞ on 09/07/2024.
 //
 //  This file was automatically generated and should not be edited.
 //
@@ -20,6 +20,7 @@ extension DailySubjects {
     @NSManaged public var category: String?
     @NSManaged public var color: String?
     @NSManaged public var date: Date?
+    @NSManaged public var importance: String?
     @NSManaged public var isCompleted: Bool
     @NSManaged public var subjectName: String?
     @NSManaged public var topics: NSObject?

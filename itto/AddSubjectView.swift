@@ -114,11 +114,8 @@ struct AddSubjectView: View {
     }
 
     private func saveSubject() {
-        guard validateInput(name: name, color: color) else {
-            alertMessage = "Invalid input: Name and color are required."
-            showAlert = true
-            return
-        }
+        
+      
 
         let colorString = color.toRgbString()
         var newSubject: NSManagedObject
