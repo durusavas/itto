@@ -1,6 +1,7 @@
-![SS1](https://github.com/durusavas/itto/assets/71273490/b7a21044-90a1-4ea0-9cfc-d8766f4865cb)
-![SS3](https://github.com/durusavas/itto/assets/71273490/e6764a21-1cc2-4d58-ad99-adfa18cdf207)
-![SS2](https://github.com/durusavas/itto/assets/71273490/a14cda11-da8e-42a8-986f-14496ec0820d)
+
+![Frame 7](https://github.com/user-attachments/assets/a4a4434f-ea1a-45a1-ac1d-1a96eedb981f)
+![Frame 8](https://github.com/user-attachments/assets/31062c89-a52b-42ec-85f5-2e2d0fb16b6a)
+![Frame 9](https://github.com/user-attachments/assets/7b1f6cd8-ab0d-4ee1-9aad-191552ae659b)
 
 # itto: Your Academic Organization Simplified
 
