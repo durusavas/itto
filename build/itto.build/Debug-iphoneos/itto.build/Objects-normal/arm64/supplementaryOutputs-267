@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/itto/MainCircleView.swift":
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainCircleView.o"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainCircleView.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainCircleView.swiftdeps"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainCircleView.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/MainCircleView.d"
+"/Users/durusavas/Desktop/itto/itto/TodayView.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/TodayView.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/TodayView.d"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/TodayView.swiftconstvalues"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/TodayView.o"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/TodayView.swiftdeps"
+"/Users/durusavas/Desktop/itto/itto/ContentView.swift":
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ContentView.o"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ContentView.swiftdeps"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ContentView.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ContentView.d"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ContentView.swiftconstvalues"

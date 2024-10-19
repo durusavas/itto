@@ -12,9 +12,18 @@ struct MainCircleView<Content: View>: View {
     var content: () -> Content
     @State private var startAngle: Angle = .degrees(0)
     @State private var endAngle: Angle = .degrees(360)
-
+    
     var body: some View {
         ZStack {
+            Circle()
+                .fill(Color.ittoPurple)
+                .frame(width: 320, height: 320)
+                .blur(radius: 55)
+            
+            Circle()
+                .fill(Color.bg2)
+                .frame(width: 250, height: 250)
+            
             Circle()
                 .strokeBorder(
                     AngularGradient(
@@ -23,57 +32,35 @@ struct MainCircleView<Content: View>: View {
                         startAngle: startAngle,
                         endAngle: endAngle
                     ),
-                    lineWidth: 15
+                    lineWidth: 10
                 )
                 .frame(width: 250, height: 250)
-                .blur(radius: 30)
+                .blur(radius: 20)
                 .overlay {
-                  Circle()
-                    .stroke(lineWidth: 4.0)
-                    .fill(.white)
-                        .blur(radius: 10.0)
+                    Circle()
+                        .stroke(lineWidth: 4)
+                        .fill(.white.opacity(0.7))
+                        .blur(radius: 7)
                 }
                 .mask(
                     Circle()
                         .frame(width: 250, height: 250)
-                    
                 )
                 .onAppear {
-                    withAnimation(Animation.linear(duration: 15).repeatForever(autoreverses: false)) {
+                    withAnimation(Animation.linear(duration: 10).repeatForever(autoreverses: false)) {
                         startAngle = .degrees(360)
                         endAngle = .degrees(720)
                     }
                 }
             
-            
-              
-
             Circle()
                 .fill(Color.clear)
                 .frame(width: 180, height: 180)
-
+            
             VStack {
                 content()
-            } 
-        }
-       
-    }
-    
-}
-
-struct MainCircleView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainCircleView(colors: [Color.red, Color.blue, Color.green]) {
-            Button(action: {
-                // Timer start action
-            }) {
-                Image(systemName: "play.fill")
-                    .font(.title)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.black.opacity(0.5))
-                    .cornerRadius(10)
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }

@@ -4,23 +4,19 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "subjects"
+        "key": "subjects",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 56
+        }
       },
       {
         "comment": "",
-        "key": "my_classes"
-      },
-      {
-        "comment": "",
-        "key": "my_exams"
-      },
-      {
-        "comment": "",
-        "key": "my_projects"
-      },
-      {
-        "comment": "",
-        "key": "add_new"
+        "key": "add_new",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 63
+        }
       }
     ]
   },

@@ -12,78 +12,91 @@ struct ProjectDetailsView: View {
     @ObservedObject var project: Projects
     var color: Color
     @State private var newTopic: String = ""
+    
     var body: some View {
-        VStack {
-            List {
-                Section {
-                    ForEach(project.topicsArray, id: \.self) { topic in
-                        Text(topic)
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
+                startPoint: .center,
+                endPoint: .topTrailing
+            )
+            .edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                List {
+                    Section {
+                        ForEach(project.topicsArray, id: \.self) { topic in
+                            HStack {
+                                GradientCircleView(baseColor: color)
+                                    .frame(width: 10, height: 10)
+                                    .padding(5)
+                                Text(topic)
+                                    .font(.custom("Poppins-Regular", size: 17))
+                            }
+                        }
+                        .onDelete(perform: deleteTopic)
                     }
+                    .padding(5)
+                    .listRowBackground(Color.gray.opacity(0.05))
                     
-                    .onDelete(perform: deleteTopic)
-                }
-                .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-                Section {
-                    HStack {
-                        TextField(LocalizedStringKey("new_topic"), text: $newTopic)
-                     
-                        Button(action: addTopic) {
-                            Text(LocalizedStringKey("save"))
-                        }
-                        .padding()
-                    }
-                
-                }
-            .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-           
-            }
-            .padding()
-        }
-        
-        .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
+                    Section {
                         HStack {
-                           GradientCircleView(baseColor: color)
-                            .frame(width: 20, height: 20)
-                            Text(project.name ?? NSLocalizedString("project_details", comment: "Project Details"))
-                                .font(.system(size: 24, weight: .bold)) // Customize font size and weight here
+                            TextField(LocalizedStringKey("new_topic"), text: $newTopic)
+                                .textFieldStyle(PlainTextFieldStyle())
+                            
+                            Button(action: addTopic) {
+                                Text(LocalizedStringKey("save"))
+                                    .font(.custom("Poppins-Regular", size: 17))
+                            }
+                            .padding()
                         }
                     }
+                    .listRowBackground(Color.gray.opacity(0.05))
                 }
+                .scrollContentBackground(.hidden)
+            }
+            .background(Color.clear)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                  
+                        
+                        Text(project.name ?? NSLocalizedString("project_details", comment: "Project Details"))
+                            .font(.custom("Poppins-SemiBold", size: 24))
+                    
+                }
+            }
+        }
     }
     
-
     private func deleteTopic(at offsets: IndexSet) {
         if let topics = project.topics as? NSMutableArray {
             topics.removeObjects(at: offsets)
             project.topics = topics as NSObject
             saveChanges()
-
-            // Delete corresponding DailySubjects
             deleteDailySubjects(topics: offsets.map { topics[$0] as! String })
         }
     }
-
+    
     private func addTopic() {
-           if !newTopic.isEmpty {
-               withAnimation {
-                   addDailySubject(topic: newTopic)
-
-                   if var topics = project.topics as? [String] {
-                       topics.append(newTopic)
-                       project.topics = topics as NSObject
-                       saveChanges()
-                       newTopic = ""
-                   } else {
-                       project.topics = [newTopic] as NSObject
-                       saveChanges()
-                       newTopic = ""
-                   }
-               }
-           }
-       }
-
+        if !newTopic.isEmpty {
+            withAnimation {
+                addDailySubject(topic: newTopic)
+                
+                if var topics = project.topics as? [String] {
+                    topics.append(newTopic)
+                    project.topics = topics as NSObject
+                    saveChanges()
+                    newTopic = ""
+                } else {
+                    project.topics = [newTopic] as NSObject
+                    saveChanges()
+                    newTopic = ""
+                }
+            }
+        }
+    }
+    
     private func saveChanges() {
         do {
             try project.managedObjectContext?.save()
@@ -91,13 +104,13 @@ struct ProjectDetailsView: View {
             print("Error saving changes: \(error)")
         }
     }
-
+    
     private func deleteDailySubjects(topics: [String]) {
         guard let managedObjectContext = project.managedObjectContext else { return }
-
+        
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", project.name ?? "", "Project")
-
+        
         do {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
             for dailySubject in dailySubjects {
@@ -105,7 +118,7 @@ struct ProjectDetailsView: View {
                    let remainingTopics = dailyTopics.filter({ !topics.contains($0) }) as NSObject? {
                     dailySubject.topics = remainingTopics
                 }
-
+                
                 if let remainingTopics = dailySubject.topics as? [String], remainingTopics.isEmpty {
                     managedObjectContext.delete(dailySubject)
                 }
@@ -115,16 +128,16 @@ struct ProjectDetailsView: View {
             print("Error deleting DailySubjects: \(error)")
         }
     }
-
+    
     private func addDailySubject(topic: String) {
         guard let managedObjectContext = project.managedObjectContext else { return }
-
+        
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", project.name ?? "", "Project")
-
+        
         do {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
-
+            
             if let existingDailySubject = dailySubjects.first {
                 if var existingTopics = existingDailySubject.topics as? [String] {
                     existingTopics.append(topic)
@@ -140,19 +153,19 @@ struct ProjectDetailsView: View {
                 dailySubject.category = "Project"
                 dailySubject.topics = [topic] as NSObject
             }
-
+            
             saveChanges()
             printDailySubjects()
         } catch {
             print("Error adding DailySubject: \(error)")
         }
     }
-
+    
     private func printDailySubjects() {
         guard let managedObjectContext = project.managedObjectContext else { return }
-
+        
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-
+        
         do {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
             print("DailySubjects:")
@@ -170,6 +183,3 @@ extension Projects {
         topics as? [String] ?? []
     }
 }
-
-
-

@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/itto/ReportView.swift":
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.d"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.dia"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.o"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.swiftdeps"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ReportView.swiftconstvalues"
+"/Users/durusavas/Desktop/itto/itto/GradientCircleView.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.d"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.o"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.swiftdeps"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/GradientCircleView.swiftconstvalues"
+"/Users/durusavas/Desktop/itto/itto/ExamDetailsView.swift":
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.d"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.o"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.dia"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.swiftdeps"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphoneos/itto.build/Objects-normal/arm64/ExamDetailsView.swiftconstvalues"

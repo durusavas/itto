@@ -13,7 +13,6 @@ import AVFoundation
 struct ContentView: View {
     
     @Environment(\.managedObjectContext) var moc
-    
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
@@ -23,12 +22,10 @@ struct ContentView: View {
         predicate: NSPredicate(format: "date >= %@", Calendar.current.startOfDay(for: Date()) as CVarArg)
     ) var dailySubjects: FetchedResults<DailySubjects>
     
-    
-    
     @State private var selectedAccentColor: Color = Color.white
     @State private var intervalNumber = 4
-    @State private var intervalTime = 30 // Interval time in minutes
-    @State private var breakTime = 5 // Break time in minutes
+    @State private var intervalTime = 30
+    @State private var breakTime = 5
     @State private var timer: Timer?
     @State private var countdownTime = 0
     @State private var timerIsPaused = true
@@ -61,7 +58,6 @@ struct ContentView: View {
         func requestNotificationPermissions() {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
                 if granted {
-                    // Notification permissions granted
                 } else if let error = error {
                     print("Error requesting notification permissions: \(error.localizedDescription)")
                 }
@@ -70,75 +66,81 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            
-            
+        ZStack{
+            LinearGradient(
+                gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
+                startPoint: .center,
+                endPoint: .topTrailing
+            )
+            .edgesIgnoringSafeArea(.all)
             
             VStack {
+                
                 if !timerStarted {
-                    
-                    
-                    VStack{
-                        HStack {
-                            VStack {
-                                Text(LocalizedStringKey("Sets"))
-                                //  .foregroundColor(Color.accentColor1)
-                                Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
-                                    ForEach(sets, id: \.self) { number in
-                                        Text("\(number)")
-                                        
+                    VStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(Color.gray.opacity(0.05))
+                                .frame(width: 320, height: 150)
+                            
+                            HStack {
+                                VStack {
+                                    Text(LocalizedStringKey("Sets"))
+                                        .font(.custom("Poppins-Regular", size: 17))
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
+                                        ForEach(sets, id: \.self) { number in
+                                            Text("\(number)")
+                                                .font(.custom("Poppins-Regular", size: 17))
+                                        }
                                     }
                                 }
                                 .pickerStyle(WheelPickerStyle())
-                                .frame(width: 70, height: 100)
+                                .frame(width: 60, height: 120)
                                 .clipped()
                                 .padding()
-                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                .cornerRadius(100)
-                            }
-                            VStack{
-                                Text(LocalizedStringKey("Interval"))
-                                // .foregroundColor(Color.accentColor1)
+                                .cornerRadius(50)
                                 
-                                Picker(LocalizedStringKey("Interval"), selection: $intervalTime) {
-                                    ForEach(times, id: \.self) { number in
-                                        Text("\(number)")
+                                VStack {
+                                    Text(LocalizedStringKey("Interval"))
+                                        .font(.custom("Poppins-Regular", size: 17))
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Picker(LocalizedStringKey("Interval"), selection: $intervalTime) {
+                                        ForEach(times, id: \.self) { number in
+                                            Text("\(number)")
+                                                .font(.custom("Poppins-Regular", size: 17))
+                                        }
                                     }
                                 }
                                 .pickerStyle(WheelPickerStyle())
-                                .frame(width: 70, height: 100)
+                                .frame(width: 60, height: 120)
                                 .clipped()
                                 .padding()
-                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                .cornerRadius(100)
                                 
-                                
-                                
-                            }
-                            
-                            
-                            
-                            VStack {
-                                Text(LocalizedStringKey("Break"))
-                                // .foregroundColor(Color.accentColor1)
-                                Picker(LocalizedStringKey("Break"), selection: $breakTime) {
-                                    ForEach(breakTimes, id: \.self) { number in
-                                        Text("\(number)")
-                                        
+                                VStack {
+                                    Text(LocalizedStringKey("Break"))
+                                        .font(.custom("Poppins-Regular", size: 17))
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Picker(LocalizedStringKey("Break"), selection: $breakTime) {
+                                        ForEach(breakTimes, id: \.self) { number in
+                                            Text("\(number)")
+                                                .font(.custom("Poppins-Regular", size: 17))
+                                        }
                                     }
                                 }
                                 .pickerStyle(WheelPickerStyle())
-                                .frame(width: 70, height: 100)
+                                .frame(width: 60, height: 120)
                                 .clipped()
                                 .padding()
-                                .background(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                .cornerRadius(100)
+                                .cornerRadius(50)
                             }
                         }
-                        
-                        
+                        .padding()
                     }
-                    .padding(30)
+                    
                     MainCircleView(colors: getDailySubjectColors(for: Date())) {
                         Button(action: {
                             startTimer()
@@ -147,40 +149,37 @@ struct ContentView: View {
                                 .font(.largeTitle)
                                 .foregroundColor(Color.white)
                                 .padding()
-                                .background(Color.gray.opacity(0.1))
                                 .cornerRadius(100)
+                                .opacity(0.8)
+                         
                         }
                     }
                     .padding()
-                    .padding()
-                    
-                    
                     .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))
+                   
                 }
                 
-                if timerStarted{
+                if timerStarted {
                     CircularProgressView(
                         progress: progressValue(),
                         currentInterval: currentInterval,
                         intervalNumber: intervalNumber,
-                        content: AnyView(timerStarted ? countdownView as! Text : Text("")),
+                        content: countdownView,
                         isTimerStarted: timerStarted,
-                        accentColor: selectedAccentColor,
+                        actColor: selectedAccentColor,
                         onBreak: onBreak
                     )
-                    .padding()
-                    .padding()
                     
-                    
+                    .padding()
                 }
+                
                 if !timerStarted {
                     HStack {
                         Picker(LocalizedStringKey("Subject"), selection: $chosenSubject) {
-                            Text(LocalizedStringKey("Choose")).tag(nil as String?) // Handling nil
-                                .foregroundColor(Color.accentColor1)
+                            Text(LocalizedStringKey("Choose")).tag(nil as String?)
                             ForEach(filteredSubjects(), id: \.self) { name in
                                 Text(name).tag(name as String?)
-                                    .foregroundColor(Color.accentColor1)
+                                    .font(.custom("Poppins-Regular", size: 17))
                             }
                         }
                         .onChange(of: chosenSubject) { oldValue, newValue in
@@ -190,6 +189,7 @@ struct ContentView: View {
                         }
                     }
                     .padding()
+                    Spacer()
                 }
                 
                 HStack {
@@ -199,10 +199,11 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "play.fill")
                                 .font(.largeTitle)
-                                .foregroundColor(Color.accentColor1)
+                                .foregroundColor(.white)
                                 .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(100)
+                                .opacity(0.8)
+                               
+                             
                         }
                     }
                     
@@ -213,9 +214,10 @@ struct ContentView: View {
                             Image(systemName: "pause.fill")
                                 .font(.largeTitle)
                                 .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(100)
-                                .foregroundColor(Color.accentColor1)
+                                .foregroundColor(.white)
+                                .opacity(0.8)
+                          
+                            
                         }
                     }
                     
@@ -225,21 +227,21 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "stop.circle.fill")
                                 .font(.largeTitle)
-                                .foregroundColor(Color.accentColor1)
                                 .padding()
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(100)
-                                .padding()
+                                .foregroundColor(.white)
+                                .opacity(0.8)
+                               
+                          
                         }
                     }
                 }
+          
             }
             .onAppear {
                 if let firstSubject = filteredSubjects().first {
                     self.chosenSubject = firstSubject
                 }
             }
-            
         }
         .animation(.easeInOut, value: timerStarted)
         .sheet(isPresented: $showDescSheet) {
@@ -254,6 +256,29 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             updateCircularView()
             resumeTimerIfNeeded()
+        }
+    }
+    private func updateCircularView() {
+        if !timerIsPaused{
+            guard let startDate = timerStartDate else { return }
+            
+            let elapsedTime = Int(Date().timeIntervalSince(startDate))
+            _ = intervalNumber * (intervalTime * 60 + breakTime * 60)
+            let completedIntervals = elapsedTime / (intervalTime * 60 + breakTime * 60)
+            let timeInCurrentInterval = elapsedTime % (intervalTime * 60 + breakTime * 60)
+            
+            if completedIntervals >= intervalNumber {
+                stopTimer()
+            } else {
+                currentInterval = completedIntervals + 1
+                if timeInCurrentInterval < intervalTime * 60 {
+                    onBreak = false
+                    countdownTime = intervalTime * 60 - timeInCurrentInterval
+                } else {
+                    onBreak = true
+                    countdownTime = (breakTime * 60) - (timeInCurrentInterval - intervalTime * 60)
+                }
+            }
         }
     }
     
@@ -272,7 +297,6 @@ struct ContentView: View {
     func requestNotificationPermissions() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
             if granted {
-                // print("Notification permissions granted")
             } else if let error = error {
                 print("Error requesting notification permissions: \(error.localizedDescription)")
             }
@@ -286,6 +310,7 @@ struct ContentView: View {
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { error in
@@ -294,6 +319,9 @@ struct ContentView: View {
             }
         }
     }
+    
+    
+    
     private func getDailySubjectColors(for date: Date) -> [Color] {
         let calendar = Calendar.current
         let filteredSubjects = dailySubjects.filter { calendar.isDate($0.date ?? Date(), inSameDayAs: date) }
@@ -302,57 +330,83 @@ struct ContentView: View {
     }
     
     private var descriptionSheet: some View {
-        VStack {
-            Text(LocalizedStringKey("What?"))
-                .font(.largeTitle)
-                .padding()
+        ZStack {
+            Color.bg2
+                .ignoresSafeArea()
             
-            TextField(LocalizedStringKey("Description"), text: $reportDescription)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .padding()
-            
-            if isExamAndClass {
-                Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
-                    Text(LocalizedStringKey("select_topic")).tag("")
-                        .foregroundColor(Color.accentColor1)
-                    if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
-                        ForEach(chosenExam.topicsArray, id: \.self) { item in
-                            Text(item)
+            VStack {
+                Text(LocalizedStringKey("What?"))
+                    .font(.custom("Poppins-SemiBold", size: 25))
+                    .padding()
+                
+                TextField(LocalizedStringKey("Description"), text: $reportDescription)
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(20)
+                    .font(.custom("Poppins-Regular", size: 16))
+                
+                if let chosenSubject = chosenSubject {
+                    Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
+                        Text(LocalizedStringKey("select_topic")).tag("")
+
+                        // For Exams
+                        if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
+                            ForEach(chosenExam.topicsArray, id: \.self) { item in
+                                Text(item)
+                                    .font(.custom("Poppins-Regular", size: 16))
+                            }
+                        }
+
+                        // For Projects
+                        if let chosenProject = projects.first(where: { $0.name == chosenSubject }) {
+                            ForEach(chosenProject.topicsArray, id: \.self) { item in
+                                Text(item)
+                                    .font(.custom("Poppins-Regular", size: 16))
+                            }
                         }
                     }
+                    .font(.custom("Poppins-Regular", size: 16))
+                    .frame(width: 200, height: 100)
+                    .clipped()
+                    .padding()
                 }
-                .frame(width: 200, height: 100)
-                .clipped()
-                .padding()
-            }
-            Button(LocalizedStringKey("Save")) {
-                let newReport = Report(context: moc)
-                newReport.date = timerStartDate
-                newReport.subjectName = chosenSubject
-                newReport.totalTime = Int16(totalWorkTime)
                 
-                if isExamAndClass {
-                    newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
-                } else {
-                    newReport.desc = reportDescription
-                }
-                reportDescription = ""
-                
-                if moc.hasChanges {
-                    do {
-                        try moc.save()
-                    } catch {
-                        print("Could not save data: \(error.localizedDescription)")
+                Button(LocalizedStringKey("Save")) {
+                    let newReport = Report(context: moc)
+                    newReport.date = timerStartDate
+                    newReport.subjectName = chosenSubject
+                    newReport.totalTime = Int16(totalWorkTime)
+                    
+                    if let chosenSubject = chosenSubject {
+                        // Add topics based on whether it's an exam or project
+                        if exams.first(where: { $0.name == chosenSubject }) != nil {
+                            newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
+                        } else if projects.first(where: { $0.name == chosenSubject }) != nil {
+                            newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
+                        }
+                    } else {
+                        newReport.desc = reportDescription
                     }
+
+                    reportDescription = ""
+                    
+                    if moc.hasChanges {
+                        do {
+                            try moc.save()
+                        } catch {
+                            print("Could not save data: \(error.localizedDescription)")
+                        }
+                    }
+                    showDescSheet = false
                 }
-                showDescSheet = false
+                .font(.custom("Poppins-Regular", size: 18))
+                .padding()
+                .cornerRadius(10)
             }
             .padding()
-            .cornerRadius(10)
         }
     }
-    
+
     private func getColorForSelectedSubject() -> Color {
         if let subject = subjects.first(where: { $0.name == chosenSubject }) {
             return subject.color?.toColor() ?? Color.white
@@ -365,8 +419,9 @@ struct ContentView: View {
     
     private var countdownView: some View {
         Text(timeString(time: countdownTime))
-            .font(.largeTitle)
+            .font(.custom("Poppins-Regular", size: 60))
     }
+    
     
     private func progressValue() -> CGFloat {
         let totalDuration = onBreak ? breakTime * 60 : intervalTime * 60
@@ -382,34 +437,51 @@ struct ContentView: View {
         timerIsPaused = false
         timerStarted = true
         totalWorkTime = 0
+
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            self.updateTimer()
+        DispatchQueue.global(qos: .background).async {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                DispatchQueue.main.async {
+                    self.updateTimer()
+                }
+            }
+            RunLoop.current.add(self.timer!, forMode: .common)
+            RunLoop.current.run()
         }
     }
     
     private func updateTimer() {
-        if countdownTime > 0 {
-            countdownTime -= 1
-            if !onBreak {
-                totalWorkTime += 1
-            }
-        } else {
-            if onBreak {
-                currentInterval += 1
-                if currentInterval <= intervalNumber {
-                    onBreak = false
-                    countdownTime = intervalTime * 60
-                    scheduleNotification(message: "Starting next interval!")
-                } else {
-                    stopTimer()
-                    scheduleNotification(message: "The timer is over!")
+        DispatchQueue.global(qos: .background).async {
+            if self.countdownTime > 0 {
+                DispatchQueue.main.async {
+                    self.countdownTime -= 1
+                    if !self.onBreak {
+                        self.totalWorkTime += 1
+                    }
                 }
             } else {
-                onBreak = true
-                countdownTime = breakTime * 60
-                scheduleNotification(message: "Time for a break!")
+                DispatchQueue.main.async {
+                    self.handleEndOfInterval()
+                }
             }
+        }
+    }
+    
+    private func handleEndOfInterval() {
+        if onBreak {
+            currentInterval += 1
+            if currentInterval <= intervalNumber {
+                onBreak = false
+                countdownTime = intervalTime * 60
+                scheduleNotification(message: "starting_next_interval_message")
+            } else {
+                stopTimer()
+                scheduleNotification(message: "timer_is_over_message")
+            }
+        } else {
+            onBreak = true
+            countdownTime = breakTime * 60
+            scheduleNotification(message: "time_for_break_message")
         }
     }
     
@@ -420,42 +492,9 @@ struct ContentView: View {
         timerIsPaused = true
         timerStarted = false
         showDescSheet = true
+
     }
     
-    private func updateCircularView() {
-        if let startDate = timerStartDate {
-            let elapsedTime = Int(Date().timeIntervalSince(startDate))
-            var remainingTime: Int
-            
-            if onBreak {
-                let breakStartTime = (currentInterval - 1) * (intervalTime * 60)
-                let breakElapsedTime = elapsedTime - breakStartTime
-                remainingTime = max(breakTime * 60 - breakElapsedTime, 0)
-            } else {
-                let workElapsedTime = elapsedTime - (currentInterval - 1) * (intervalTime * 60 + breakTime * 60)
-                let workDuration = intervalTime * 60
-                remainingTime = max(workDuration - workElapsedTime, 0)
-            }
-            
-            countdownTime = remainingTime
-            totalWorkTime = elapsedTime
-            
-            if remainingTime == 0 {
-                if onBreak {
-                    scheduleNotification(message: "end_break_message")
-                    if currentInterval < intervalNumber {
-                        onBreak.toggle()
-                        countdownTime = intervalTime * 60
-                        currentInterval += 1
-                    } else {
-                        scheduleNotification(message: "finish_message")
-                    }
-                } else {
-                    scheduleNotification(message: "break_message")
-                }
-            }
-        }
-    }
     
     private func pauseTimer() {
         timer?.invalidate()
@@ -464,31 +503,33 @@ struct ContentView: View {
     
     private func resumeTimer() {
         timerIsPaused = false
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.countdownTime > 0 {
-                self.countdownTime -= 1
-                if !self.onBreak {
-                    self.totalWorkTime += 1
-                }
-            } else {
-                if self.currentInterval < self.intervalNumber {
-                    self.onBreak.toggle()
-                    self.countdownTime = self.onBreak ? self.breakTime * 60 : self.intervalTime * 60
-                    if !self.onBreak {
-                        self.currentInterval += 1
+        DispatchQueue.global(qos: .background).async {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                DispatchQueue.main.async {
+                    if self.countdownTime > 0 {
+                        self.countdownTime -= 1
+                        if !self.onBreak {
+                            self.totalWorkTime += 1
+                        }
+                    } else {
+                        self.handleEndOfInterval()
                     }
-                } else {
-                    self.timer?.invalidate()
                 }
             }
+            RunLoop.current.add(self.timer!, forMode: .common)
+            RunLoop.current.run()
         }
     }
     
     private func timeString(time: Int) -> String {
-        let minutes = time / 60
-        let seconds = time % 60
-        return "\(String(format: "%02d", minutes)):\(String(format: "%02d", seconds))"
+        if time <= 59 && time > 0 {
+               return "1"
+           }
+        let minutes = Int(ceil(Double(time) / 60.0))
+           
+        return "\(String(format: "%d", minutes))"
     }
+
 }
 
 struct CircularGradientBackground: ViewModifier {
@@ -496,17 +537,14 @@ struct CircularGradientBackground: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-        
             .background(
                 Circle()
-                
                     .fill(LinearGradient(
                         gradient: Gradient(colors: colors),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ))
             )
-        
     }
 }
 
@@ -516,7 +554,7 @@ extension View {
     }
 }
 
-
+import SwiftUI
 
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
@@ -524,34 +562,58 @@ struct CircularProgressView<Content: View>: View {
     var intervalNumber: Int
     var content: Content
     var isTimerStarted: Bool
-    var accentColor: Color
+    var actColor: Color
     var onBreak: Bool
+    @State private var startAngle: Angle = .degrees(0)
+    @State private var endAngle: Angle = .degrees(360)
     
     var body: some View {
         ZStack {
             Circle()
-                .stroke(lineWidth: 30)
-                .opacity(0.1)
-                .foregroundColor(Color.gray)
-                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 2)
+                .fill(actColor.opacity(0.2))
+                .frame(width: 320, height: 320)
+                .blur(radius: 55)
+           
+            Circle()
+                .fill(Color.bg2)
+                .frame(width: 250, height: 250)
             
             Circle()
                 .trim(from: 0.0, to: progress)
-                .stroke(style: StrokeStyle(lineWidth: 17, lineCap: .round, lineJoin: .round))
-                .foregroundColor(accentColor.opacity(onBreak ? 0.5 : 1))
+                .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                .foregroundColor(actColor.opacity(onBreak ? 0.5 : 1))
                 .rotationEffect(Angle(degrees: 270))
-                .animation(.linear, value: progress)
+                .frame(width: 250, height: 250)
+                .animation(.easeInOut(duration: 1.0), value: progress)
             
-            content
+            
+                .mask(
+                    Circle()
+                        .frame(width: 250, height: 250)
+                )
+            
+            Circle()
+                .fill(Color.clear)
+                .frame(width: 180, height: 180)
+            
+            VStack {
+                content
+                
+            }
             
             if isTimerStarted {
                 Text("\(currentInterval) / \(intervalNumber)")
-                    .offset(y: -40)
+                    .offset(y: -50)
+                    .foregroundColor(.white)
+                    .opacity(0.5)
+                    .font(.custom("Poppins-Regular", size: 17))
+                    .padding()
             }
         }
-        .frame(width: 200, height: 200)
+        .edgesIgnoringSafeArea(.all)
     }
 }
+
 
 struct TopicPickerItem: View {
     var text: String
@@ -573,6 +635,4 @@ extension String {
         return Color(red: rgbValues[0], green: rgbValues[1], blue: rgbValues[2])
     }
 }
-#Preview {
-    ContentView()
-}
+

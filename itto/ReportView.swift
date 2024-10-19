@@ -7,20 +7,18 @@
 // itto
 //
 // Created by Duru SAVAŞ on 19/11/2023.
+
 import SwiftUI
 import CoreData
 import Charts
 
-
-struct WeeklyChartView: View {
-    var weekOffset: Int
-    var reports: FetchedResults<Report>
-    var subjects: FetchedResults<Subjects>
-    var projects: FetchedResults<Projects>
-
-    @State private var selectedReport: CombinedReport?
+struct ReportView: View {
+    @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
+    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
+    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
+    @State private var weekOffset = 0
     @State private var currentDayOffset = 0
-
+    
     var combinedReports: [CombinedReport] {
         var combinedList: [CombinedReport] = []
         for reportItem in reports {
@@ -34,87 +32,93 @@ struct WeeklyChartView: View {
         }
         return combinedList
     }
-
+    
     var body: some View {
-        VStack {
-            Chart {
-                ForEach(daysOfTheWeek(start: weekRange(offset: weekOffset).0), id: \.self) { day in
-                    // Filter reports for the specific day
-                    let dayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: day) }
-                    if dayReports.isEmpty {
-                        // No reports for this day, so add a transparent bar to ensure the axis label is shown
-                        BarMark(
-                            x: .value("Day", day.formattedDay),
-                            y: .value("Work Time", 0)
-                        )
-                        .foregroundStyle(Color.clear)
-                    } else {
-                        // Create a stack of bars for each report on this day
-                        ForEach(dayReports, id: \.subjectId) { report in
-                            BarMark(
-                                x: .value("Day", day.formattedDay),
-                                y: .value("Work Time", Double(report.totalTime) / 60)
-                            )
-                            .foregroundStyle(report.color)
+        NavigationStack {
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
+                    startPoint: .center,
+                    endPoint: .topTrailing
+                )
+                .edgesIgnoringSafeArea(.all)
+                
+                VStack(spacing: 0) {
+                    Chart {
+                        ForEach(daysOfTheWeek(start: weekRange(offset: weekOffset).0), id: \.self) { day in
+                            let dayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: day) }
+                            if dayReports.isEmpty {
+                                BarMark(
+                                    x: .value("Day", day.formattedDay),
+                                    y: .value("Work Time", 0)
+                                )
+                                .foregroundStyle(Color.clear)
+                            } else {
+                                ForEach(dayReports, id: \.subjectId) { report in
+                                    BarMark(
+                                        x: .value("Day", day.formattedDay),
+                                        y: .value("Work Time", Double(report.totalTime) / 60)
+                                    )
+                                    .foregroundStyle(report.color)
+                                }
+                            }
                         }
                     }
+                    .frame(width: 300, height: 300)
+                    .padding()
+                    HStack(spacing: 10) {
+                        Button(action: { self.currentDayOffset -= 1 }) {
+                            Image(systemName: "arrow.left")
+                        }
+                        .disabled(currentDayOffset <= 0)
+                        
+                        Text(formattedDate(currentDate))
+                            .font(.custom("Poppins-Regular", size: 20))
+                        
+                        Button(action: { self.currentDayOffset += 1 }) {
+                            Image(systemName: "arrow.right")
+                        }
+                        .disabled(currentDayOffset >= 6)
+                    }
+                    
+                    List {
+                        ForEach(filteredItemsForDay(), id: \.id) { item in
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    GradientCircleView(baseColor: item.color.toColor())
+                                        .frame(width: 17, height: 17)
+                                    
+                                    Text(item.name)
+                                        .font(.custom("Poppins-Regular", size: 16))
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(item.totalTime / 60) \(NSLocalizedString("minutes", comment: ""))")
+                                        .font(.custom("Poppins-Regular", size: 16))
+                                    
+                                }
+                                
+                                if !item.descriptions.isEmpty {
+                                    ForEach(item.descriptions, id: \.self) { description in
+                                        Text(description)
+                                            .font(.custom("Poppins-Regular", size: 14))
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+                    }
+                    .scrollContentBackground(.hidden)
                 }
+                .padding(.bottom, 70)
             }
-            .frame(width: 300, height: 300)
-            .padding()
-          //  .background(Color(red: 15/255, green: 20/255, blue: 33/255)) // Frame background color
-            .cornerRadius(10) // Rounded corners for the frame
-            .shadow(radius: 5) // Optional: shadow for better effect
-        }
-        .padding() // Outer padding to separate from other views
-    }
-
-    private func weekRange(offset: Int) -> (Date, Date) {
-        let calendar = Calendar(identifier: .gregorian)
-        let currentDate = Date()
-        guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
-            return (currentDate, currentDate)
-        }
-
-        var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
-        // Check if the startOfWeek is Sunday and adjust
-        if calendar.component(.weekday, from: startOfWeek) == 1 {
-            startOfWeek = calendar.date(byAdding: .day, value: 1, to: startOfWeek)!
-        }
-        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
-
-        return (startOfWeek, endOfWeek)
-    }
-
-    private func daysOfTheWeek(start: Date) -> [Date] {
-        let calendar = Calendar(identifier: .gregorian)
-        var days = [Date]()
-        for i in 0..<7 {
-            if let date = calendar.date(byAdding: .day, value: i, to: start) {
-                days.append(date)
-            }
-        }
-        return days
-    }
-}
-
-
-struct ReportView: View {
-    @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
-    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
-    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
-    @State private var weekOffset = 0
-
-    var body: some View {
-        NavigationView {
-
-            VStack {
-                WeeklyChartView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
-                DailyListView(weekOffset: weekOffset, reports: reports, subjects: subjects, projects: projects)
-                    .frame(maxWidth: .infinity)
-            }
-            .navigationTitle(navigationTitle(for: weekOffset))
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(navigationTitle(for: weekOffset))
+                        .font(.custom("Poppins-Regular", size: 23))
+                }
+                
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: { self.weekOffset -= 1 }) {
                         Image(systemName: "arrow.left")
@@ -127,121 +131,8 @@ struct ReportView: View {
                     .disabled(weekOffset == 0)
                 }
             }
-        
         }
         .onAppear {
-            // Ensure data is properly fetched and initialized
-            printReportData(reports, subjects, projects)
-        }
-    }
-
-    private func navigationTitle(for weekOffset: Int) -> String {
-        let (startOfWeek, _) = weekRange(offset: weekOffset)
-        let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: startOfWeek)!
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d" // Day only
-        let startString = dateFormatter.string(from: startOfWeek)
-
-        dateFormatter.dateFormat = "d MMMM" // Day and full month name
-        let endString = dateFormatter.string(from: endOfWeek)
-
-        if weekOffset == 0 {
-            return NSLocalizedString("this_week", comment: "This week")
-        } else {
-            return "\(startString)-\(endString)"
-        }
-    }
-
-    private func printReportData(_ reports: FetchedResults<Report>, _ subjects: FetchedResults<Subjects>, _ projects: FetchedResults<Projects>) {
-        print("Report Data:")
-        for report in reports {
-            print("Date: \(report.date ?? Date())")
-            print("Description: \(report.desc ?? "No description")")
-            print("Subject Name: \(report.subjectName ?? "No subject name")")
-            print("Total Time: \(report.totalTime) minutes")
-            
-            if let subject = subjects.first(where: { $0.name == report.subjectName }) {
-                print("Subject Color: \(subject.color ?? "No color")")
-            }
-            
-            if let project = projects.first(where: { $0.name == report.subjectName }) {
-                print("Project Color: \(project.color ?? "No color")")
-            }
-            
-            print("---")
-        }
-    }
-
-    private func weekRange(offset: Int) -> (Date, Date) {
-        let calendar = Calendar(identifier: .gregorian)
-        let currentDate = Date()
-        guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
-            return (currentDate, currentDate)
-        }
-        var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
-        // Check if the startOfWeek is Sunday and adjust
-        if calendar.component(.weekday, from: startOfWeek) == 1 {
-            startOfWeek = calendar.date(byAdding: .day, value: 1, to: startOfWeek)!
-        }
-        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
-
-        return (startOfWeek, endOfWeek)
-    }
-}
-
-
-struct DailyListView: View {
-    var weekOffset: Int
-    var reports: FetchedResults<Report>
-    var subjects: FetchedResults<Subjects>
-    var projects: FetchedResults<Projects>
-
-    @State private var currentDayOffset = 0
-
-    var body: some View {
-        
-        VStack {
-            HStack {
-                Button(action: { self.currentDayOffset -= 1 }) {
-                    Image(systemName: "arrow.left")
-                }
-                .disabled(currentDayOffset <= 0)
-                Text(formattedDate(currentDate)) // Display the current date here
-
-                Button(action: { self.currentDayOffset += 1 }) {
-                    Image(systemName: "arrow.right")
-                }
-                .disabled(currentDayOffset >= 6)
-            }
-            List {
-                ForEach(filteredItemsForDay(), id: \.id) { ItemWithTotalTime in
-                    VStack(alignment: .leading) {
-                        HStack {
-                         GradientCircleView(baseColor: ItemWithTotalTime.color.toColor())
-                                .frame(width: 20, height: 20)
-                       
-                            Text(ItemWithTotalTime.name)
-                            Spacer()
-                            Text("\(ItemWithTotalTime.totalTime/60) mins")
-                        }
-
-                        // Only add descriptions if they exist
-                        if !ItemWithTotalTime.descriptions.isEmpty {
-                            ForEach(ItemWithTotalTime.descriptions, id: \.self) { description in
-                                Text(description)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    }
-                }
-                .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-            }
-            
-        }
-        .onAppear {
-            // Adjust currentDayOffset to the current day of the week
             let calendar = Calendar(identifier: .gregorian)
             let today = Date()
             let startOfWeek = weekRange(offset: weekOffset).0
@@ -250,79 +141,77 @@ struct DailyListView: View {
         }
     }
     
-
-    var combinedReports: [CombinedReport] {
-        var combinedList: [CombinedReport] = []
-        for reportItem in reports {
-            if let subjectItem = subjects.first(where: { $0.name == reportItem.subjectName }) {
-                let combinedReport = CombinedReport(report: reportItem, subject: subjectItem)
-                combinedList.append(combinedReport)
-            } else if let projectItem = projects.first(where: { $0.name == reportItem.subjectName }) {
-                let combinedReport = CombinedReport(report: reportItem, project: projectItem)
-                combinedList.append(combinedReport)
-            }
-        }
-        return combinedList
-    }
-
     private var currentDate: Date {
         let startOfWeek = weekRange(offset: weekOffset).0
         return Calendar.current.date(byAdding: .day, value: currentDayOffset, to: startOfWeek) ?? Date()
     }
-
+    
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "E, MMM d"
+        formatter.dateFormat = "E, d" 
         return formatter.string(from: date)
     }
-
+    
     private func filteredItemsForDay() -> [ItemWithTotalTime] {
-        let currentDate = daysOfTheWeek(start: weekRange(offset: weekOffset).0)[currentDayOffset]
+        let days = daysOfTheWeek(start: weekRange(offset: weekOffset).0)
+        guard currentDayOffset >= 0 && currentDayOffset < days.count else {
+            return []
+        }
+        
+        let currentDate = days[currentDayOffset]
         let currentDayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
-
-        // Create a dictionary to hold combined data for both subjects and projects
+        
         var combinedItems = [String: ItemWithTotalTime]()
-
-        // Process reports to aggregate information
+        
         for report in currentDayReports {
             let itemName = report.subjectName
             let itemID = report.subjectId
             let itemColor = report.subjectColor
             let itemTime = Int(report.totalTime)
             let itemDescription = report.reportDescription
-
+            
             if let existingItem = combinedItems[itemName] {
-                // Update existing item with new time and descriptions
                 let updatedTime = existingItem.totalTime + itemTime
                 let updatedDescriptions = existingItem.descriptions + [itemDescription]
                 combinedItems[itemName] = ItemWithTotalTime(name: itemName, color: itemColor, totalTime: updatedTime, descriptions: updatedDescriptions, id: itemID)
             } else {
-                // Add new item
                 combinedItems[itemName] = ItemWithTotalTime(name: itemName, color: itemColor, totalTime: itemTime, descriptions: [itemDescription], id: itemID)
             }
         }
-
+        
         return Array(combinedItems.values)
     }
-
-
+    
+    private func navigationTitle(for weekOffset: Int) -> String {
+        let (startOfWeek, _) = weekRange(offset: weekOffset)
+        let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: startOfWeek)!
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d"
+        let startString = dateFormatter.string(from: startOfWeek)
+        
+        dateFormatter.dateFormat = "d MMMM"
+        let endString = dateFormatter.string(from: endOfWeek)
+        
+        return weekOffset == 0 ? NSLocalizedString("this_week", comment: "This week") : "\(startString)-\(endString)"
+    }
+    
     private func weekRange(offset: Int) -> (Date, Date) {
         let calendar = Calendar(identifier: .gregorian)
         let currentDate = Date()
         guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
             return (currentDate, currentDate)
         }
-
+        
         var startOfWeek = calendar.date(byAdding: .day, value: 7 * offset, to: weekInterval.start)!
-        // Check if the startOfWeek is Sunday and adjust
         if calendar.component(.weekday, from: startOfWeek) == 1 {
             startOfWeek = calendar.date(byAdding: .day, value: 1, to: startOfWeek)!
         }
         let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
-
+        
         return (startOfWeek, endOfWeek)
     }
-
+    
     private func daysOfTheWeek(start: Date) -> [Date] {
         let calendar = Calendar(identifier: .gregorian)
         var days = [Date]()
@@ -340,11 +229,9 @@ struct ItemWithTotalTime {
     let color: String
     let totalTime: Int
     let descriptions: [String]
-    let id: UUID // Ensure each item can be uniquely identified, as needed
+    let id: UUID
 }
 
-
-// Combined Report Struct
 struct CombinedReport {
     var date: Date
     var subjectName: String
@@ -373,8 +260,6 @@ struct CombinedReport {
         self.reportDescription = report.desc ?? ""
     }
     
- 
-
     init(report: Report, project: Projects) {
         self.date = report.date ?? Date()
         self.subjectName = report.subjectName ?? "None"
@@ -383,18 +268,13 @@ struct CombinedReport {
         self.subjectId = project.id ?? UUID()
         self.reportDescription = report.desc ?? ""
     }
-
-    static func totalTimeForSubject(_ subjectName: String, in reports: [CombinedReport]) -> Int {
-        return reports.filter { $0.subjectName == subjectName }
-            .map { Int($0.totalTime) }
-            .reduce(0, +)
-    }
 }
 
 extension Date {
     var formattedDay: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "E" // Day of the week, e.g., "Mon", "Tue", etc.
+        formatter.dateFormat = "E"
         return formatter.string(from: self)
     }
 }
+

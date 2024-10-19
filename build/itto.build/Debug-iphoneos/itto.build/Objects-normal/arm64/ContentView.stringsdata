@@ -4,59 +4,139 @@
     "Localizable": [
       {
         "comment": "",
-        "key": ""
+        "key": "Sets",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 88
+        }
       },
       {
         "comment": "",
-        "key": "Today's colors"
+        "key": "Sets",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 92
+        }
       },
       {
         "comment": "",
-        "key": "Sets"
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 94
+        }
       },
       {
         "comment": "",
-        "key": "%lld"
+        "key": "Interval",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 106
+        }
       },
       {
         "comment": "",
-        "key": "Interval"
+        "key": "Interval",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 110
+        }
       },
       {
         "comment": "",
-        "key": "Break"
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 112
+        }
       },
       {
         "comment": "",
-        "key": "Subject"
+        "key": "Break",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 123
+        }
       },
       {
         "comment": "",
-        "key": "Choose"
+        "key": "Break",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 127
+        }
       },
       {
         "comment": "",
-        "key": "What?"
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 129
+        }
       },
       {
         "comment": "",
-        "key": "Description"
+        "key": "Subject",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 178
+        }
       },
       {
         "comment": "",
-        "key": "Topics"
+        "key": "Choose",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 179
+        }
       },
       {
         "comment": "",
-        "key": "Save"
+        "key": "What?",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 338
+        }
       },
       {
         "comment": "",
-        "key": "select_topic"
+        "key": "Description",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 342
+        }
       },
       {
         "comment": "",
-        "key": "%lld / %lld"
+        "key": "Topics",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 349
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 374
+        }
+      },
+      {
+        "comment": "",
+        "key": "select_topic",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 350
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld / %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 605
+        }
       }
     ]
   },

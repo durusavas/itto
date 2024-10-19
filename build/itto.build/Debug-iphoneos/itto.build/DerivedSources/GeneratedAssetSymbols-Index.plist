@@ -14,20 +14,39 @@
 			<key>swiftSymbol</key>
 			<string>accentColor1</string>
 		</dict>
-	</array>
-	<key>images</key>
-	<array>
 		<dict>
 			<key>catalogPath</key>
 			<string>/Users/durusavas/Desktop/itto/itto/Assets.xcassets</string>
 			<key>objcSymbol</key>
-			<string>ACImageNameLogo1</string>
+			<string>ACColorNameBg1</string>
 			<key>relativePath</key>
-			<string>./logo1.imageset</string>
+			<string>./bg1.colorset</string>
 			<key>swiftSymbol</key>
-			<string>logo1</string>
+			<string>bg1</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/durusavas/Desktop/itto/itto/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameBg2</string>
+			<key>relativePath</key>
+			<string>./bg2.colorset</string>
+			<key>swiftSymbol</key>
+			<string>bg2</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/durusavas/Desktop/itto/itto/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameIttoPurple</string>
+			<key>relativePath</key>
+			<string>./ittoPurple.colorset</string>
+			<key>swiftSymbol</key>
+			<string>ittoPurple</string>
 		</dict>
 	</array>
+	<key>images</key>
+	<array/>
 	<key>symbols</key>
 	<array/>
 </dict>

@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/itto/SplashScreenView.swift":
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.d"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.o"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.swiftdeps"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.swiftconstvalues"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/SplashScreenView.dia"
+"/Users/durusavas/Desktop/itto/itto/DataController.swift":
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.swiftdeps"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.d"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.dia"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/DataController.o"
+"/Users/durusavas/Desktop/itto/itto/MainView.swift":
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.swiftconstvalues"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.d"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.swiftdeps"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.dia"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/MainView.o"

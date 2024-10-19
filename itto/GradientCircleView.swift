@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GradientCircleView: View {
     var baseColor: Color
-
+    
     var body: some View {
         Circle()
             .fill(LinearGradient(

@@ -1,0 +1,18 @@
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/DerivedSources/GeneratedAssetSymbols.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.dia"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.o"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/GeneratedAssetSymbols.d"
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/DerivedSources/CoreDataGenerated/Itto/Subjects+CoreDataProperties.swift":
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Subjects+CoreDataProperties.o"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Subjects+CoreDataProperties.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Subjects+CoreDataProperties.swiftdeps"
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Subjects+CoreDataProperties.dia"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Subjects+CoreDataProperties.d"
+"/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/DerivedSources/CoreDataGenerated/Itto/Itto+CoreDataModel.swift":
+  diagnostics: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Itto+CoreDataModel.dia"
+  const-values: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Itto+CoreDataModel.swiftconstvalues"
+  swift-dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Itto+CoreDataModel.swiftdeps"
+  dependencies: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Itto+CoreDataModel.d"
+  object: "/Users/durusavas/Desktop/itto/build/itto.build/Debug-iphonesimulator/itto.build/Objects-normal/arm64/Itto+CoreDataModel.o"

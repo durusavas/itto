@@ -4,15 +4,43 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Day"
+        "key": "Day",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 52
+        }
       },
       {
         "comment": "",
-        "key": "Work Time"
+        "key": "Work Time",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 53
+        }
       },
       {
         "comment": "",
-        "key": "%lld mins"
+        "key": "Day",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "Work Time",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld %@",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 96
+        }
       }
     ]
   },

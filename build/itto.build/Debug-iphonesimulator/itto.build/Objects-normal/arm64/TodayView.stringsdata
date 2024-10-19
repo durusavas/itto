@@ -4,15 +4,19 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "today_view_title"
+        "key": "done",
+        "location": {
+          "startingColumn": 69,
+          "startingLine": 321
+        }
       },
       {
         "comment": "",
-        "key": "reselect_days"
-      },
-      {
-        "comment": "",
-        "key": "done"
+        "key": "reselect_days",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 315
+        }
       }
     ]
   },

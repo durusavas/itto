@@ -14,73 +14,48 @@ struct SubjectView: View {
     @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
     @State private var showAddScreen = false
-    @State private var selectedExam: Subjects?
     
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(red: 1/255, green: 28/255, blue: 40/255)
-                    .ignoresSafeArea()
+                LinearGradient(
+                    gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
+                    startPoint: .center,
+                    endPoint: .topTrailing
+                )
+                .edgesIgnoringSafeArea(.all)
+                
                 VStack {
-                    List {
-                        // "My Subjects" Section
-                        if !subjects.isEmpty {
-                            Section(header: Text(LocalizedStringKey("my_classes"))) {
-                                ForEach(subjects, id: \.self) { item in
-                                    HStack {
-                                    GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
-                                            .frame(width: 20, height: 20)
-                                        Text(item.name ?? "Unknown")
-                                    }
-                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                }
-                                .onDelete(perform: deleteSubject)
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            
+                            if !subjects.isEmpty {
+                                sectionView(title: "my_classes", items: subjects.map { item in
+                                    subjectRow(item: item)
+                                })
+                            }
+                            
+                            if !exams.isEmpty {
+                                sectionView(title: "my_exams", items: exams.map { exam in
+                                    examRow(exam: exam)
+                                })
+                            }
+                            
+                            if !projects.isEmpty {
+                                sectionView(title: "my_projects", items: projects.map { project in
+                                    projectRow(project: project)
+                                })
                             }
                         }
-                        // "My Exams" Section
-                        if !exams.isEmpty {
-                            Section(header: Text(LocalizedStringKey("my_exams"))) {
-                                ForEach(exams, id: \.self) { exam in
-                                    NavigationLink(
-                                        destination: ExamDetailsView(exam: exam, color:exam.color?.toColor() ?? Color.white),
-                                        label: {
-                                            HStack {
-                                                GradientCircleView(baseColor: exam.color?.toColor() ?? Color.white)
-                                                                                           .frame(width: 20, height: 20)
-                                                Text(exam.examName ?? "Unknown")
-                                            }
-                                        }
-                                    )
-                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                }
-                                .onDelete(perform: deleteSubject)
-                            }
-                        }
-                        // "My Projects" Section
-                        if !projects.isEmpty {
-                            Section(header: Text(LocalizedStringKey("my_projects"))) {
-                                ForEach(projects, id: \.self) { project in
-                                    NavigationLink(
-                                        destination: ProjectDetailsView(project: project, color:project.color?.toColor() ?? Color.white),
-                                        label: {
-                                            HStack {
-                                                GradientCircleView(baseColor: project.color?.toColor() ?? Color.white)
-                                                    .frame(width: 20, height: 20)
-                                                Text(project.name ?? "Unknown")
-                                            }
-                                        }
-                                        )
-                                    .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
-                                }
-                                .onDelete(perform: deleteSubject)
-                            }
-                           
-                        }
-                        
                     }
+                    .scrollIndicators(.hidden)
+                    .padding(.bottom, 80)
                 }
-                .navigationTitle(LocalizedStringKey("subjects"))
                 .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text(LocalizedStringKey("subjects"))
+                            .font(.custom("Poppins-Regular", size: 23))
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             showAddScreen.toggle()
@@ -96,19 +71,91 @@ struct SubjectView: View {
         }
     }
     
-    // Function to handle the deletion of subjects
-    private func deleteSubject(at offsets: IndexSet) {
-        for index in offsets {
-            let subjectToDelete = subjects[index]
-            moc.delete(subjectToDelete)
+    private func sectionView(title: String, items: [AnyView]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+              
+                Rectangle()
+                    .fill(Color.white.opacity(0.5))
+                    .frame(height: 0.7)
+                Text(LocalizedStringKey(title))
+                    .font(.custom("Poppins-Regular", size: 18))
+                    .foregroundColor(.white.opacity(0.5))
+
+            }
+            .padding()
+            
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(0..<items.count, id: \.self) { index in
+                    items[index]
+                        .padding(.vertical, 10)
+                        .background(Color.clear)
+                    if index != items.count - 1 {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.1))
+                            .frame(height: 1)
+                            .padding(.vertical, 5)
+                    }
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.gray.opacity(0.05))  // Match the background and corner radius
+                    .frame(maxWidth: .infinity)
+            )
+            .animation(.easeInOut(duration: 0.3), value: items.count)
         }
-        // Save the context
-        do {
-            try moc.save()
-        } catch {
-            print("Error saving context after deletion: \(error)")
-        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+    }
+
+    
+    private func subjectRow(item: Subjects) -> AnyView {
+        AnyView(
+            HStack {
+                GradientCircleView(baseColor: item.color?.toColor() ?? Color.white)
+                    .frame(width: 16, height: 16)
+                Text(item.name ?? "Unknown")
+                    .font(.custom("Poppins-Regular", size: 15))
+                    .foregroundColor(.primary)
+            }
+            
+        )
+    }
+    
+    private func examRow(exam: Exams) -> AnyView {
+        AnyView(
+            NavigationLink(destination: ExamDetailsView(exam: exam, color: exam.color?.toColor() ?? Color.white)) {
+                HStack {
+                    GradientCircleView(baseColor: exam.color?.toColor() ?? Color.white)
+                        .frame(width: 16, height: 16)
+                    Text(exam.examName ?? "Unknown")
+                        .font(.custom("Poppins-Regular", size: 15))
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
+            }
+        )
+    }
+    
+    private func projectRow(project: Projects) -> AnyView {
+        AnyView(
+            NavigationLink(destination: ProjectDetailsView(project: project, color: project.color?.toColor() ?? Color.white)) {
+                HStack {
+                    GradientCircleView(baseColor: project.color?.toColor() ?? Color.white)
+                        .frame(width: 16, height: 16)
+                    Text(project.name ?? "Unknown")
+                        .font(.custom("Poppins-Regular", size: 15))
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
+            }
+        )
     }
 }
-
-

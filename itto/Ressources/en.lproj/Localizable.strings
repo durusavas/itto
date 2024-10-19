@@ -1,10 +1,10 @@
-/* 
-  Localizable.strings
-  itto
-
-  Created by Duru SAVAŞ on 30/06/2024.
-  
-*/
+/*
+ Localizable.strings
+ itto
+ 
+ Created by Duru SAVAŞ on 30/06/2024.
+ 
+ */
 // ContentView
 "Sets" = "Sets";
 "Break" = "Break";
@@ -53,6 +53,7 @@
 "add_subject" = "Add Subject";
 "error" = "Error";
 "ok" = "OK";
+"choose_subject" = "Choose Subject";
 
 // ExamDetailsView
 "new_topic" = "New Topic";
@@ -71,3 +72,16 @@
 
 
 "Interval" = "Interval";
+
+"timer_notification_title" = "Timer Notification";
+"starting_next_interval_message" = "Starting next interval!";
+"time_for_break_message" = "Time for a break!";
+"timer_is_over_message" = "The timer is over!";
+"timer_completed_message" = "The timer has completed all intervals!";
+
+"this_week" = "This Week";
+
+"minutes" = "mins";
+"add_subject" = "Add Subject";
+"Topic %d" = "Topic %d";
+

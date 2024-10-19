@@ -4,23 +4,19 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Red"
+        "key": "new_topic",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 46
+        }
       },
       {
         "comment": "",
-        "key": "Orange"
-      },
-      {
-        "comment": "",
-        "key": "Yellow"
-      },
-      {
-        "comment": "",
-        "key": "new_topic"
-      },
-      {
-        "comment": "",
-        "key": "save"
+        "key": "save",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 50
+        }
       }
     ]
   },

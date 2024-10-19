@@ -53,7 +53,7 @@
 "add_subject" = "Ajouter un sujet";
 "error" = "Erreur";
 "ok" = "OK";
-
+"choose_subject" = "Choisir un sujet";
 // ExamDetailsView
 "new_topic" = "Nouveau Sujet";
 "save" = "Enregistrer";
@@ -69,3 +69,15 @@
 "class" = "Courses";
 
 "Interval" = "Intervalle";
+
+"timer_notification_title" = "Notification de minuterie";
+"starting_next_interval_message" = "Prochain intervalle commencé !";
+"time_for_break_message" = "C'est l'heure de la pause !";
+"timer_is_over_message" = "La minuterie est terminée !";
+"timer_completed_message" = "La minuterie a terminé tous les intervalles !";
+
+"this_week" = "Cette Semaine";
+
+"minutes" = "min";
+"add_subject" = "Ajouter une matière";
+"Topic %d" = "Sujet %d";"

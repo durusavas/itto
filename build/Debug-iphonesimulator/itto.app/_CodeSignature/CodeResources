@@ -6,53 +6,69 @@
 	<dict>
 		<key>AppIcon60x60@2x.png</key>
 		<data>
-		qVDp3Lhjj535Fyo6qSTc0s9ArHY=
+		cITx5K2EUesUJnJAejCmE+SsWdk=
 		</data>
 		<key>AppIcon76x76@2x~ipad.png</key>
 		<data>
-		UayemSDu1CperyCAKZ99O1Sg7mI=
+		bOW3vmt7h97G3CTtZmqLLmE19AE=
 		</data>
 		<key>Assets.car</key>
 		<data>
-		m2/mD69w0ouAMv9BnBd1/PG0cYw=
+		ymRqtspSZYVci2bJuaYipCnW3ik=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		YCWx/KT/UOK+tvZzvQVSQzrFntg=
+		vKcSAANu4O/DvckKHdZXsBSHxYs=
 		</data>
 		<key>Itto.momd/Itto.mom</key>
 		<data>
-		iTmyVa1b4jNrgfyp3u+1l58pEeU=
+		9x/mDb7XJxqqZkQZHshNmRkX9RM=
 		</data>
 		<key>Itto.momd/VersionInfo.plist</key>
 		<data>
 		8QgiVIpuugbcv1RPkLHnFbeOGcM=
 		</data>
-		<key>OldStandardTT-Bold.ttf</key>
-		<data>
-		qZGrXxiZVD0pdLQjesjuK7e1AKQ=
-		</data>
-		<key>OldStandardTT-Italic.ttf</key>
-		<data>
-		MBJjkw9K7siixgydZgFOOeVBv9w=
-		</data>
-		<key>OldStandardTT-Regular.ttf</key>
-		<data>
-		K/DsGCMGbeJwH1FccZ14wlc8K/0=
-		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
 		</data>
-		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<key>Poppins-ExtraBoldItalic.ttf</key>
 		<data>
-		bqrzUbb1ubFUNrR0ww0wIUdlkDA=
+		lNPuOs29AON6cVol8rUjdma1uKM=
+		</data>
+		<key>Poppins-ExtraLight2.ttf</key>
+		<data>
+		ha9lgqfmFVkXxgX50/7WjAKyOwY=
+		</data>
+		<key>Poppins-Regular.ttf</key>
+		<data>
+		/dMALn2BTuR8HBuEh8csa7s6LQA=
+		</data>
+		<key>Poppins-SemiBold.ttf</key>
+		<data>
+		ikrOk5LQa8t/jqL1FpsH5MODqQ0=
+		</data>
+		<key>Poppins-SemiBoldItalic.ttf</key>
+		<data>
+		DIvtCllCsjiNNrEcEVaF2fAXALA=
+		</data>
+		<key>Poppins-Thin.ttf</key>
+		<data>
+		CbpNzVUJyAhb+IxmXcxRy9/O0ns=
+		</data>
+		<key>Poppins-ThinItalic.ttf</key>
+		<data>
+		+4/MyiFVDnETX5K7r4ouihLJBGU=
+		</data>
+		<key>__preview.dylib</key>
+		<data>
+		VucjMrSLjLAbw2b/pIOfFuWhefM=
 		</data>
 		<key>en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3f2EAuPQtZrVjbkjcxGU+pr534s=
+			AlxWZLhLRKX5GZeQlDZKfK8t1xU=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -61,16 +77,20 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			/OnyHZQkkDFjkzFAZUntR/gGuKw=
+			Dw3BGD9HO95okWZrDdzGuS3qVKQ=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
+		<key>itto.debug.dylib</key>
+		<data>
+		vPuvkKh6w/x8DYEEXZ/WBwW1h1E=
+		</data>
 		<key>tr.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			F9ntk/oYKQIvaiZvtcYGxqy+0us=
+			t6BvAkjs8tZ+Fh3vXta/Sgmc85c=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -82,28 +102,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			3wd/j9I0Kr4jHvJ+5VIob+YnKelp4FczwU+APF47uSg=
+			3MjRIW90gLNxtA9JFlyp5xy4T/jxrQGKtUaBqCvMsgs=
 			</data>
 		</dict>
 		<key>AppIcon76x76@2x~ipad.png</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qON7prc6TDRW8gwJrL1u1OLfvWRglHFAO4+FhFUF39s=
+			5CqNP6IZNsPzAmab8S9BpK+iUOJf9hf6Ir2usnXNvuU=
 			</data>
 		</dict>
 		<key>Assets.car</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GEdHU+Yu6eFlHmHNiv73yUREE6YpOokBPpV+GHYy7uk=
+			3+wHNXV5onwbPPmhNh1rrU9Knu12U1pVkh9Kj2O7H1c=
 			</data>
 		</dict>
 		<key>Itto.momd/Itto.mom</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			HvNlXTHFx0wn9URcv93R7+wMMEN4LRmSrXcSYYWSGxY=
+			XWF53zINsrvzRGCKFrWjsVMspoTA1B9VUM28wdWzeko=
 			</data>
 		</dict>
 		<key>Itto.momd/VersionInfo.plist</key>
@@ -113,39 +133,67 @@
 			0GP0lqQY1/7HSpPzC3YZFVFo5tTBhtfUdyZ9oOx7hqY=
 			</data>
 		</dict>
-		<key>OldStandardTT-Bold.ttf</key>
+		<key>Poppins-ExtraBoldItalic.ttf</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			h5vXtkGf1OODfiMCGrPH+tb+KGYOb4qL5j7PWNPF6dk=
+			u6mG4RZpBmD3DT67GKdNjSyOr82mwoyP/EMGqh4rkeQ=
 			</data>
 		</dict>
-		<key>OldStandardTT-Italic.ttf</key>
+		<key>Poppins-ExtraLight2.ttf</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AUQT8dgqwRRmC9kALI8dIw59qG/gm+VA+OAf+q8EZ2U=
+			YMS7G48nLwrEcCuWLMRuWOiFplYkR5vhwGRsnjfZzmI=
 			</data>
 		</dict>
-		<key>OldStandardTT-Regular.ttf</key>
+		<key>Poppins-Regular.ttf</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AIDauOa3gYHkpv45lMbtNitMXyxuQ1H8GOTnzbw+Bnw=
+			cH/cXIurV6kAYcao7Xtw1f+4L8gQ6ZTnn5C6zokMJVo=
 			</data>
 		</dict>
-		<key>Screenshot 2024-06-30 at 21.13.43.png</key>
+		<key>Poppins-SemiBold.ttf</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ylBNQS5o3rSDMoMLi9uc36DBXOjwdHOQ0X79ysl5T+c=
+			JIwCRLNQ7GiICZaqa+bXeWJ0tJmS1fy77+JRkGqk6jY=
+			</data>
+		</dict>
+		<key>Poppins-SemiBoldItalic.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			dLMcvCnckMLWMOd2c+e29xT/m7AeXUJGcLxhyoW2CTo=
+			</data>
+		</dict>
+		<key>Poppins-Thin.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			lYdfnvDRLVy91khSkzpXgCHIEM7CR/dWQgfgRs9scok=
+			</data>
+		</dict>
+		<key>Poppins-ThinItalic.ttf</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			BDImsOGHJjq1TePpcbZjp35Sw4V8uyNchBA4jbbSjeg=
+			</data>
+		</dict>
+		<key>__preview.dylib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			JRq1lVWEl4xUhXQD+fKRK4Q4UgAbo5A2Ncqs+JMS8yU=
 			</data>
 		</dict>
 		<key>en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			N4qrGOizXZp7aFFosB31ABvW7iHELC3CYUPLJIpsJfU=
+			RuXC+lG0BKNA3qJ48rSXB/kV3XfA0q3A5uCfR0548Fg=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -154,16 +202,23 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8XMto+d86aZnnPajBq7fIybJ4/Xfy5EDZe4kFLdQdJY=
+			yquIfyCwRtCk7a2cmymya68BVskIQDafOSuFZsX5I7A=
 			</data>
 			<key>optional</key>
 			<true/>
+		</dict>
+		<key>itto.debug.dylib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			G8euHw4ZWCso0ZyMy50IQ2PRpCKnf19u3TrAC2VoMJ8=
+			</data>
 		</dict>
 		<key>tr.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9And8YvRjTQoaNv/JOr7dxukf+7H+XCcBh2TVbXDSlQ=
+			tNFxewF50EEw5ioFYjEDOvl7cnGF5ScwR7odn56Jpe8=
 			</data>
 			<key>optional</key>
 			<true/>

@@ -12,7 +12,6 @@ struct TodayView: View {
     @State private var showReselectSubjectsPopup = false
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
-   
     
     init() {
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
@@ -25,34 +24,46 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(red: 15/255, green: 20/255, blue: 33/255)
-                    .ignoresSafeArea()
+                LinearGradient(
+                    gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
+                    startPoint: .center,
+                    endPoint: .topTrailing
+                )
+                .edgesIgnoringSafeArea(.all)
                 
-                VStack {
-                    List {
-                        ForEach(sortedGroupedDailySubjects(), id: \.0) { category, subjects in
-                            Section(header: Text(LocalizedStringKey(category))
-                                .foregroundColor(Color.accentColor1)) {
-                                ForEach(subjects, id: \.self) { dailySubject in
-                                    switch category {
-                                    case "exam":
-                                        examSection(dailySubject: dailySubject)
-                                    case "project":
-                                        projectSection(dailySubject: dailySubject)
-                                    default:
-                                        classSection(dailySubject: dailySubject)
-                                    }
-                                }
-                            }
-                            .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255)) // Set background for sections
-                        }
-                        .background(Color(red: 15/255, green: 20/255, blue: 33/255)) // Ensure list background matches
-                        .scrollContentBackground(.hidden) // Hides default background of the list
+                VStack(spacing: 0) {
+                    HStack {
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(height: 0.8)
+                            .padding(.trailing, 5)
+                        Text(currentDateString())
+                            .font(.custom("Poppins-Regular", size: 25))
+                            .foregroundColor(.white)
+                            .padding(.leading, 5)
+                        
+                        Spacer()
                     }
-
-
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            if let classes = groupedDailySubjects["class"], !classes.isEmpty {
+                                sectionView(title: "class", content: classes.map { classSection(dailySubject: $0) as! AnyView })
+                            }
+                            if let exams = groupedDailySubjects["exam"], !exams.isEmpty {
+                                sectionView(title: "exam", content: exams.map { examSection(dailySubject: $0) as! AnyView })
+                            }
+                            if let projects = groupedDailySubjects["project"], !projects.isEmpty {
+                                sectionView(title: "project", content: projects.map { projectSection(dailySubject: $0) as! AnyView })
+                            }
+                        }
+                    }
+                    .scrollIndicators(.hidden)
+                    .padding(.bottom, 80)
                 }
-                .navigationTitle(LocalizedStringKey("today_view_title"))
                 .onAppear {
                     checkForWeeklyReset()
                     deleteCompletedSubjectsAtEndOfWeek(managedObjectContext: moc)
@@ -63,6 +74,41 @@ struct TodayView: View {
             }
         }
     }
+    
+    private func sectionView(title: String, content: [AnyView]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(0..<content.count, id: \.self) { index in
+                    content[index]
+                        .padding(.vertical, 10)
+                        .background(Color.clear)
+                    if index != content.count - 1 {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.1))
+                            .frame(height: 1)
+                            .padding(.vertical, 5)
+                    }
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.gray.opacity(0.05))
+                    .frame(maxWidth: .infinity)
+            )
+            .animation(.easeInOut(duration: 0.3), value: content.count)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+    }
+    
+    private func currentDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM"
+        return formatter.string(from: Date())
+    }
+    
     private func sortedGroupedDailySubjects() -> [(String, [DailySubjects])] {
         let groupedSubjects = groupedDailySubjects
         return groupedSubjects.sorted {
@@ -73,22 +119,6 @@ struct TodayView: View {
             return firstIndex < secondIndex
         }
     }
-
-    private func importanceColor(_ importance: String) -> Color? {
-        switch importance {
-        case "Red":
-            return .red
-        case "Orange":
-            return .orange
-        case "Yellow":
-            return .yellow
-        default:
-            return nil
-        }
-    }
-    
-
-
     
     private func isTopicCompleted(dailySubject: DailySubjects, topic: String) -> Bool {
         guard let completedTopics = dailySubject.topicsCompleted as? [String] else { return false }
@@ -105,10 +135,8 @@ struct TodayView: View {
                     completedTopics.removeAll { $0 == topic }
                 }
                 dailySubject.topicsCompleted = completedTopics as NSObject
-                
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
-                
                 if allTopicsCompleted {
                     moc.delete(dailySubject)
                 }
@@ -120,61 +148,55 @@ struct TodayView: View {
     private func examSection(dailySubject: DailySubjects) -> some View {
         VStack(alignment: .leading) {
             Text(dailySubject.subjectName ?? "")
-                .font(.headline)
+                .font(.custom("Poppins-SemiBold", size: 20))
             ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
                 HStack {
-                  
                     CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
                         updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
                     }
+                    .padding(.leading, 10)
                     Text(topic)
+                        .font(.custom("Poppins-Regular", size: 14))
                         .foregroundColor(isTopicCompleted(dailySubject: dailySubject, topic: topic) ? .gray : .primary)
-                    
-                    Spacer()
-                    // Show importance indicator if it exists
-                    if let importance = dailySubject.importance, let importanceColor = importanceColor(importance) {
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor(importanceColor)
-                    }
                 }
             }
         }
     }
-
+    
     private func projectSection(dailySubject: DailySubjects) -> some View {
         VStack(alignment: .leading) {
             Text(dailySubject.subjectName ?? "")
-                .font(.headline)
+                .font(.custom("Poppins-SemiBold", size: 20))
             ForEach(dailySubject.topics as? [String] ?? [], id: \.self) { topic in
                 HStack {
                     CheckboxView(isChecked: isTopicCompleted(dailySubject: dailySubject, topic: topic), color: dailySubject.color?.toColor() ?? .blue) { checked in
                         updateCompletionStatus(for: dailySubject, topic: topic, isCompleted: checked)
                     }
+                    .padding(.leading, 10)
                     Text(topic)
+                        .font(.custom("Poppins-Regular", size: 14))
                         .foregroundColor(isTopicCompleted(dailySubject: dailySubject, topic: topic) ? .gray : .primary)
                 }
             }
         }
     }
-
-
     
     private func classSection(dailySubject: DailySubjects) -> some View {
         HStack {
             CheckboxView(isChecked: dailySubject.isCompleted, color: dailySubject.color?.toColor() ?? .blue) { checked in
                 updateCompletionStatus(for: dailySubject, isCompleted: checked)
             }
+            .padding(.leading, 10)
             Text(dailySubject.subjectName ?? "Unknown Subject")
+                .font(.custom("Poppins-Regular", size: 14))
                 .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
         }
     }
-
     
     private static func todayPredicate() -> NSPredicate {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
-        
         return NSCompoundPredicate(orPredicateWithSubpredicates: [
             NSPredicate(format: "date >= %@ AND date < %@", argumentArray: [today, tomorrow]),
             NSPredicate(format: "date < %@ AND isCompleted == %@", argumentArray: [today, NSNumber(value: false)])
@@ -184,13 +206,12 @@ struct TodayView: View {
     private var groupedDailySubjects: [String: [DailySubjects]] {
         Dictionary(grouping: dailySubjects, by: { $0.category?.lowercased() ?? "" })
     }
-
+    
     private static let lastReselectKey = "LastReselectDate"
     
     private func checkForWeeklyReset() {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        
         if calendar.component(.weekday, from: Date()) == 2 {
             if let lastReselectDate = UserDefaults.standard.value(forKey: TodayView.lastReselectKey) as? Date {
                 if calendar.dateComponents([.weekOfYear], from: lastReselectDate, to: today).weekOfYear ?? 0 >= 1 {
@@ -214,10 +235,8 @@ struct TodayView: View {
                     completedTopics.removeAll { $0 == topic }
                 }
                 dailySubject.topicsCompleted = completedTopics as NSObject
-                
                 let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
                 dailySubject.isCompleted = allTopicsCompleted
-                
                 if isCompleted {
                     moc.delete(dailySubject)
                 }
@@ -231,12 +250,9 @@ struct TodayView: View {
         let today = calendar.startOfDay(for: Date())
         let weekday = calendar.component(.weekday, from: today)
         let endOfWeekDay = 1
-        
         guard weekday == endOfWeekDay else { return }
-        
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "isCompleted == %@", NSNumber(value: true))
-        
         do {
             let completedSubjects = try managedObjectContext.fetch(fetchRequest)
             for completedSubject in completedSubjects {
@@ -265,8 +281,6 @@ struct CheckboxView: View {
             }
     }
 }
-
-
 struct ReselectSubjectsView: View {
     @Environment(\.managedObjectContext) private var moc
     @Binding var isPresented: Bool
@@ -274,42 +288,52 @@ struct ReselectSubjectsView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(subjects) { subject in
-                    Section(header: Text(subject.name ?? "Unknown")) {
-                        DaysPicker(selectedDays: Binding(
-                            get: {
-                                (subject.days as? [String])?.compactMap { Weekday(rawValue: $0) } ?? []
-                            },
-                            set: { newValue in
-                                subject.days = newValue.map { $0.rawValue } as NSObject
-                                try? moc.save()
+            ZStack {
+                Color("bg2")
+                    .ignoresSafeArea()
+                List {
+                    ForEach(subjects) { subject in
+                        Section(header: Text(subject.name ?? "Unknown")
+                            .font(.custom("Poppins-Regular", size: 15))) {
+                                DaysPicker(selectedDays: Binding(
+                                    get: {
+                                        (subject.days as? [String])?.compactMap { Weekday(rawValue: $0) } ?? []
+                                    },
+                                    set: { newValue in
+                                        subject.days = newValue.map { $0.rawValue } as NSObject
+                                        try? moc.save()
+                                    }
+                                ))
                             }
-                        ))
                     }
+                    .listRowBackground(Color.clear)
                 }
-                .listRowBackground(Color(red: 15/255, green: 20/255, blue: 33/255))
+                .scrollContentBackground(.hidden)
             }
-            .navigationTitle(LocalizedStringKey("reselect_days"))
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(LocalizedStringKey("reselect_days"))
+                        .font(.custom("Poppins-Regular", size: 18))
+                        .foregroundColor(.white)
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button(LocalizedStringKey("done")) {
                 isPresented = false
-            })
+            }
+                .font(.custom("Poppins-Regular", size: 18))) // Apply Poppins to the done button
         }
     }
-    }
+}
 
 
 private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], moc: NSManagedObjectContext) {
     let calendar = Calendar.current
     _ = calendar.startOfDay(for: Date())
-    
     let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
     fetchRequest.predicate = NSPredicate(format: "subjectName == %@", subject.name ?? "")
-    
     do {
         let existingDailySubjects = try moc.fetch(fetchRequest)
-        
         for day in newDays {
             if let nextDate = getNextDate(for: day) {
                 if let dailySubject = existingDailySubjects.first(where: { $0.date == nextDate }) {
@@ -323,17 +347,13 @@ private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], 
                 }
             }
         }
-        
         let daysToRemove = existingDailySubjects.filter { dailySubject in
             !newDays.contains(Weekday(rawValue: dailySubject.date?.weekdayString ?? "") ?? .monday)
         }
-        
         for dailySubject in daysToRemove {
             moc.delete(dailySubject)
         }
-        
         try moc.save()
-        
     } catch {
         print("Error updating DailySubjects: \(error.localizedDescription)")
     }
@@ -343,7 +363,6 @@ private func getNextDate(for day: Weekday) -> Date? {
     let today = Date()
     var dateComponent = DateComponents()
     let calendar = Calendar.current
-    
     for i in 0..<7 {
         dateComponent.day = i
         if let nextDate = calendar.date(byAdding: dateComponent, to: today),

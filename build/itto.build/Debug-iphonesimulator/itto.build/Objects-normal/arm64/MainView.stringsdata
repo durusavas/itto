@@ -1,24 +1,5 @@
 {
   "source": "/Users/durusavas/Desktop/itto/itto/MainView.swift",
-  "tables": {
-    "Localizable": [
-      {
-        "comment": "",
-        "key": "Today"
-      },
-      {
-        "comment": "",
-        "key": "Timer"
-      },
-      {
-        "comment": "",
-        "key": "Subjects"
-      },
-      {
-        "comment": "",
-        "key": "Report"
-      }
-    ]
-  },
+  "tables": {},
   "version": 1
 }

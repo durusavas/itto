@@ -4,59 +4,115 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "add_subject"
+        "key": "choose_days",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 72
+        }
       },
       {
         "comment": "",
-        "key": "choose_days"
+        "key": "category",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 34
+        }
       },
       {
         "comment": "",
-        "key": "category"
+        "key": "project_name",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 48
+        }
       },
       {
         "comment": "",
-        "key": "project_name"
+        "key": "",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 53
+        }
       },
       {
         "comment": "",
-        "key": ""
+        "key": "class_name",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 62
+        }
       },
       {
         "comment": "",
-        "key": "class_name"
+        "key": "",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 67
+        }
       },
       {
         "comment": "",
-        "key": "exam_name"
+        "key": "exam_name",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 83
+        }
       },
       {
         "comment": "",
-        "key": "Subject"
+        "key": "Subject",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 91
+        }
       },
       {
         "comment": "",
-        "key": "topics_for_exam"
+        "key": "choose_subject",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 92
+        }
       },
       {
         "comment": "",
-        "key": "Topic %lld"
+        "key": "topics_for_exam",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 109
+        }
       },
       {
         "comment": "",
-        "key": "add_topic"
+        "key": "add_topic",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 123
+        }
       },
       {
         "comment": "",
-        "key": "save"
+        "key": "save",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 136
+        }
       },
       {
         "comment": "",
-        "key": "error"
+        "key": "error",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 152
+        }
       },
       {
         "comment": "",
-        "key": "ok"
+        "key": "ok",
+        "location": {
+          "startingColumn": 71,
+          "startingLine": 154
+        }
       }
     ]
   },

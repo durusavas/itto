@@ -2,7 +2,7 @@
 //  Subjects+CoreDataClass.swift
 //  
 //
-//  Created by Duru SAVAŞ on 09/07/2024.
+//  Created by Duru SAVAŞ on 18/10/2024.
 //
 //  This file was automatically generated and should not be edited.
 //

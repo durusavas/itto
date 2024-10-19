@@ -27,15 +27,21 @@ extension DeveloperToolsSupport.ColorResource {
     /// The "AccentColor1" asset catalog color resource.
     static let accentColor1 = DeveloperToolsSupport.ColorResource(name: "AccentColor1", bundle: resourceBundle)
 
+    /// The "bg1" asset catalog color resource.
+    static let bg1 = DeveloperToolsSupport.ColorResource(name: "bg1", bundle: resourceBundle)
+
+    /// The "bg2" asset catalog color resource.
+    static let bg2 = DeveloperToolsSupport.ColorResource(name: "bg2", bundle: resourceBundle)
+
+    /// The "ittoPurple" asset catalog color resource.
+    static let ittoPurple = DeveloperToolsSupport.ColorResource(name: "ittoPurple", bundle: resourceBundle)
+
 }
 
 // MARK: - Image Symbols -
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension DeveloperToolsSupport.ImageResource {
-
-    /// The "logo1" asset catalog image resource.
-    static let logo1 = DeveloperToolsSupport.ImageResource(name: "logo1", bundle: resourceBundle)
 
 }
 
@@ -50,6 +56,33 @@ extension AppKit.NSColor {
     static var accentColor1: AppKit.NSColor {
 #if !targetEnvironment(macCatalyst)
         .init(resource: .accentColor1)
+#else
+        .init()
+#endif
+    }
+
+    /// The "bg1" asset catalog color.
+    static var bg1: AppKit.NSColor {
+#if !targetEnvironment(macCatalyst)
+        .init(resource: .bg1)
+#else
+        .init()
+#endif
+    }
+
+    /// The "bg2" asset catalog color.
+    static var bg2: AppKit.NSColor {
+#if !targetEnvironment(macCatalyst)
+        .init(resource: .bg2)
+#else
+        .init()
+#endif
+    }
+
+    /// The "ittoPurple" asset catalog color.
+    static var ittoPurple: AppKit.NSColor {
+#if !targetEnvironment(macCatalyst)
+        .init(resource: .ittoPurple)
 #else
         .init()
 #endif
@@ -72,6 +105,33 @@ extension UIKit.UIColor {
 #endif
     }
 
+    /// The "bg1" asset catalog color.
+    static var bg1: UIKit.UIColor {
+#if !os(watchOS)
+        .init(resource: .bg1)
+#else
+        .init()
+#endif
+    }
+
+    /// The "bg2" asset catalog color.
+    static var bg2: UIKit.UIColor {
+#if !os(watchOS)
+        .init(resource: .bg2)
+#else
+        .init()
+#endif
+    }
+
+    /// The "ittoPurple" asset catalog color.
+    static var ittoPurple: UIKit.UIColor {
+#if !os(watchOS)
+        .init(resource: .ittoPurple)
+#else
+        .init()
+#endif
+    }
+
 }
 #endif
 
@@ -82,6 +142,15 @@ extension SwiftUI.Color {
     /// The "AccentColor1" asset catalog color.
     static var accentColor1: SwiftUI.Color { .init(.accentColor1) }
 
+    /// The "bg1" asset catalog color.
+    static var bg1: SwiftUI.Color { .init(.bg1) }
+
+    /// The "bg2" asset catalog color.
+    static var bg2: SwiftUI.Color { .init(.bg2) }
+
+    /// The "ittoPurple" asset catalog color.
+    static var ittoPurple: SwiftUI.Color { .init(.ittoPurple) }
+
 }
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
@@ -89,6 +158,15 @@ extension SwiftUI.ShapeStyle where Self == SwiftUI.Color {
 
     /// The "AccentColor1" asset catalog color.
     static var accentColor1: SwiftUI.Color { .init(.accentColor1) }
+
+    /// The "bg1" asset catalog color.
+    static var bg1: SwiftUI.Color { .init(.bg1) }
+
+    /// The "bg2" asset catalog color.
+    static var bg2: SwiftUI.Color { .init(.bg2) }
+
+    /// The "ittoPurple" asset catalog color.
+    static var ittoPurple: SwiftUI.Color { .init(.ittoPurple) }
 
 }
 #endif
@@ -100,15 +178,6 @@ extension SwiftUI.ShapeStyle where Self == SwiftUI.Color {
 @available(macCatalyst, unavailable)
 extension AppKit.NSImage {
 
-    /// The "logo1" asset catalog image.
-    static var logo1: AppKit.NSImage {
-#if !targetEnvironment(macCatalyst)
-        .init(resource: .logo1)
-#else
-        .init()
-#endif
-    }
-
 }
 #endif
 
@@ -116,15 +185,6 @@ extension AppKit.NSImage {
 @available(iOS 17.0, tvOS 17.0, *)
 @available(watchOS, unavailable)
 extension UIKit.UIImage {
-
-    /// The "logo1" asset catalog image.
-    static var logo1: UIKit.UIImage {
-#if !os(watchOS)
-        .init(resource: .logo1)
-#else
-        .init()
-#endif
-    }
 
 }
 #endif
@@ -246,26 +306,6 @@ extension DeveloperToolsSupport.ImageResource {
     }
 
 }
-
-#if canImport(AppKit)
-@available(macOS 14.0, *)
-@available(macCatalyst, unavailable)
-extension AppKit.NSImage {
-
-    private convenience init?(thinnableResource: DeveloperToolsSupport.ImageResource?) {
-#if !targetEnvironment(macCatalyst)
-        if let resource = thinnableResource {
-            self.init(resource: resource)
-        } else {
-            return nil
-        }
-#else
-        return nil
-#endif
-    }
-
-}
-#endif
 
 #if canImport(UIKit)
 @available(iOS 17.0, tvOS 17.0, *)

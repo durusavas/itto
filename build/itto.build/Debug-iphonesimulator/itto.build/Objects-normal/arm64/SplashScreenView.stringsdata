@@ -1,5 +1,16 @@
 {
   "source": "/Users/durusavas/Desktop/itto/itto/SplashScreenView.swift",
-  "tables": {},
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 26
+        }
+      }
+    ]
+  },
   "version": 1
 }

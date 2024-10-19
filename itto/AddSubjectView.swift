@@ -7,23 +7,12 @@
 import SwiftUI
 import CoreData
 
-extension Color {
-    func toRgbString() -> String {
-        let uiColor = UIColor(self)
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return String(format: "R: %.0f, G: %.0f, B: %.0f", red * 255, green * 255, blue * 255)
-    }
-}
-
 struct AddSubjectView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors: []) var subject: FetchedResults<Subjects>
     @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
+    
     @State private var name = ""
     @State private var color: Color = Color.red
     @State private var showAlert = false
@@ -34,91 +23,159 @@ struct AddSubjectView: View {
     @State private var examSubjects: [String] = [""]
     @State private var selectedDays: [Weekday] = []
     @State private var selectedWeekdays: [Weekday] = []
-
+    @FocusState private var isNameFieldFocused: Bool
+    
     var body: some View {
         NavigationStack {
-            Form {
-                Picker("category", selection: $chosenCategory) {
-                    ForEach(categories, id: \.self) { category in
-                        Text(LocalizedStringKey(category.lowercased()))
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding()
-
-                if chosenCategory == "Project" {
-                    Section {
-                        HStack {
-                            TextField(LocalizedStringKey("project_name"), text: $name)
-                                .padding()
-                            ColorPicker("", selection: $color)
+            ZStack {
+                Color.bg2
+                    .ignoresSafeArea()
+                Form {
+                    Picker("category", selection: $chosenCategory) {
+                        ForEach(categories, id: \.self) { category in
+                            Text(LocalizedStringKey(category.lowercased()))
+                                .font(.custom("Poppins-Regular", size: 18))
+                                .foregroundColor(.white)
                         }
                     }
-                }
+                    .listRowBackground(Color.gray.opacity(0.1))
+                    .pickerStyle(.segmented)
+                    .padding()
 
-                if chosenCategory == "Class" {
-                    Section {
-                        HStack {
-                            TextField(LocalizedStringKey("class_name"), text: $name)
-                                .padding()
-                            ColorPicker("", selection: $color)
-                        }
-                    }
-
-                    Text(LocalizedStringKey("choose_days"))
-                        .font(.headline)
-                    DaysPicker(selectedDays: $selectedWeekdays)
-                }
-
-                if chosenCategory == "Exam" {
-                    Section {
-                        TextField(LocalizedStringKey("exam_name"), text: $examName)
-                    }
-                    Section {
-                        Picker(LocalizedStringKey("Subject"), selection: $name) {
-                            ForEach(subject) { item in
-                                Text(item.name ?? "Unknown")
+                    if chosenCategory == "Project" {
+                        Section {
+                            HStack {
+                                TextField(LocalizedStringKey("project_name"), text: $name)
+                                    .font(.custom("Poppins-Regular", size: 16))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .focused($isNameFieldFocused)
+                                ColorPicker("", selection: $color)
                             }
                         }
+                        .listRowBackground(Color.gray.opacity(0.1))
                     }
-                    Section {
-                        Text(LocalizedStringKey("topics_for_exam"))
-                            .font(.headline)
-                        ForEach(0..<examSubjects.count, id: \.self) { index in
-                            TextField(LocalizedStringKey("Topic \(index + 1)"), text: $examSubjects[index])
+
+                    if chosenCategory == "Class" {
+                        Section {
+                            HStack {
+                                TextField(LocalizedStringKey("class_name"), text: $name)
+                                    .font(.custom("Poppins-Regular", size: 18))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .focused($isNameFieldFocused)
+                                ColorPicker("", selection: $color)
+                            }
                         }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Text(LocalizedStringKey("choose_days"))
+                            .font(.custom("Poppins-Regular", size: 18))
+                            .foregroundColor(.white)
+                            .listRowBackground(Color.gray.opacity(0.1))
+                        
+                        DaysPicker(selectedDays: $selectedWeekdays)
+                            .listRowBackground(Color.gray.opacity(0.1))
                     }
-                    Section {
-                        Button(action: addTextField) {
-                            Label(LocalizedStringKey("add_topic"), systemImage: "plus")
+
+                    if chosenCategory == "Exam" {
+                        Section {
+                            TextField(LocalizedStringKey("exam_name"), text: $examName)
+                                .font(.custom("Poppins-Regular", size: 18))
+                                .foregroundColor(.white)
+                                .focused($isNameFieldFocused)
                         }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Section {
+                            Picker(LocalizedStringKey("Subject"), selection: $name) {
+                                Text(LocalizedStringKey("choose_subject")).tag("")
+                                ForEach(subject) { item in
+                                    Text(item.name ?? "Unknown")
+                                        .font(.custom("Poppins-Regular", size: 18))
+                                        .foregroundColor(.white)
+                                        .tag(item.name ?? "Unknown")
+                                }
+                            }
+                            .onAppear {
+                                if let firstSubject = subject.first {
+                                    name = firstSubject.name ?? ""
+                                }
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Section {
+                            Text(LocalizedStringKey("topics_for_exam"))
+                                .font(.custom("Poppins-Regular", size: 18))
+                                .foregroundColor(.white)
+                            ForEach(0..<examSubjects.count, id: \.self) { index in
+                                TextField(LocalizedStringKey(String(format: NSLocalizedString("Topic %d", comment: ""), index + 1)), text: $examSubjects[index])
+                                    .font(.custom("Poppins-Regular", size: 18))
+                                    .foregroundColor(.white)
+                                    .focused($isNameFieldFocused)
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+                        
+                        Section {
+                            Button(action: addTextField) {
+                                Label(LocalizedStringKey("add_topic"), systemImage: "plus")
+                                    .font(.custom("Poppins-Regular", size: 18))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
                     }
                 }
+                .scrollContentBackground(.hidden)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: saveSubject) {
                         Text(LocalizedStringKey("save"))
+                            .font(.custom("Poppins-Regular", size: 15))
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("add_subject", comment: ""))
+                        .padding()
+                        .font(.custom("Poppins-Regular", size: 23))
+                        .foregroundColor(.white)
+                }
             }
-            .navigationTitle(LocalizedStringKey("add_subject"))
+            .onAppear {
+              
+                isNameFieldFocused = true
+            }
             .alert(isPresented: $showAlert) {
-                Alert(title: Text(LocalizedStringKey("error")), message: Text(alertMessage), dismissButton: .default(Text(LocalizedStringKey("ok"))))
+                Alert(title: Text(LocalizedStringKey("error")).font(.custom("Poppins-Regular", size: 18)),
+                      message: Text(alertMessage).font(.custom("Poppins-Regular", size: 18)),
+                      dismissButton: .default(Text(LocalizedStringKey("ok")).font(.custom("Poppins-Regular", size: 18))))
             }
         }
     }
-
+    
     private func addTextField() {
         examSubjects.append("")
     }
 
     private func saveSubject() {
-        
-      
+        if name.isEmpty && chosenCategory != "Exam" {
+            alertMessage = "The name cannot be empty."
+            showAlert = true
+            return
+        }
+
+        if examName.isEmpty && chosenCategory == "Exam" {
+            alertMessage = "The exam name cannot be empty."
+            showAlert = true
+            return
+        }
 
         let colorString = color.toRgbString()
         var newSubject: NSManagedObject
+
         if chosenCategory == "Project" {
             newSubject = Projects(context: moc)
         } else if chosenCategory == "Exam" {
@@ -145,7 +202,7 @@ struct AddSubjectView: View {
             dailySubject.isCompleted = false
             dailySubject.category = chosenCategory
             dailySubject.topics = examSubjects as NSObject
-            dailySubject.color = colorString  // Set color
+            dailySubject.color = colorString
         } else if chosenCategory == "Project" {
             let dailySubject = DailySubjects(context: moc)
             dailySubject.subjectName = name
@@ -189,10 +246,6 @@ struct AddSubjectView: View {
         }
         return nil
     }
-
-    private func validateInput(name: String, color: Color) -> Bool {
-        return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
 }
 
 enum Weekday: String, CaseIterable {
@@ -219,15 +272,18 @@ enum Weekday: String, CaseIterable {
 
 struct DaysPicker: View {
     @Binding var selectedDays: [Weekday]
+
     var body: some View {
         VStack {
             HStack {
                 ForEach(Weekday.allCases, id: \.self) { day in
                     Text(String(day.rawValue.first!))
+                        .font(.custom("Poppins-Regular", size: 18))
                         .bold()
-                        .foregroundColor(.white)
-                        .frame(width: 30, height: 30)
-                        .background(selectedDays.contains(day) ? Color.cyan.cornerRadius(10) : Color.gray.cornerRadius(10))
+                        .foregroundColor( Color.white)
+                        .frame(width: 35, height: 35)
+                        .background(selectedDays.contains(day) ? Color.bg1 : Color.gray.opacity(0.1))
+                        .cornerRadius(28)
                         .onTapGesture {
                             if selectedDays.contains(day) {
                                 selectedDays.removeAll(where: { $0 == day })
@@ -239,5 +295,17 @@ struct DaysPicker: View {
             }
             .padding()
         }
+    }
+}
+
+extension Color {
+    func toRgbString() -> String {
+        let uiColor = UIColor(self)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        return String(format: "R: %.0f, G: %.0f, B: %.0f", red * 255, green * 255, blue * 255)
     }
 }

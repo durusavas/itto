@@ -4,11 +4,19 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "new_topic"
+        "key": "new_topic",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 44
+        }
       },
       {
         "comment": "",
-        "key": "save"
+        "key": "save",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 48
+        }
       }
     ]
   },

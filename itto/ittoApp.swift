@@ -13,12 +13,9 @@ struct ittoApp: App {
             UIView.appearance().overrideUserInterfaceStyle = .dark
         
         }
-    
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
-            //MainView()
-             //   .environment(\.managedObjectContext, dataController.container.viewContext) // reading data
         }
     }
 }

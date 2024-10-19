@@ -53,6 +53,7 @@
 "add_subject" = "Konu Ekle";
 "error" = "Hata";
 "ok" = "Tamam";
+"choose_subject" = "Konu seç";
 
 // ExamDetailsView
 "new_topic" = "Yeni Konu";
@@ -69,3 +70,15 @@
 "class" = "Derslerim";
 
 "Interval" = "Aralık";
+
+"timer_notification_title" = "Zamanlayıcı Bildirimi";
+"starting_next_interval_message" = "Çalışmaya devam!";
+"time_for_break_message" = "Ara zamanı!";
+"timer_is_over_message" = "Zamanlayıcı sona erdi!";
+"timer_completed_message" = "Zamanlayıcı sona erdi!";
+
+"this_week" = "Bu hafta";
+
+"minutes" = "dk";
+"add_subject" = "Konu Ekle";
+"Topic %d" = "Konu %d";
