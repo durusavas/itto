@@ -14,6 +14,16 @@ struct TodayView: View {
     @Environment(\.managedObjectContext) private var moc
     @FetchRequest var dailySubjects: FetchedResults<DailySubjects>
     
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Exams.dueDate, ascending: true)],
+        predicate: NSPredicate(format: "dueDate != nil")
+    ) var examsWithDueDates: FetchedResults<Exams>
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Projects.dueDate, ascending: true)],
+        predicate: NSPredicate(format: "dueDate != nil")
+    ) var projectsWithDueDates: FetchedResults<Projects>
+    
     init() {
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \DailySubjects.date, ascending: true)]
@@ -21,6 +31,24 @@ struct TodayView: View {
         _dailySubjects = FetchRequest<DailySubjects>(fetchRequest: fetchRequest)
     }
     private let categoryOrder = ["exam", "project", "class"]
+    
+    private var upcomingExams: [Exams] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return examsWithDueDates.filter { exam in
+            guard let due = exam.dueDate else { return false }
+            return due >= calendar.date(byAdding: .day, value: -2, to: today)!
+        }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
+    
+    private var upcomingProjects: [Projects] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return projectsWithDueDates.filter { project in
+            guard let due = project.dueDate else { return false }
+            return due >= calendar.date(byAdding: .day, value: -2, to: today)!
+        }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
+    }
     
     var body: some View {
         NavigationStack {
@@ -61,10 +89,16 @@ struct TodayView: View {
                                 sectionView(title: "project", content: projects.map { projectSection(dailySubject: $0) as! AnyView })
                             }
                             
+                            // Upcoming deadlines from due dates
+                            if !upcomingExams.isEmpty || !upcomingProjects.isEmpty {
+                                upcomingDeadlinesSection()
+                            }
+                            
                             // Empty state for first-time or quiet days
                             if (groupedDailySubjects["class"]?.isEmpty ?? true) &&
                                (groupedDailySubjects["exam"]?.isEmpty ?? true) &&
-                               (groupedDailySubjects["project"]?.isEmpty ?? true) {
+                               (groupedDailySubjects["project"]?.isEmpty ?? true) &&
+                               upcomingExams.isEmpty && upcomingProjects.isEmpty {
                                 VStack(spacing: 12) {
                                     Text("All clear for today 🎉")
                                         .font(.custom("Poppins-SemiBold", size: 20))
@@ -190,6 +224,61 @@ struct TodayView: View {
                 .font(.custom("Poppins-Regular", size: 14))
                 .foregroundColor(dailySubject.isCompleted ? .gray : .primary)
         }
+    }
+    
+    private func upcomingDeadlinesSection() -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Rectangle()
+                    .fill(Color.white.opacity(0.5))
+                    .frame(height: 0.7)
+                Text("Upcoming Deadlines")
+                    .font(.custom("Poppins-Regular", size: 18))
+                    .foregroundColor(.white.opacity(0.5))
+            }
+            .padding()
+            
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(upcomingExams, id: \.id) { exam in
+                    HStack {
+                        GradientCircleView(baseColor: exam.color?.toColor() ?? .blue)
+                            .frame(width: 12, height: 12)
+                        Text(exam.examName ?? "Exam")
+                            .font(.custom("Poppins-Regular", size: 14))
+                        Spacer()
+                        if let due = exam.dueDate {
+                            Text(due, style: .date)
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                ForEach(upcomingProjects, id: \.id) { project in
+                    HStack {
+                        GradientCircleView(baseColor: project.color?.toColor() ?? .blue)
+                            .frame(width: 12, height: 12)
+                        Text(project.name ?? "Project")
+                            .font(.custom("Poppins-Regular", size: 14))
+                        Spacer()
+                        if let due = project.dueDate {
+                            Text(due, style: .date)
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.gray.opacity(0.05))
+            )
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
     }
     
     private static func todayPredicate() -> NSPredicate {
