@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var selectedTab = 0
+    @AppStorage("selectedTab") private var selectedTab = 0
     @State private var showSettings = false
     
     init() {
@@ -67,6 +67,11 @@ struct MainView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("DeepLinkTab"))) { notification in
+            if let tab = notification.object as? Int {
+                selectedTab = tab
+            }
         }
     }
 }
