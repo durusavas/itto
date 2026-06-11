@@ -52,6 +52,21 @@ struct ProjectDetailsView: View {
                         }
                     }
                     .listRowBackground(Color.gray.opacity(0.05))
+                    
+                    Section("Due Date") {
+                        DatePicker("Due", selection: Binding(
+                            get: { project.dueDate ?? Date() },
+                            set: { project.dueDate = $0; saveChanges() }
+                        ), displayedComponents: .date)
+                        if project.dueDate != nil {
+                            Button("Remove due date") {
+                                project.dueDate = nil
+                                saveChanges()
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
+                    .listRowBackground(Color.gray.opacity(0.05))
                 }
                 .scrollContentBackground(.hidden)
             }

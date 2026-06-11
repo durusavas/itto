@@ -55,6 +55,21 @@ struct ExamDetailsView: View {
                     }
                   
                     .listRowBackground(Color.gray.opacity(0.05))
+                    
+                    Section("Due Date") {
+                        DatePicker("Due", selection: Binding(
+                            get: { exam.dueDate ?? Date() },
+                            set: { exam.dueDate = $0; saveChanges() }
+                        ), displayedComponents: .date)
+                        if exam.dueDate != nil {
+                            Button("Remove due date") {
+                                exam.dueDate = nil
+                                saveChanges()
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
+                    .listRowBackground(Color.gray.opacity(0.05))
                 }
                 .scrollContentBackground(.hidden)
          
