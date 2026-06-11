@@ -7,272 +7,220 @@
 
 import SwiftUI
 import CoreData
-import UniformTypeIdentifiers
+import UserNotifications
 
 struct SettingsView: View {
     @Environment(\.managedObjectContext) private var moc
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var defaultInterval = 25
-    @State private var defaultBreak = 5
-    @State private var showExportSuccess = false
-    @State private var showResetAlert = false
-    @State private var exportURL: URL?
-    
+
+    @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
+    @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
+    @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
+    @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
+
+    @AppStorage("defaultInterval") private var defaultInterval = 25
+    @AppStorage("defaultBreak") private var defaultBreak = 5
+
+    @State private var showResetConfirmation = false
+    @State private var exportedURL: URL?
+    @State private var showExportSheet = false
+    @State private var icsURL: URL?
+    @State private var showICSExportSheet = false
+
+    let intervals = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+    let breaks = [5, 10, 15, 20]
+
     var body: some View {
         NavigationStack {
-            Form {
-                Section(header: Text("Timer Defaults").font(.custom("Poppins-Regular", size: 14))) {
-                    Stepper(value: $defaultInterval, in: 5...60, step: 5) {
-                        Text("Work interval: \(defaultInterval) min")
-                            .font(.custom("Poppins-Regular", size: 16))
-                    }
-                    Stepper(value: $defaultBreak, in: 1...20, step: 1) {
-                        Text("Break: \(defaultBreak) min")
-                            .font(.custom("Poppins-Regular", size: 16))
-                    }
-                    
-                    Button("Save Defaults") {
-                        UserDefaults.standard.set(defaultInterval, forKey: "defaultInterval")
-                        UserDefaults.standard.set(defaultBreak, forKey: "defaultBreak")
-                        dismiss()
-                    }
-                    .font(.custom("Poppins-Regular", size: 16))
-                }
-                
-                Section(header: Text("Data").font(.custom("Poppins-Regular", size: 14))) {
-                    Button("Export All Data (JSON)") {
-                        exportData()
-                    }
-                    .font(.custom("Poppins-Regular", size: 16))
-                    
-                    Button("Export Deadlines to Calendar (.ics)") {
-                        exportDeadlinesToICS()
-                    }
-                    .font(.custom("Poppins-Regular", size: 16))
-                    
-                    if let url = exportURL {
-                        ShareLink(item: url) {
-                            Label("Share Exported File", systemImage: "square.and.arrow.up")
-                                .font(.custom("Poppins-Regular", size: 16))
+            ZStack {
+                Color.bg2.ignoresSafeArea()
+
+                Form {
+                    Section("Timer Defaults") {
+                        Picker("Default interval", selection: $defaultInterval) {
+                            ForEach(intervals, id: \.self) { min in
+                                Text("\(min) min").tag(min)
+                            }
                         }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Picker("Default break", selection: $defaultBreak) {
+                            ForEach(breaks, id: \.self) { min in
+                                Text("\(min) min").tag(min)
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
                     }
-                    
-                    Button(role: .destructive) {
-                        showResetAlert = true
-                    } label: {
-                        Text("Reset All Data")
-                            .font(.custom("Poppins-Regular", size: 16))
+
+                    Section("Export") {
+                        Button("Export data as JSON") {
+                            if let url = buildJSONExport() {
+                                exportedURL = url
+                                showExportSheet = true
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Button("Export deadlines as .ics") {
+                            if let url = buildICSExport() {
+                                icsURL = url
+                                showICSExportSheet = true
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+                    }
+
+                    Section {
+                        Button("Reset all data", role: .destructive) {
+                            showResetConfirmation = true
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
                     }
                 }
-                
-                Section {
-                    Text("itto v1.0 • Academic organization made simple")
-                        .font(.custom("Poppins-Regular", size: 14))
-                        .foregroundColor(.secondary)
-                }
+                .scrollContentBackground(.hidden)
             }
-            .scrollContentBackground(.hidden)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [Color("bg2"), Color("bg1")]),
-                    startPoint: .center,
-                    endPoint: .topTrailing
-                )
-                .ignoresSafeArea()
-            )
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Settings")
-                        .font(.custom("Poppins-SemiBold", size: 20))
+                        .font(.custom("Poppins-Regular", size: 23))
+                        .foregroundColor(.white)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { dismiss() }
                         .font(.custom("Poppins-Regular", size: 16))
                 }
             }
-            .onAppear {
-                defaultInterval = UserDefaults.standard.integer(forKey: "defaultInterval")
-                if defaultInterval == 0 { defaultInterval = 25 }
-                defaultBreak = UserDefaults.standard.integer(forKey: "defaultBreak")
-                if defaultBreak == 0 { defaultBreak = 5 }
-            }
-            .alert("Reset all data?", isPresented: $showResetAlert) {
+            .confirmationDialog(
+                "Reset all data?",
+                isPresented: $showResetConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Reset", role: .destructive) { resetAllData() }
                 Button("Cancel", role: .cancel) {}
-                Button("Reset", role: .destructive) {
-                    resetAllData()
-                }
             } message: {
-                Text("This will permanently delete all your classes, exams, projects, reports, and schedules. This action cannot be undone.")
+                Text("This will permanently delete all subjects, exams, projects, and reports.")
             }
-            .alert("Export complete", isPresented: $showExportSuccess) {
-                Button("OK") {}
+            .sheet(isPresented: $showExportSheet) {
+                if let url = exportedURL {
+                    ShareSheet(activityItems: [url])
+                }
+            }
+            .sheet(isPresented: $showICSExportSheet) {
+                if let url = icsURL {
+                    ShareSheet(activityItems: [url])
+                }
             }
         }
     }
-    
-    private func exportData() {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.outputFormatting = .prettyPrinted
-        
-        var export: [String: Any] = [:]
-        
-        // Subjects
-        let subjectsFetch: NSFetchRequest<Subjects> = Subjects.fetchRequest()
-        if let subjects = try? moc.fetch(subjectsFetch) {
-            export["subjects"] = subjects.map { s in
-                [
-                    "id": s.id?.uuidString ?? "",
-                    "name": s.name ?? "",
-                    "color": s.color ?? "",
-                    "days": s.days as? [String] ?? []
-                ]
+
+    // MARK: - Export
+
+    private func buildJSONExport() -> URL? {
+        let subjectData: [[String: Any]] = subjects.compactMap { s in
+            guard let name = s.name else { return nil }
+            return ["name": name, "color": s.color ?? "", "days": (s.days as? [String]) ?? []]
+        }
+        let examData: [[String: Any]] = exams.compactMap { e in
+            guard let name = e.examName else { return nil }
+            var dict: [String: Any] = [
+                "examName": name,
+                "color": e.color ?? "",
+                "topics": (e.topics as? [String]) ?? []
+            ]
+            if let due = e.dueDate {
+                dict["dueDate"] = due.formatted(date: .long, time: .omitted)
             }
+            return dict
         }
-        
-        // Exams
-        let examsFetch: NSFetchRequest<Exams> = Exams.fetchRequest()
-        if let exams = try? moc.fetch(examsFetch) {
-            export["exams"] = exams.map { e in
-                [
-                    "id": e.id?.uuidString ?? "",
-                    "name": e.name ?? "",
-                    "examName": e.examName ?? "",
-                    "color": e.color ?? "",
-                    "topics": e.topics as? [String] ?? [],
-                    "dueDate": e.dueDate?.ISO8601Format() ?? ""
-                ]
+        let projectData: [[String: Any]] = projects.compactMap { p in
+            guard let name = p.name else { return nil }
+            var dict: [String: Any] = [
+                "name": name,
+                "color": p.color ?? "",
+                "topics": (p.topics as? [String]) ?? []
+            ]
+            if let due = p.dueDate {
+                dict["dueDate"] = due.formatted(date: .long, time: .omitted)
             }
+            return dict
         }
-        
-        // Projects
-        let projectsFetch: NSFetchRequest<Projects> = Projects.fetchRequest()
-        if let projects = try? moc.fetch(projectsFetch) {
-            export["projects"] = projects.map { p in
-                [
-                    "id": p.id?.uuidString ?? "",
-                    "name": p.name ?? "",
-                    "color": p.color ?? "",
-                    "topics": p.topics as? [String] ?? [],
-                    "dueDate": p.dueDate?.ISO8601Format() ?? ""
-                ]
-            }
+        let reportData: [[String: Any]] = reports.compactMap { r in
+            guard let name = r.subjectName else { return nil }
+            return [
+                "subjectName": name,
+                "totalTime": Int(r.totalTime),
+                "date": r.date?.formatted() ?? "",
+                "desc": r.desc ?? ""
+            ]
         }
-        
-        // Reports
-        let reportsFetch: NSFetchRequest<Report> = Report.fetchRequest()
-        if let reports = try? moc.fetch(reportsFetch) {
-            export["reports"] = reports.map { r in
-                [
-                    "date": r.date?.ISO8601Format() ?? "",
-                    "subjectName": r.subjectName ?? "",
-                    "totalTime": r.totalTime,
-                    "desc": r.desc ?? ""
-                ]
-            }
-        }
-        
-        // DailySubjects (optional)
-        let dailyFetch: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        if let dailies = try? moc.fetch(dailyFetch) {
-            export["dailySubjects"] = dailies.map { d in
-                [
-                    "subjectName": d.subjectName ?? "",
-                    "category": d.category ?? "",
-                    "date": d.date?.ISO8601Format() ?? "",
-                    "color": d.color ?? "",
-                    "topics": d.topics as? [String] ?? []
-                ]
-            }
-        }
-        
-        do {
-            let data = try JSONSerialization.data(withJSONObject: export, options: .prettyPrinted)
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent("itto_export_\(Date().timeIntervalSince1970).json")
-            try data.write(to: url)
-            exportURL = url
-            showExportSuccess = true
-        } catch {
-            print("Export failed: \(error)")
-        }
+
+        let payload: [String: Any] = [
+            "subjects": subjectData,
+            "exams": examData,
+            "projects": projectData,
+            "reports": reportData
+        ]
+
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return nil }
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("itto_export.json")
+        try? data.write(to: url)
+        return url
     }
-    
+
+    private func buildICSExport() -> URL? {
+        var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//itto//itto//EN"]
+
+        for exam in exams {
+            guard let due = exam.dueDate, let name = exam.examName else { continue }
+            lines += [
+                "BEGIN:VEVENT",
+                "DTSTART;VALUE=DATE:\(due.icsDateString)",
+                "DTEND;VALUE=DATE:\(due.icsDateString)",
+                "SUMMARY:\(name) Exam Due",
+                "END:VEVENT"
+            ]
+        }
+        for project in projects {
+            guard let due = project.dueDate, let name = project.name else { continue }
+            lines += [
+                "BEGIN:VEVENT",
+                "DTSTART;VALUE=DATE:\(due.icsDateString)",
+                "DTEND;VALUE=DATE:\(due.icsDateString)",
+                "SUMMARY:\(name) Project Due",
+                "END:VEVENT"
+            ]
+        }
+
+        lines.append("END:VCALENDAR")
+        let content = lines.joined(separator: "\r\n")
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("itto_deadlines.ics")
+        try? content.write(to: url, atomically: true, encoding: .utf8)
+        return url
+    }
+
+    // MARK: - Reset
+
     private func resetAllData() {
-        let entities = ["Subjects", "Exams", "Projects", "Report", "DailySubjects"]
-        for entity in entities {
-            let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-            let delete = NSBatchDeleteRequest(fetchRequest: fetch)
-            _ = try? moc.execute(delete)
+        for entity in ["Report", "DailySubjects", "Exams", "Projects", "Subjects"] {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+            _ = try? moc.execute(deleteRequest)
         }
         try? moc.save()
-        dismiss()
+        moc.reset()
     }
-    
-    private func exportDeadlinesToICS() {
-        var ics = """
-        BEGIN:VCALENDAR
-        VERSION:2.0
-        PRODID:-//itto//Academic Deadlines//EN
-        CALSCALE:GREGORIAN
-        METHOD:PUBLISH
-        """
-        
-        // Exams with due dates
-        let examsFetch: NSFetchRequest<Exams> = Exams.fetchRequest()
-        if let exams = try? moc.fetch(examsFetch) {
-            for exam in exams where exam.dueDate != nil {
-                let uid = exam.id?.uuidString ?? UUID().uuidString
-                let summary = exam.examName ?? exam.name ?? "Exam"
-                let due = exam.dueDate!
-                let dateStr = due.icsDateString
-                ics += """
-                
-                BEGIN:VEVENT
-                UID:\(uid)-exam@itto.app
-                DTSTAMP:\(Date().icsDateString)T000000Z
-                DTSTART;VALUE=DATE:\(dateStr)
-                DTEND;VALUE=DATE:\(dateStr)
-                SUMMARY:\(summary) (Exam)
-                DESCRIPTION:Deadline for exam: \(summary)
-                END:VEVENT
-                """
-            }
-        }
-        
-        // Projects with due dates
-        let projectsFetch: NSFetchRequest<Projects> = Projects.fetchRequest()
-        if let projects = try? moc.fetch(projectsFetch) {
-            for project in projects where project.dueDate != nil {
-                let uid = project.id?.uuidString ?? UUID().uuidString
-                let summary = project.name ?? "Project"
-                let due = project.dueDate!
-                let dateStr = due.icsDateString
-                ics += """
-                
-                BEGIN:VEVENT
-                UID:\(uid)-project@itto.app
-                DTSTAMP:\(Date().icsDateString)T000000Z
-                DTSTART;VALUE=DATE:\(dateStr)
-                DTEND;VALUE=DATE:\(dateStr)
-                SUMMARY:\(summary) (Project)
-                DESCRIPTION:Deadline for project: \(summary)
-                END:VEVENT
-                """
-            }
-        }
-        
-        ics += "\nEND:VCALENDAR"
-        
-        do {
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent("itto_deadlines_\(Date().timeIntervalSince1970).ics")
-            try ics.write(to: url, atomically: true, encoding: .utf8)
-            exportURL = url
-            showExportSuccess = true
-        } catch {
-            print("ICS export failed: \(error)")
-        }
+}
+
+// MARK: - Helpers
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 extension Date {
@@ -281,8 +229,4 @@ extension Date {
         formatter.dateFormat = "yyyyMMdd"
         return formatter.string(from: self)
     }
-}
-
-#Preview {
-    SettingsView()
 }

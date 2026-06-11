@@ -8,8 +8,207 @@ import SwiftUI
 import CoreData
 import Foundation
 import UserNotifications
-import AVFoundation
 import UIKit
+import Observation
+
+@Observable
+final class TimerManager {
+    var intervalNumber = 4
+    var intervalTime = 30
+    var breakTime = 5
+    
+    var countdownTime = 0
+    var timerIsPaused = true
+    var onBreak = false
+    var currentInterval = 1
+    var totalWorkTime = 0
+    var timerStarted = false
+    var chosenSubject: String?
+    var timerStartDate: Date?
+    
+    private var timer: Timer?
+    
+    private let stateKey = "itto_timer_state_v1"
+    
+    init() {
+        loadDefaults()
+        restoreState()
+    }
+    
+    func loadDefaults() {
+        let ud = UserDefaults.standard
+        if ud.integer(forKey: "defaultInterval") > 0 {
+            intervalTime = ud.integer(forKey: "defaultInterval")
+        }
+        if ud.integer(forKey: "defaultBreak") > 0 {
+            breakTime = ud.integer(forKey: "defaultBreak")
+        }
+    }
+    
+    func start() {
+        timerStartDate = Date()
+        timer?.invalidate()
+        currentInterval = 1
+        onBreak = false
+        countdownTime = intervalTime * 60
+        timerIsPaused = false
+        timerStarted = true
+        totalWorkTime = 0
+        
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+        
+        scheduleNextNotification()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.tick()
+            }
+        }
+        
+        saveState()
+    }
+    
+    func pause() {
+        timer?.invalidate()
+        timerIsPaused = true
+        saveState()
+    }
+    
+    func resume() {
+        timerIsPaused = false
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.tick()
+            }
+        }
+        saveState()
+    }
+    
+    func stop() {
+        timer?.invalidate()
+        timerStarted = false
+        timerIsPaused = true
+        countdownTime = 0
+        clearState()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+    }
+    
+    private func tick() {
+        if countdownTime > 0 {
+            countdownTime -= 1
+            if !onBreak {
+                totalWorkTime += 1
+            }
+            if countdownTime % 5 == 0 {
+                saveState()
+            }
+        } else {
+            handleEndOfInterval()
+        }
+    }
+    
+    private func handleEndOfInterval() {
+        if onBreak {
+            currentInterval += 1
+            if currentInterval <= intervalNumber {
+                onBreak = false
+                countdownTime = intervalTime * 60
+                scheduleNextNotification()
+            } else {
+                stop()
+                scheduleNotification(message: "timer_is_over_message", delay: 1)
+                return
+            }
+        } else {
+            onBreak = true
+            countdownTime = breakTime * 60
+            scheduleNotification(message: "time_for_break_message", delay: 2)
+            scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
+        }
+        saveState()
+    }
+    
+    private func scheduleNextNotification() {
+        scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
+    }
+    
+    private func scheduleNotification(message: String, delay: TimeInterval) {
+        let content = UNMutableNotificationContent()
+        content.title = NSLocalizedString("timer_notification_title", comment: "Timer Notification")
+        content.body = NSLocalizedString(message, comment: "Notification message")
+        content.sound = UNNotificationSound.default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(delay, 0.5), repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
+    func saveState() {
+        let state: [String: Any] = [
+            "intervalNumber": intervalNumber,
+            "intervalTime": intervalTime,
+            "breakTime": breakTime,
+            "chosenSubject": chosenSubject ?? "",
+            "timerStarted": timerStarted,
+            "timerIsPaused": timerIsPaused,
+            "onBreak": onBreak,
+            "currentInterval": currentInterval,
+            "totalWorkTime": totalWorkTime,
+            "timerStartDate": timerStartDate?.timeIntervalSince1970 ?? 0,
+            "countdownTime": countdownTime
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: state) {
+            UserDefaults.standard.set(data, forKey: stateKey)
+        }
+    }
+    
+    private func restoreState() {
+        guard let data = UserDefaults.standard.data(forKey: stateKey),
+              let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+        
+        if let startTs = dict["timerStartDate"] as? TimeInterval, startTs > 0 {
+            let start = Date(timeIntervalSince1970: startTs)
+            if Date().timeIntervalSince(start) > 3 * 3600 {
+                clearState()
+                return
+            }
+        }
+        
+        intervalNumber = dict["intervalNumber"] as? Int ?? 4
+        intervalTime = dict["intervalTime"] as? Int ?? 30
+        breakTime = dict["breakTime"] as? Int ?? 5
+        let subj = dict["chosenSubject"] as? String ?? ""
+        chosenSubject = subj.isEmpty ? nil : subj
+        timerStarted = dict["timerStarted"] as? Bool ?? false
+        timerIsPaused = dict["timerIsPaused"] as? Bool ?? true
+        onBreak = dict["onBreak"] as? Bool ?? false
+        currentInterval = dict["currentInterval"] as? Int ?? 1
+        totalWorkTime = dict["totalWorkTime"] as? Int ?? 0
+        countdownTime = dict["countdownTime"] as? Int ?? 0
+        
+        if let startTs = dict["timerStartDate"] as? TimeInterval, startTs > 0 {
+            timerStartDate = Date(timeIntervalSince1970: startTs)
+        }
+        
+        // If the timer was running when the app was killed, restart the tick loop
+        if timerStarted && !timerIsPaused {
+            DispatchQueue.main.async { UIApplication.shared.isIdleTimerDisabled = true }
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+                DispatchQueue.main.async { self?.tick() }
+            }
+        }
+    }
+    
+    private func clearState() {
+        UserDefaults.standard.removeObject(forKey: stateKey)
+    }
+}
 
 struct ContentView: View {
     
@@ -23,7 +222,7 @@ struct ContentView: View {
         predicate: NSPredicate(format: "date >= %@", Calendar.current.startOfDay(for: Date()) as CVarArg)
     ) var dailySubjects: FetchedResults<DailySubjects>
     
-    @StateObject private var timerManager = TimerManager()
+    @State private var timerManager = TimerManager()
     @State private var selectedAccentColor: Color = Color.white
     @State private var navigateToReportView = false
     @State private var selectedTopic = ""
@@ -31,6 +230,7 @@ struct ContentView: View {
     @State private var reportDescription = ""
     @State private var showAddSubjectsView = false
     @State private var isSavingReport = false
+    @State private var chosenSubject: String? = nil
     
     private func filteredSubjects() -> [String] {
         let subjectNames = Set(subjects.compactMap { $0.name })
@@ -51,13 +251,9 @@ struct ContentView: View {
     let breakTimes = [1, 5, 10, 15, 20]
     
     init() {
-        requestNotificationPermissions()
-        func requestNotificationPermissions() {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
-                if granted {
-                } else if let error = error {
-                    print("Error requesting notification permissions: \(error.localizedDescription)")
-                }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if !granted, let error = error {
+                print("Error requesting notification permissions: \(error.localizedDescription)")
             }
         }
     }
@@ -192,6 +388,7 @@ struct ContentView: View {
                             }
                         }
                         .onChange(of: chosenSubject) { oldValue, newValue in
+                            timerManager.chosenSubject = chosenSubject
                             if !timerManager.timerStarted {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
@@ -212,8 +409,6 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .padding()
                                 .opacity(0.8)
-                               
-                             
                         }
                     }
                     
@@ -227,8 +422,6 @@ struct ContentView: View {
                                 .padding()
                                 .foregroundColor(.white)
                                 .opacity(0.8)
-                          
-                            
                         }
                     }
                     
@@ -243,16 +436,20 @@ struct ContentView: View {
                                 .padding()
                                 .foregroundColor(.white)
                                 .opacity(0.8)
-                               
-                          
                         }
                     }
                 }
           
             }
             .onAppear {
-                if let firstSubject = filteredSubjects().first {
+                if let firstSubject = filteredSubjects().first, chosenSubject == nil {
                     self.chosenSubject = firstSubject
+                }
+                if let cs = timerManager.chosenSubject {
+                    chosenSubject = cs
+                }
+                if timerManager.timerStarted {
+                    selectedAccentColor = getColorForSelectedSubject()
                 }
             }
         }
@@ -263,14 +460,8 @@ struct ContentView: View {
         .sheet(isPresented: $showAddSubjectsView) {
             AddSubjectView()
         }
-        .onAppear {
-            // TimerManager handles restore in init; refresh accent if needed
-            if timerManager.timerStarted {
-                selectedAccentColor = getColorForSelectedSubject()
-            }
-        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            // Manager can handle foreground if extended later
+            // Manager restores state on init; accent color refresh handled in onAppear
         }
     }
     
@@ -280,39 +471,11 @@ struct ContentView: View {
         return subjectExists && examExists
     }
     
-    func requestNotificationPermissions() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
-            if granted {
-            } else if let error = error {
-                print("Error requesting notification permissions: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func scheduleNotification(message: String, delay: TimeInterval = 1) {
-        let content = UNMutableNotificationContent()
-        content.title = NSLocalizedString("timer_notification_title", comment: "Timer Notification")
-        content.body = NSLocalizedString(message, comment: "Notification message")
-        content.sound = UNNotificationSound.default
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(delay, 0.5), repeats: false)
-        
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error scheduling notification: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    
-    
     private func getDailySubjectColors(for date: Date) -> [Color] {
         let calendar = Calendar.current
         let filteredSubjects = dailySubjects.filter { calendar.isDate($0.date ?? Date(), inSameDayAs: date) }
         let colors = filteredSubjects.compactMap { $0.color?.toColor() }
-        return colors.isEmpty ? [Color.gray, Color.blue] : colors // Fallback colors if no subjects found
+        return colors.isEmpty ? [Color.gray, Color.blue] : colors
     }
     
     private var descriptionSheet: some View {
@@ -335,7 +498,6 @@ struct ContentView: View {
                     Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
                         Text(LocalizedStringKey("select_topic")).tag("")
 
-                        // For Exams (match on examName since that's the user-facing title used in the picker)
                         if let chosenExam = exams.first(where: { $0.examName == chosenSubject || $0.name == chosenSubject }) {
                             ForEach(chosenExam.topicsArray, id: \.self) { item in
                                 Text(item)
@@ -343,7 +505,6 @@ struct ContentView: View {
                             }
                         }
 
-                        // For Projects
                         if let chosenProject = projects.first(where: { $0.name == chosenSubject }) {
                             ForEach(chosenProject.topicsArray, id: \.self) { item in
                                 Text(item)
@@ -365,7 +526,6 @@ struct ContentView: View {
                     newReport.totalTime = Int16(timerManager.totalWorkTime)
                     
                     if let chosenSubject = chosenSubject {
-                        // Add topics based on whether it's an exam or project
                         if exams.first(where: { $0.examName == chosenSubject || $0.name == chosenSubject }) != nil {
                             newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
                         } else if projects.first(where: { $0.name == chosenSubject }) != nil {
@@ -411,40 +571,15 @@ struct ContentView: View {
             .font(.custom("Poppins-Regular", size: 60))
     }
     
-    
     private func progressValue() -> CGFloat {
         let totalDuration = timerManager.onBreak ? timerManager.breakTime * 60 : timerManager.intervalTime * 60
         return totalDuration > 0 ? CGFloat(timerManager.countdownTime) / CGFloat(totalDuration) : 0
     }
     
-
-    
-
-    
-
-    
-
-    
     private func timeString(time: Int) -> String {
-        if time <= 0 {
-            return "0"
-        }
-        // Show remaining whole minutes (ceiling) for the pomodoro countdown display
+        if time <= 0 { return "0" }
         let minutes = Int(ceil(Double(time) / 60.0))
         return "\(minutes)"
-    }
-
-}
-
-struct Haptics {
-    static func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
-        let generator = UIImpactFeedbackGenerator(style: style)
-        generator.impactOccurred()
-    }
-    
-    static func notification(_ type: UINotificationFeedbackGenerator.FeedbackType) {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(type)
     }
 }
 
@@ -469,8 +604,6 @@ extension View {
         self.modifier(CircularGradientBackground(colors: colors))
     }
 }
-
-import SwiftUI
 
 struct CircularProgressView<Content: View>: View {
     var progress: CGFloat
@@ -502,11 +635,10 @@ struct CircularProgressView<Content: View>: View {
                 .frame(width: 250, height: 250)
                 .animation(.easeInOut(duration: 1.0), value: progress)
             
-            
-                .mask(
-                    Circle()
-                        .frame(width: 250, height: 250)
-                )
+            .mask(
+                Circle()
+                    .frame(width: 250, height: 250)
+            )
             
             Circle()
                 .fill(Color.clear)
@@ -514,7 +646,6 @@ struct CircularProgressView<Content: View>: View {
             
             VStack {
                 content
-                
             }
             
             if isTimerStarted {
@@ -529,7 +660,6 @@ struct CircularProgressView<Content: View>: View {
         .edgesIgnoringSafeArea(.all)
     }
 }
-
 
 struct TopicPickerItem: View {
     var text: String
@@ -551,9 +681,8 @@ extension String {
             return CGFloat(Double(value) ?? 0) / 255.0
         }
         guard rgbValues.count >= 3 else {
-            return Color.gray // safe fallback instead of crash
+            return Color.gray
         }
         return Color(red: rgbValues[0], green: rgbValues[1], blue: rgbValues[2])
     }
 }
-

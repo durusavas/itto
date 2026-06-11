@@ -69,16 +69,22 @@ struct ProjectDetailsView: View {
                     .listRowBackground(Color.gray.opacity(0.05))
                     
                     Section("Due Date") {
-                        DatePicker("Due", selection: Binding(
-                            get: { project.dueDate ?? Date() },
-                            set: { project.dueDate = $0; saveChanges() }
-                        ), displayedComponents: .date)
-                        if project.dueDate != nil {
-                            Button("Remove due date") {
-                                project.dueDate = nil
+                        Toggle("Has due date", isOn: Binding(
+                            get: { project.dueDate != nil },
+                            set: { enabled in
+                                if enabled {
+                                    project.dueDate = Date().addingTimeInterval(86400 * 7)
+                                } else {
+                                    project.dueDate = nil
+                                }
                                 saveChanges()
                             }
-                            .foregroundColor(.red)
+                        ))
+                        if project.dueDate != nil {
+                            DatePicker("Due", selection: Binding(
+                                get: { project.dueDate ?? Date() },
+                                set: { project.dueDate = $0; saveChanges() }
+                            ), displayedComponents: .date)
                         }
                     }
                     .listRowBackground(Color.gray.opacity(0.05))
@@ -89,22 +95,21 @@ struct ProjectDetailsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                  
-                        
-                        Text(project.name ?? NSLocalizedString("project_details", comment: "Project Details"))
-                            .font(.custom("Poppins-SemiBold", size: 24))
-                    
+                    Text(project.name ?? NSLocalizedString("project_details", comment: "Project Details"))
+                        .font(.custom("Poppins-SemiBold", size: 24))
                 }
             }
         }
     }
     
     private func deleteTopic(at offsets: IndexSet) {
-        if let topics = project.topics as? NSMutableArray {
-            topics.removeObjects(at: offsets)
+        if var topics = project.topics as? [String] {
+            // Capture the names to delete BEFORE mutating the array
+            let deletedTopics = offsets.map { topics[$0] }
+            topics.remove(atOffsets: offsets)
             project.topics = topics as NSObject
             saveChanges()
-            deleteDailySubjects(topics: offsets.map { topics[$0] as! String })
+            deleteDailySubjects(topics: deletedTopics)
         }
     }
     
@@ -185,25 +190,8 @@ struct ProjectDetailsView: View {
             }
             
             saveChanges()
-            printDailySubjects()
         } catch {
             print("Error adding DailySubject: \(error)")
-        }
-    }
-    
-    private func printDailySubjects() {
-        guard let managedObjectContext = project.managedObjectContext else { return }
-        
-        let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        
-        do {
-            let dailySubjects = try managedObjectContext.fetch(fetchRequest)
-            print("DailySubjects:")
-            for dailySubject in dailySubjects {
-                print("Subject Name: \(dailySubject.subjectName ?? "Unknown"), Topics: \(dailySubject.topics as? [String] ?? ["No topics"]), Date: \(dailySubject.date ?? Date())")
-            }
-        } catch {
-            print("Error fetching DailySubjects: \(error)")
         }
     }
 }

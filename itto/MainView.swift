@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import CoreData
+import UniformTypeIdentifiers
 
 struct MainView: View {
     @AppStorage("selectedTab") private var selectedTab = 0
@@ -86,6 +88,3 @@ struct TabBarItem: View {
             .foregroundColor(isSelected ? .white : .gray)
     }
 }
-
-
-

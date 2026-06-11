@@ -37,7 +37,7 @@ struct TodayView: View {
         let today = calendar.startOfDay(for: Date())
         return examsWithDueDates.filter { exam in
             guard let due = exam.dueDate else { return false }
-            return due >= calendar.date(byAdding: .day, value: -2, to: today)!
+            return due >= today
         }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
     
@@ -46,7 +46,7 @@ struct TodayView: View {
         let today = calendar.startOfDay(for: Date())
         return projectsWithDueDates.filter { project in
             guard let due = project.dueDate else { return false }
-            return due >= calendar.date(byAdding: .day, value: -2, to: today)!
+            return due >= today
         }.sorted { ($0.dueDate ?? .distantFuture) < ($1.dueDate ?? .distantFuture) }
     }
     
@@ -80,13 +80,13 @@ struct TodayView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             if let classes = groupedDailySubjects["class"], !classes.isEmpty {
-                                sectionView(title: "class", content: classes.map { classSection(dailySubject: $0) as! AnyView })
+                                sectionView(title: "class", content: classes.map { AnyView(classSection(dailySubject: $0)) })
                             }
                             if let exams = groupedDailySubjects["exam"], !exams.isEmpty {
-                                sectionView(title: "exam", content: exams.map { examSection(dailySubject: $0) as! AnyView })
+                                sectionView(title: "exam", content: exams.map { AnyView(examSection(dailySubject: $0)) })
                             }
                             if let projects = groupedDailySubjects["project"], !projects.isEmpty {
-                                sectionView(title: "project", content: projects.map { projectSection(dailySubject: $0) as! AnyView })
+                                sectionView(title: "project", content: projects.map { AnyView(projectSection(dailySubject: $0)) })
                             }
                             
                             // Upcoming deadlines from due dates

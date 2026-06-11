@@ -3,10 +3,6 @@
 //  itto
 //
 //  Created by Duru SAVAŞ on 19/11/2023.
-// ReportView.swift
-// itto
-//
-// Created by Duru SAVAŞ on 19/11/2023.
 
 import SwiftUI
 import CoreData
@@ -85,8 +81,9 @@ struct ReportView: View {
         }
     }
     
+    // totalTime is stored in seconds; convert to minutes for display
     private var totalMinutesThisWeek: Int {
-        currentWeekReports.reduce(0) { $0 + Int($1.totalTime) }
+        currentWeekReports.reduce(0) { $0 + Int($1.totalTime) } / 60
     }
     
     private var avgDailyMinutes: Double {
@@ -406,4 +403,3 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-

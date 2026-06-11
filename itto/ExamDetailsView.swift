@@ -5,7 +5,6 @@
 //  Created by Duru SAVAŞ on 19/02/2024.
 //
 
-
 import SwiftUI
 import CoreData
 
@@ -68,20 +67,25 @@ struct ExamDetailsView: View {
                             .padding()
                         }
                     }
-                  
                     .listRowBackground(Color.gray.opacity(0.05))
                     
                     Section("Due Date") {
-                        DatePicker("Due", selection: Binding(
-                            get: { exam.dueDate ?? Date() },
-                            set: { exam.dueDate = $0; saveChanges() }
-                        ), displayedComponents: .date)
-                        if exam.dueDate != nil {
-                            Button("Remove due date") {
-                                exam.dueDate = nil
+                        Toggle("Has due date", isOn: Binding(
+                            get: { exam.dueDate != nil },
+                            set: { enabled in
+                                if enabled {
+                                    exam.dueDate = Date().addingTimeInterval(86400 * 7)
+                                } else {
+                                    exam.dueDate = nil
+                                }
                                 saveChanges()
                             }
-                            .foregroundColor(.red)
+                        ))
+                        if exam.dueDate != nil {
+                            DatePicker("Due", selection: Binding(
+                                get: { exam.dueDate ?? Date() },
+                                set: { exam.dueDate = $0; saveChanges() }
+                            ), displayedComponents: .date)
                         }
                     }
                     .listRowBackground(Color.gray.opacity(0.05))
@@ -103,11 +107,13 @@ struct ExamDetailsView: View {
     }
     
     private func deleteTopic(at offsets: IndexSet) {
-        if let topics = exam.topics as? NSMutableArray {
-            topics.removeObjects(at: offsets)
+        if var topics = exam.topics as? [String] {
+            // Capture the names to delete BEFORE mutating the array
+            let deletedTopics = offsets.map { topics[$0] }
+            topics.remove(atOffsets: offsets)
             exam.topics = topics as NSObject
             saveChanges()
-            deleteDailySubjects(topics: offsets.map { topics[$0] as! String })
+            deleteDailySubjects(topics: deletedTopics)
         }
     }
     
@@ -138,7 +144,6 @@ struct ExamDetailsView: View {
         guard let managedObjectContext = exam.managedObjectContext else { return }
         
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        // Use examName (the user-visible exam title) as the key for DailySubjects, matching how it is created in AddSubjectView
         fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.examName ?? exam.name ?? "", "Exam")
         
         do {
@@ -163,7 +168,6 @@ struct ExamDetailsView: View {
         guard let managedObjectContext = exam.managedObjectContext else { return }
         
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        // Primary key for exam DailySubjects is examName
         fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.examName ?? exam.name ?? "", "Exam")
         
         do {
@@ -186,25 +190,8 @@ struct ExamDetailsView: View {
             }
             
             saveChanges()
-            printDailySubjects()
         } catch {
             print("Error adding DailySubject: \(error)")
-        }
-    }
-    
-    private func printDailySubjects() {
-        guard let managedObjectContext = exam.managedObjectContext else { return }
-        
-        let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        
-        do {
-            let dailySubjects = try managedObjectContext.fetch(fetchRequest)
-            print("DailySubjects:")
-            for dailySubject in dailySubjects {
-                print("Subject Name: \(dailySubject.subjectName ?? "Unknown"), Topics: \(dailySubject.topics as? [String] ?? ["No topics"]), Date: \(dailySubject.date ?? Date())")
-            }
-        } catch {
-            print("Error fetching DailySubjects: \(error)")
         }
     }
 }
