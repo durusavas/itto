@@ -14,6 +14,22 @@ struct SubjectView: View {
     @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
     @State private var showAddScreen = false
+    @State private var searchText = ""
+    
+    private var filteredSubjectsList: [Subjects] {
+        if searchText.isEmpty { return Array(subjects) }
+        return subjects.filter { ($0.name ?? "").localizedCaseInsensitiveContains(searchText) }
+    }
+    
+    private var filteredExamsList: [Exams] {
+        if searchText.isEmpty { return Array(exams) }
+        return exams.filter { ($0.examName ?? $0.name ?? "").localizedCaseInsensitiveContains(searchText) }
+    }
+    
+    private var filteredProjectsList: [Projects] {
+        if searchText.isEmpty { return Array(projects) }
+        return projects.filter { ($0.name ?? "").localizedCaseInsensitiveContains(searchText) }
+    }
     
     var body: some View {
         NavigationStack {
@@ -29,22 +45,32 @@ struct SubjectView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             
-                            if !subjects.isEmpty {
-                                sectionView(title: "my_classes", items: subjects.map { item in
+                            if !filteredSubjectsList.isEmpty {
+                                sectionView(title: "my_classes", items: filteredSubjectsList.map { item in
                                     subjectRow(item: item)
                                 })
                             }
                             
-                            if !exams.isEmpty {
-                                sectionView(title: "my_exams", items: exams.map { exam in
+                            if !filteredExamsList.isEmpty {
+                                sectionView(title: "my_exams", items: filteredExamsList.map { exam in
                                     examRow(exam: exam)
                                 })
                             }
                             
-                            if !projects.isEmpty {
-                                sectionView(title: "my_projects", items: projects.map { project in
+                            if !filteredProjectsList.isEmpty {
+                                sectionView(title: "my_projects", items: filteredProjectsList.map { project in
                                     projectRow(project: project)
                                 })
+                            }
+                            
+                            if searchText.isEmpty == false &&
+                               filteredSubjectsList.isEmpty &&
+                               filteredExamsList.isEmpty &&
+                               filteredProjectsList.isEmpty {
+                                Text("No results for \"\(searchText)\"")
+                                    .font(.custom("Poppins-Regular", size: 16))
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, 40)
                             }
                         }
                     }
@@ -68,6 +94,7 @@ struct SubjectView: View {
                     AddSubjectView()
                 }
             }
+            .searchable(text: $searchText, prompt: LocalizedStringKey("Search"))
         }
     }
     
