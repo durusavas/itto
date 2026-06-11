@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import CoreData
+import UserNotifications
 
 struct AddSubjectView: View {
     @Environment(\.managedObjectContext) var moc
@@ -260,10 +261,32 @@ struct AddSubjectView: View {
 
         do {
             try moc.save()
+            if let due = dueDate {
+                scheduleDueReminder(for: name.isEmpty ? examName : name, dueDate: due, category: chosenCategory)
+            }
             dismiss()
         } catch {
             alertMessage = "Error saving subject: \(error.localizedDescription)"
             showAlert = true
+        }
+    }
+    
+    private func scheduleDueReminder(for title: String, dueDate: Date, category: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "\(category) Due Soon"
+        content.body = "\(title) is due on \(dueDate, style: .date)"
+        content.sound = .default
+        
+        // Schedule 2 days before
+        let reminderDate = Calendar.current.date(byAdding: .day, value: -2, to: dueDate) ?? dueDate
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: "due-\(title)-\(dueDate.timeIntervalSince1970)", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Due reminder error: \(error)")
+            }
         }
     }
 
