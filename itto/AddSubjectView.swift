@@ -274,7 +274,7 @@ struct AddSubjectView: View {
     private func scheduleDueReminder(for title: String, dueDate: Date, category: String) {
         let content = UNMutableNotificationContent()
         content.title = "\(category) Due Soon"
-        content.body = "\(title) is due on \(dueDate, style: .date)"
+        content.body = "\(title) is due on \(dueDate.formatted(date: .long, time: .omitted))"
         content.sound = .default
         
         // Schedule 2 days before

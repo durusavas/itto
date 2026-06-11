@@ -25,10 +25,12 @@ final class TimerManager {
     var timerStarted = false
     var chosenSubject: String?
     var timerStartDate: Date?
-    
+    var sessionCompleted = false
+
     private var timer: Timer?
-    
+
     private let stateKey = "itto_timer_state_v1"
+    private let pendingSessionKey = "itto_pending_session_v1"
     
     init() {
         loadDefaults()
@@ -121,15 +123,22 @@ final class TimerManager {
                 countdownTime = intervalTime * 60
                 scheduleNextNotification()
             } else {
+                // Save session data before stop() so it survives app kills
+                savePendingSession()
                 stop()
                 scheduleNotification(message: "timer_is_over_message", delay: 1)
+                sessionCompleted = true
                 return
             }
         } else {
             onBreak = true
             countdownTime = breakTime * 60
-            scheduleNotification(message: "time_for_break_message", delay: 2)
-            scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
+            // "time_for_break_message" is already scheduled by scheduleNextNotification() at interval start —
+            // don't schedule it again here or the user gets two break notifications.
+            // Only announce "starting next interval" when there actually is one.
+            if currentInterval < intervalNumber {
+                scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
+            }
         }
         saveState()
     }
@@ -169,6 +178,19 @@ final class TimerManager {
     }
     
     private func restoreState() {
+        // If a session completed while the app was backgrounded/killed, surface the save sheet
+        if let data = UserDefaults.standard.data(forKey: pendingSessionKey),
+           let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            if let startTs = dict["startDate"] as? TimeInterval, startTs > 0 {
+                timerStartDate = Date(timeIntervalSince1970: startTs)
+            }
+            totalWorkTime = dict["workTime"] as? Int ?? 0
+            let subj = dict["subject"] as? String ?? ""
+            chosenSubject = subj.isEmpty ? nil : subj
+            sessionCompleted = true
+            return
+        }
+
         guard let data = UserDefaults.standard.data(forKey: stateKey),
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
         
@@ -207,6 +229,23 @@ final class TimerManager {
     
     private func clearState() {
         UserDefaults.standard.removeObject(forKey: stateKey)
+    }
+
+    // Persists the completed session so the save sheet can appear even after an app relaunch
+    private func savePendingSession() {
+        let pending: [String: Any] = [
+            "startDate": timerStartDate?.timeIntervalSince1970 ?? 0,
+            "workTime": totalWorkTime,
+            "subject": chosenSubject ?? ""
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: pending) {
+            UserDefaults.standard.set(data, forKey: pendingSessionKey)
+        }
+    }
+
+    func clearPendingSession() {
+        UserDefaults.standard.removeObject(forKey: pendingSessionKey)
+        sessionCompleted = false
     }
 }
 
@@ -454,7 +493,12 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut, value: timerManager.timerStarted)
-        .sheet(isPresented: $showDescSheet) {
+        .onChange(of: timerManager.sessionCompleted) { _, completed in
+            if completed { showDescSheet = true }
+        }
+        .sheet(isPresented: $showDescSheet, onDismiss: {
+            timerManager.clearPendingSession()
+        }) {
             descriptionSheet
         }
         .sheet(isPresented: $showAddSubjectsView) {
