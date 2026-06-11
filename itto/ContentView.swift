@@ -24,9 +24,9 @@ struct ContentView: View {
     ) var dailySubjects: FetchedResults<DailySubjects>
     
     @State private var selectedAccentColor: Color = Color.white
-    @State private var intervalNumber = 4
-    @State private var intervalTime = 30
-    @State private var breakTime = 5
+    @State private var intervalNumber = UserDefaults.standard.integer(forKey: "defaultInterval") > 0 ? UserDefaults.standard.integer(forKey: "defaultInterval") : 4
+    @State private var intervalTime = UserDefaults.standard.integer(forKey: "defaultInterval") > 0 ? UserDefaults.standard.integer(forKey: "defaultInterval") : 30
+    @State private var breakTime = UserDefaults.standard.integer(forKey: "defaultBreak") > 0 ? UserDefaults.standard.integer(forKey: "defaultBreak") : 5
     @State private var timer: Timer?
     @State private var countdownTime = 0
     @State private var timerIsPaused = true
