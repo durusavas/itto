@@ -46,6 +46,11 @@ struct SettingsView: View {
                     }
                     .font(.custom("Poppins-Regular", size: 16))
                     
+                    Button("Export Deadlines to Calendar (.ics)") {
+                        exportDeadlinesToICS()
+                    }
+                    .font(.custom("Poppins-Regular", size: 16))
+                    
                     if let url = exportURL {
                         ShareLink(item: url) {
                             Label("Share Exported File", systemImage: "square.and.arrow.up")
@@ -202,6 +207,79 @@ struct SettingsView: View {
         }
         try? moc.save()
         dismiss()
+    }
+    
+    private func exportDeadlinesToICS() {
+        var ics = """
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//itto//Academic Deadlines//EN
+        CALSCALE:GREGORIAN
+        METHOD:PUBLISH
+        """
+        
+        // Exams with due dates
+        let examsFetch: NSFetchRequest<Exams> = Exams.fetchRequest()
+        if let exams = try? moc.fetch(examsFetch) {
+            for exam in exams where exam.dueDate != nil {
+                let uid = exam.id?.uuidString ?? UUID().uuidString
+                let summary = exam.examName ?? exam.name ?? "Exam"
+                let due = exam.dueDate!
+                let dateStr = due.icsDateString
+                ics += """
+                
+                BEGIN:VEVENT
+                UID:\(uid)-exam@itto.app
+                DTSTAMP:\(Date().icsDateString)T000000Z
+                DTSTART;VALUE=DATE:\(dateStr)
+                DTEND;VALUE=DATE:\(dateStr)
+                SUMMARY:\(summary) (Exam)
+                DESCRIPTION:Deadline for exam: \(summary)
+                END:VEVENT
+                """
+            }
+        }
+        
+        // Projects with due dates
+        let projectsFetch: NSFetchRequest<Projects> = Projects.fetchRequest()
+        if let projects = try? moc.fetch(projectsFetch) {
+            for project in projects where project.dueDate != nil {
+                let uid = project.id?.uuidString ?? UUID().uuidString
+                let summary = project.name ?? "Project"
+                let due = project.dueDate!
+                let dateStr = due.icsDateString
+                ics += """
+                
+                BEGIN:VEVENT
+                UID:\(uid)-project@itto.app
+                DTSTAMP:\(Date().icsDateString)T000000Z
+                DTSTART;VALUE=DATE:\(dateStr)
+                DTEND;VALUE=DATE:\(dateStr)
+                SUMMARY:\(summary) (Project)
+                DESCRIPTION:Deadline for project: \(summary)
+                END:VEVENT
+                """
+            }
+        }
+        
+        ics += "\nEND:VCALENDAR"
+        
+        do {
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent("itto_deadlines_\(Date().timeIntervalSince1970).ics")
+            try ics.write(to: url, atomically: true, encoding: .utf8)
+            exportURL = url
+            showExportSuccess = true
+        } catch {
+            print("ICS export failed: \(error)")
+        }
+    }
+}
+
+extension Date {
+    var icsDateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        return formatter.string(from: self)
     }
 }
 
