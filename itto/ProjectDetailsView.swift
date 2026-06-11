@@ -25,6 +25,21 @@ struct ProjectDetailsView: View {
             VStack {
                 List {
                     Section {
+                        HStack {
+                            Text("\(project.topicsArray.count) topics")
+                                .font(.custom("Poppins-Regular", size: 16))
+                            Spacer()
+                            if !project.topicsArray.isEmpty {
+                                Text("100%")
+                                    .font(.custom("Poppins-Regular", size: 14))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .listRowBackground(Color.gray.opacity(0.05))
+                    
+                    Section {
                         ForEach(project.topicsArray, id: \.self) { topic in
                             HStack {
                                 GradientCircleView(baseColor: color)

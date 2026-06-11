@@ -198,6 +198,9 @@ struct SubjectView: View {
                                 .font(.custom("Poppins-Regular", size: 12))
                                 .foregroundColor(.secondary)
                         }
+                        Text("\(exam.topicsArray.count) topics")
+                            .font(.custom("Poppins-Regular", size: 11))
+                            .foregroundColor(.secondary)
                     }
                     Spacer()
                     Image(systemName: "chevron.right")
@@ -222,6 +225,9 @@ struct SubjectView: View {
                                 .font(.custom("Poppins-Regular", size: 12))
                                 .foregroundColor(.secondary)
                         }
+                        Text("\(project.topicsArray.count) topics")
+                            .font(.custom("Poppins-Regular", size: 11))
+                            .foregroundColor(.secondary)
                     }
                     Spacer()
                     Image(systemName: "chevron.right")
