@@ -16,6 +16,7 @@ struct ReportView: View {
     @FetchRequest(sortDescriptors: []) var reports: FetchedResults<Report>
     @FetchRequest(sortDescriptors: []) var subjects: FetchedResults<Subjects>
     @FetchRequest(sortDescriptors: []) var projects: FetchedResults<Projects>
+    @FetchRequest(sortDescriptors: []) var exams: FetchedResults<Exams>
     @State private var weekOffset = 0
     @State private var currentDayOffset = 0
     
@@ -27,6 +28,27 @@ struct ReportView: View {
                 combinedList.append(combinedReport)
             } else if let projectItem = projects.first(where: { $0.name == reportItem.subjectName }) {
                 let combinedReport = CombinedReport(report: reportItem, project: projectItem)
+                combinedList.append(combinedReport)
+            } else if let examItem = exams.first(where: { $0.examName == reportItem.subjectName || $0.name == reportItem.subjectName }) {
+                let combinedReport = CombinedReport(
+                    date: reportItem.date ?? Date(),
+                    subjectName: reportItem.subjectName ?? "None",
+                    totalTime: reportItem.totalTime,
+                    subjectColor: examItem.color ?? "R:128, G:128, B:200",
+                    subjectId: examItem.id ?? UUID(),
+                    reportDescription: reportItem.desc ?? ""
+                )
+                combinedList.append(combinedReport)
+            } else if let name = reportItem.subjectName {
+                // Include any other reports (e.g. legacy or unmatched) so data is never lost in the UI
+                let combinedReport = CombinedReport(
+                    date: reportItem.date ?? Date(),
+                    subjectName: name,
+                    totalTime: reportItem.totalTime,
+                    subjectColor: "R:140, G:140, B:140",
+                    subjectId: UUID(),
+                    reportDescription: reportItem.desc ?? ""
+                )
                 combinedList.append(combinedReport)
             }
         }
@@ -267,6 +289,15 @@ struct CombinedReport {
         self.subjectColor = project.color ?? "R:0, G:0, B:0"
         self.subjectId = project.id ?? UUID()
         self.reportDescription = report.desc ?? ""
+    }
+
+    init(date: Date, subjectName: String, totalTime: Int16, subjectColor: String, subjectId: UUID, reportDescription: String) {
+        self.date = date
+        self.subjectName = subjectName
+        self.totalTime = totalTime
+        self.subjectColor = subjectColor
+        self.subjectId = subjectId
+        self.reportDescription = reportDescription
     }
 }
 

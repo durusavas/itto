@@ -46,7 +46,8 @@ struct ContentView: View {
     private func filteredSubjects() -> [String] {
         let subjectNames = Set(subjects.compactMap { $0.name })
         let projectNames = Set(projects.compactMap { $0.name })
-        return Array(subjectNames.union(projectNames))
+        let examNames = Set(exams.compactMap { $0.examName })
+        return Array(subjectNames.union(projectNames).union(examNames))
     }
     
     let sets = [1, 2, 3, 4, 5, 6]
@@ -290,7 +291,7 @@ struct ContentView: View {
     
     var isExamAndClass: Bool {
         let subjectExists = subjects.contains(where: { $0.name == chosenSubject })
-        let examExists = exams.contains(where: { $0.name == chosenSubject })
+        let examExists = exams.contains(where: { $0.examName == chosenSubject || $0.name == chosenSubject })
         return subjectExists && examExists
     }
     
@@ -349,8 +350,8 @@ struct ContentView: View {
                     Picker(LocalizedStringKey("Topics"), selection: $selectedTopic) {
                         Text(LocalizedStringKey("select_topic")).tag("")
 
-                        // For Exams
-                        if let chosenExam = exams.first(where: { $0.name == chosenSubject }) {
+                        // For Exams (match on examName since that's the user-facing title used in the picker)
+                        if let chosenExam = exams.first(where: { $0.examName == chosenSubject || $0.name == chosenSubject }) {
                             ForEach(chosenExam.topicsArray, id: \.self) { item in
                                 Text(item)
                                     .font(.custom("Poppins-Regular", size: 16))
@@ -379,7 +380,7 @@ struct ContentView: View {
                     
                     if let chosenSubject = chosenSubject {
                         // Add topics based on whether it's an exam or project
-                        if exams.first(where: { $0.name == chosenSubject }) != nil {
+                        if exams.first(where: { $0.examName == chosenSubject || $0.name == chosenSubject }) != nil {
                             newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
                         } else if projects.first(where: { $0.name == chosenSubject }) != nil {
                             newReport.desc = !reportDescription.isEmpty ? reportDescription : selectedTopic
@@ -410,6 +411,8 @@ struct ContentView: View {
     private func getColorForSelectedSubject() -> Color {
         if let subject = subjects.first(where: { $0.name == chosenSubject }) {
             return subject.color?.toColor() ?? Color.white
+        } else if let exam = exams.first(where: { $0.examName == chosenSubject || $0.name == chosenSubject }) {
+            return exam.color?.toColor() ?? Color.white
         } else if let project = projects.first(where: { $0.name == chosenSubject }) {
             return project.color?.toColor() ?? Color.white
         } else {
