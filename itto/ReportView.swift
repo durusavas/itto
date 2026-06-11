@@ -55,6 +55,22 @@ struct ReportView: View {
         return combinedList
     }
     
+    /// Current consecutive day study streak (days with at least one logged report)
+    var currentStudyStreak: Int {
+        let calendar = Calendar.current
+        let reportDays = Set(reports.compactMap { $0.date.map { calendar.startOfDay(for: $0) } })
+        
+        var streak = 0
+        var day = calendar.startOfDay(for: Date())
+        
+        while reportDays.contains(day) {
+            streak += 1
+            guard let previous = calendar.date(byAdding: .day, value: -1, to: day) else { break }
+            day = previous
+        }
+        return streak
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -66,6 +82,19 @@ struct ReportView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 0) {
+                    if currentStudyStreak > 0 {
+                        HStack {
+                            Text("🔥 \(currentStudyStreak)-day streak")
+                                .font(.custom("Poppins-SemiBold", size: 15))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.purple.opacity(0.55))
+                                .cornerRadius(20)
+                        }
+                        .padding(.bottom, 8)
+                    }
+                    
                     Chart {
                         ForEach(daysOfTheWeek(start: weekRange(offset: weekOffset).0), id: \.self) { day in
                             let dayReports = combinedReports.filter { Calendar.current.isDate($0.date, inSameDayAs: day) }
