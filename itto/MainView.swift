@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @State private var selectedTab = 0
+    @State private var showSettings = false
     
     init() {
         UITabBar.appearance().isHidden = true
@@ -52,12 +53,20 @@ struct MainView: View {
                         .onTapGesture {
                             selectedTab = 3
                         }
+                    Button(action: { showSettings = true }) {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 24))
+                            .foregroundColor(.gray)
+                    }
                 }
                 .padding(20)
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(30)
                 
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
         }
     }
 }
