@@ -303,13 +303,13 @@ struct ContentView: View {
         }
     }
     
-    func scheduleNotification(message: String) {
+    func scheduleNotification(message: String, delay: TimeInterval = 1) {
         let content = UNMutableNotificationContent()
         content.title = NSLocalizedString("timer_notification_title", comment: "Timer Notification")
         content.body = NSLocalizedString(message, comment: "Notification message")
         content.sound = UNNotificationSound.default
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(delay, 0.5), repeats: false)
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         
@@ -438,6 +438,8 @@ struct ContentView: View {
         timerStarted = true
         totalWorkTime = 0
 
+        // Schedule notification for end of the first work interval
+        scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
         
         DispatchQueue.global(qos: .background).async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
@@ -473,15 +475,18 @@ struct ContentView: View {
             if currentInterval <= intervalNumber {
                 onBreak = false
                 countdownTime = intervalTime * 60
-                scheduleNotification(message: "starting_next_interval_message")
+                // Notify when this next work interval ends (time for break)
+                scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
             } else {
                 stopTimer()
-                scheduleNotification(message: "timer_is_over_message")
+                scheduleNotification(message: "timer_is_over_message", delay: 1)
             }
         } else {
             onBreak = true
             countdownTime = breakTime * 60
-            scheduleNotification(message: "time_for_break_message")
+            // Break is starting now - notify soon, and pre-schedule the "next interval" for end of break
+            scheduleNotification(message: "time_for_break_message", delay: 2)
+            scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
         }
     }
     
@@ -491,6 +496,7 @@ struct ContentView: View {
         countdownTime = 0
         timerIsPaused = true
         timerStarted = false
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         showDescSheet = true
 
     }
@@ -499,6 +505,7 @@ struct ContentView: View {
     private func pauseTimer() {
         timer?.invalidate()
         timerIsPaused = true
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
     
     private func resumeTimer() {
