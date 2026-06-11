@@ -532,12 +532,12 @@ struct ContentView: View {
     }
     
     private func timeString(time: Int) -> String {
-        if time <= 59 && time > 0 {
-               return "1"
-           }
+        if time <= 0 {
+            return "0"
+        }
+        // Show remaining whole minutes (ceiling) for the pomodoro countdown display
         let minutes = Int(ceil(Double(time) / 60.0))
-           
-        return "\(String(format: "%d", minutes))"
+        return "\(minutes)"
     }
 
 }
