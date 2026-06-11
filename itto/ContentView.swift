@@ -638,9 +638,14 @@ struct TopicPickerItem: View {
 extension String {
     func toColor() -> Color {
         let components = self.replacingOccurrences(of: " ", with: "").split(separator: ",").map { String($0) }
-        let rgbValues = components.map { component -> CGFloat in
-            let value = component.split(separator: ":")[1]
+        let rgbValues = components.compactMap { component -> CGFloat? in
+            let parts = component.split(separator: ":")
+            guard parts.count == 2 else { return nil }
+            let value = parts[1]
             return CGFloat(Double(value) ?? 0) / 255.0
+        }
+        guard rgbValues.count >= 3 else {
+            return Color.gray // safe fallback instead of crash
         }
         return Color(red: rgbValues[0], green: rgbValues[1], blue: rgbValues[2])
     }

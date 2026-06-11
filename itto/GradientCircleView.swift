@@ -22,7 +22,9 @@ struct GradientCircleView: View {
 
 extension Color {
     func lighter(by percentage: Double) -> Color {
-        let components = UIColor(self).cgColor.components!
+        guard let components = UIColor(self).cgColor.components, components.count >= 3 else {
+            return self // safe fallback
+        }
         let red = components[0] + (1 - components[0]) * CGFloat(percentage / 100)
         let green = components[1] + (1 - components[1]) * CGFloat(percentage / 100)
         let blue = components[2] + (1 - components[2]) * CGFloat(percentage / 100)
