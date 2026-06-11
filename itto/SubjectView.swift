@@ -31,6 +31,20 @@ struct SubjectView: View {
         return projects.filter { ($0.name ?? "").localizedCaseInsensitiveContains(searchText) }
     }
     
+    private var sortedExams: [Exams] {
+        filteredExamsList.sorted { (a, b) in
+            guard let da = a.dueDate, let db = b.dueDate else { return a.dueDate != nil && b.dueDate == nil }
+            return da < db
+        }
+    }
+    
+    private var sortedProjects: [Projects] {
+        filteredProjectsList.sorted { (a, b) in
+            guard let da = a.dueDate, let db = b.dueDate else { return a.dueDate != nil && b.dueDate == nil }
+            return da < db
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -51,22 +65,22 @@ struct SubjectView: View {
                                 })
                             }
                             
-                            if !filteredExamsList.isEmpty {
-                                sectionView(title: "my_exams", items: filteredExamsList.map { exam in
+                            if !sortedExams.isEmpty {
+                                sectionView(title: "my_exams", items: sortedExams.map { exam in
                                     examRow(exam: exam)
                                 })
                             }
                             
-                            if !filteredProjectsList.isEmpty {
-                                sectionView(title: "my_projects", items: filteredProjectsList.map { project in
+                            if !sortedProjects.isEmpty {
+                                sectionView(title: "my_projects", items: sortedProjects.map { project in
                                     projectRow(project: project)
                                 })
                             }
                             
                             if searchText.isEmpty == false &&
                                filteredSubjectsList.isEmpty &&
-                               filteredExamsList.isEmpty &&
-                               filteredProjectsList.isEmpty {
+                               sortedExams.isEmpty &&
+                               sortedProjects.isEmpty {
                                 Text("No results for \"\(searchText)\"")
                                     .font(.custom("Poppins-Regular", size: 16))
                                     .foregroundColor(.secondary)
@@ -76,8 +90,8 @@ struct SubjectView: View {
                             // First-use empty state
                             if searchText.isEmpty &&
                                filteredSubjectsList.isEmpty &&
-                               filteredExamsList.isEmpty &&
-                               filteredProjectsList.isEmpty {
+                               sortedExams.isEmpty &&
+                               sortedProjects.isEmpty {
                                 VStack(spacing: 12) {
                                     Text("Welcome to itto 👋")
                                         .font(.custom("Poppins-SemiBold", size: 20))
