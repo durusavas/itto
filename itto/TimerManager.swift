@@ -55,6 +55,11 @@ final class TimerManager {
         timerStarted = true
         totalWorkTime = 0
         
+        // Prevent device from sleeping during focus session (Focus-like behavior)
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+        
         scheduleNextNotification()
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
@@ -89,6 +94,11 @@ final class TimerManager {
         countdownTime = 0
         clearState()
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        
+        // Re-enable idle timer
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
     private func tick() {
