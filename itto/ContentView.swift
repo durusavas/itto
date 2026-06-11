@@ -44,6 +44,22 @@ struct ContentView: View {
     @State private var showAddSubjectsView = false
     @State private var isSavingReport = false
     
+    private struct PersistedTimerState: Codable {
+        let intervalNumber: Int
+        let intervalTime: Int
+        let breakTime: Int
+        let chosenSubject: String?
+        let timerStarted: Bool
+        let timerIsPaused: Bool
+        let onBreak: Bool
+        let currentInterval: Int
+        let totalWorkTime: Int
+        let timerStartDate: Date?
+        let countdownTime: Int
+    }
+    
+    private let timerStateKey = "itto_timer_state_v1"
+    
     private func filteredSubjects() -> [String] {
         let subjectNames = Set(subjects.compactMap { $0.name })
         let projectNames = Set(projects.compactMap { $0.name })
@@ -257,11 +273,15 @@ struct ContentView: View {
             AddSubjectView()
         }
         .onAppear {
-            resumeTimerIfNeeded()
+            restoreTimerState()
+            if timerStarted && !timerIsPaused {
+                // Restart the actual timer if we restored a running session
+                resumeTimer()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             updateCircularView()
-            resumeTimerIfNeeded()
+            restoreTimerState()
         }
     }
     private func updateCircularView() {
@@ -292,6 +312,76 @@ struct ContentView: View {
         if !timerStarted && !timerIsPaused {
             resumeTimer()
         }
+    }
+    
+    private func saveTimerState() {
+        let state = PersistedTimerState(
+            intervalNumber: intervalNumber,
+            intervalTime: intervalTime,
+            breakTime: breakTime,
+            chosenSubject: chosenSubject,
+            timerStarted: timerStarted,
+            timerIsPaused: timerIsPaused,
+            onBreak: onBreak,
+            currentInterval: currentInterval,
+            totalWorkTime: totalWorkTime,
+            timerStartDate: timerStartDate,
+            countdownTime: countdownTime
+        )
+        if let data = try? JSONEncoder().encode(state) {
+            UserDefaults.standard.set(data, forKey: timerStateKey)
+        }
+    }
+    
+    private func restoreTimerState() {
+        guard let data = UserDefaults.standard.data(forKey: timerStateKey),
+              let state = try? JSONDecoder().decode(PersistedTimerState.self, from: data) else {
+            return
+        }
+        
+        // Ignore very old sessions (more than 3 hours)
+        if let start = state.timerStartDate, Date().timeIntervalSince(start) > 3 * 3600 {
+            clearTimerState()
+            return
+        }
+        
+        intervalNumber = state.intervalNumber
+        intervalTime = state.intervalTime
+        breakTime = state.breakTime
+        chosenSubject = state.chosenSubject
+        timerStarted = state.timerStarted
+        timerIsPaused = state.timerIsPaused
+        onBreak = state.onBreak
+        currentInterval = state.currentInterval
+        totalWorkTime = state.totalWorkTime
+        timerStartDate = state.timerStartDate
+        
+        // Recompute remaining time based on real elapsed if session was active
+        if timerStarted && !timerIsPaused, let startDate = timerStartDate {
+            let elapsed = Int(Date().timeIntervalSince(startDate))
+            let phaseDuration = (onBreak ? breakTime : intervalTime) * 60
+            let timeInPhase = elapsed % (intervalTime * 60 + breakTime * 60)   // rough
+            if onBreak {
+                countdownTime = max(0, (breakTime * 60) - (timeInPhase - intervalTime * 60))
+            } else {
+                countdownTime = max(0, (intervalTime * 60) - timeInPhase)
+            }
+        } else {
+            countdownTime = state.countdownTime
+        }
+        
+        if timerStarted {
+            selectedAccentColor = getColorForSelectedSubject()
+        }
+        
+        // If the session should have naturally ended, stop it
+        if timerStarted && currentInterval > intervalNumber {
+            stopTimer()
+        }
+    }
+    
+    private func clearTimerState() {
+        UserDefaults.standard.removeObject(forKey: timerStateKey)
     }
     
     var isExamAndClass: Bool {
@@ -450,6 +540,8 @@ struct ContentView: View {
         // Schedule notification for end of the first work interval
         scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
         
+        saveTimerState()
+        
         DispatchQueue.global(qos: .background).async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 DispatchQueue.main.async {
@@ -468,6 +560,10 @@ struct ContentView: View {
                     self.countdownTime -= 1
                     if !self.onBreak {
                         self.totalWorkTime += 1
+                    }
+                    // Persist progress periodically (cheap)
+                    if self.countdownTime % 5 == 0 {
+                        self.saveTimerState()
                     }
                 }
             } else {
@@ -489,6 +585,7 @@ struct ContentView: View {
             } else {
                 stopTimer()
                 scheduleNotification(message: "timer_is_over_message", delay: 1)
+                return
             }
         } else {
             onBreak = true
@@ -497,6 +594,7 @@ struct ContentView: View {
             scheduleNotification(message: "time_for_break_message", delay: 2)
             scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
         }
+        saveTimerState()
     }
     
     private func stopTimer() {
@@ -506,8 +604,8 @@ struct ContentView: View {
         timerIsPaused = true
         timerStarted = false
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        clearTimerState()
         showDescSheet = true
-
     }
     
     
@@ -515,10 +613,12 @@ struct ContentView: View {
         timer?.invalidate()
         timerIsPaused = true
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        saveTimerState()
     }
     
     private func resumeTimer() {
         timerIsPaused = false
+        saveTimerState()
         DispatchQueue.global(qos: .background).async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 DispatchQueue.main.async {
@@ -526,6 +626,9 @@ struct ContentView: View {
                         self.countdownTime -= 1
                         if !self.onBreak {
                             self.totalWorkTime += 1
+                        }
+                        if self.countdownTime % 5 == 0 {
+                            self.saveTimerState()
                         }
                     } else {
                         self.handleEndOfInterval()
