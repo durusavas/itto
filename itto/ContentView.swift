@@ -23,42 +23,14 @@ struct ContentView: View {
         predicate: NSPredicate(format: "date >= %@", Calendar.current.startOfDay(for: Date()) as CVarArg)
     ) var dailySubjects: FetchedResults<DailySubjects>
     
+    @StateObject private var timerManager = TimerManager()
     @State private var selectedAccentColor: Color = Color.white
-    @State private var intervalNumber = UserDefaults.standard.integer(forKey: "defaultInterval") > 0 ? UserDefaults.standard.integer(forKey: "defaultInterval") : 4
-    @State private var intervalTime = UserDefaults.standard.integer(forKey: "defaultInterval") > 0 ? UserDefaults.standard.integer(forKey: "defaultInterval") : 30
-    @State private var breakTime = UserDefaults.standard.integer(forKey: "defaultBreak") > 0 ? UserDefaults.standard.integer(forKey: "defaultBreak") : 5
-    @State private var timer: Timer?
-    @State private var countdownTime = 0
-    @State private var timerIsPaused = true
-    @State private var onBreak = false
-    @State private var currentInterval = 1
-    @State private var totalWorkTime = 0
-    @State private var timerEndDate: Date?
-    @State private var timerStartDate: Date?
-    @State private var chosenSubject: String?
-    @State private var timerStarted = false
     @State private var navigateToReportView = false
     @State private var selectedTopic = ""
     @State private var showDescSheet = false
     @State private var reportDescription = ""
     @State private var showAddSubjectsView = false
     @State private var isSavingReport = false
-    
-    private struct PersistedTimerState: Codable {
-        let intervalNumber: Int
-        let intervalTime: Int
-        let breakTime: Int
-        let chosenSubject: String?
-        let timerStarted: Bool
-        let timerIsPaused: Bool
-        let onBreak: Bool
-        let currentInterval: Int
-        let totalWorkTime: Int
-        let timerStartDate: Date?
-        let countdownTime: Int
-    }
-    
-    private let timerStateKey = "itto_timer_state_v1"
     
     private func filteredSubjects() -> [String] {
         let subjectNames = Set(subjects.compactMap { $0.name })
@@ -69,9 +41,9 @@ struct ContentView: View {
     
     private func setPreset(sets: Int, interval: Int, breakTime: Int) {
         Haptics.impact(.light)
-        intervalNumber = sets
-        intervalTime = interval
-        self.breakTime = breakTime
+        timerManager.intervalNumber = sets
+        timerManager.intervalTime = interval
+        timerManager.breakTime = breakTime
     }
     
     let sets = [1, 2, 3, 4, 5, 6]
@@ -101,7 +73,7 @@ struct ContentView: View {
             
             VStack {
                 
-                if !timerStarted {
+                if !timerManager.timerStarted {
                     VStack {
                         HStack(spacing: 12) {
                             Button("25/5") { setPreset(sets: 4, interval: 25, breakTime: 5) }
@@ -122,7 +94,7 @@ struct ContentView: View {
                                         .font(.custom("Poppins-Regular", size: 17))
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.8)
-                                    Picker(LocalizedStringKey("Sets"), selection: $intervalNumber) {
+                                    Picker(LocalizedStringKey("Sets"), selection: $timerManager.intervalNumber) {
                                         ForEach(sets, id: \.self) { number in
                                             Text("\(number)")
                                                 .font(.custom("Poppins-Regular", size: 17))
@@ -140,7 +112,7 @@ struct ContentView: View {
                                         .font(.custom("Poppins-Regular", size: 17))
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.8)
-                                    Picker(LocalizedStringKey("Interval"), selection: $intervalTime) {
+                                    Picker(LocalizedStringKey("Interval"), selection: $timerManager.intervalTime) {
                                         ForEach(times, id: \.self) { number in
                                             Text("\(number)")
                                                 .font(.custom("Poppins-Regular", size: 17))
@@ -157,7 +129,7 @@ struct ContentView: View {
                                         .font(.custom("Poppins-Regular", size: 17))
                                         .lineLimit(1)
                                         .minimumScaleFactor(0.8)
-                                    Picker(LocalizedStringKey("Break"), selection: $breakTime) {
+                                    Picker(LocalizedStringKey("Break"), selection: $timerManager.breakTime) {
                                         ForEach(breakTimes, id: \.self) { number in
                                             Text("\(number)")
                                                 .font(.custom("Poppins-Regular", size: 17))
@@ -177,7 +149,8 @@ struct ContentView: View {
                     MainCircleView(colors: getDailySubjectColors(for: Date())) {
                         Button(action: {
                             Haptics.impact(.medium)
-                            startTimer()
+                            timerManager.start()
+                            selectedAccentColor = getColorForSelectedSubject()
                         }) {
                             Image(systemName: "play.fill")
                                 .font(.largeTitle)
@@ -193,21 +166,21 @@ struct ContentView: View {
                    
                 }
                 
-                if timerStarted {
+                if timerManager.timerStarted {
                     CircularProgressView(
                         progress: progressValue(),
-                        currentInterval: currentInterval,
-                        intervalNumber: intervalNumber,
+                        currentInterval: timerManager.currentInterval,
+                        intervalNumber: timerManager.intervalNumber,
                         content: countdownView,
-                        isTimerStarted: timerStarted,
+                        isTimerStarted: timerManager.timerStarted,
                         actColor: selectedAccentColor,
-                        onBreak: onBreak
+                        onBreak: timerManager.onBreak
                     )
                     
                     .padding()
                 }
                 
-                if !timerStarted {
+                if !timerManager.timerStarted {
                     HStack {
                         Picker(LocalizedStringKey("Subject"), selection: $chosenSubject) {
                             Text(LocalizedStringKey("Choose")).tag(nil as String?)
@@ -217,7 +190,7 @@ struct ContentView: View {
                             }
                         }
                         .onChange(of: chosenSubject) { oldValue, newValue in
-                            if !timerStarted {
+                            if !timerManager.timerStarted {
                                 self.selectedAccentColor = getColorForSelectedSubject()
                             }
                         }
@@ -227,10 +200,10 @@ struct ContentView: View {
                 }
                 
                 HStack {
-                    if timerIsPaused && timerStarted {
+                    if timerManager.timerIsPaused && timerManager.timerStarted {
                         Button(action: {
                             Haptics.impact(.medium)
-                            resumeTimer()
+                            timerManager.resume()
                         }) {
                             Image(systemName: "play.fill")
                                 .font(.largeTitle)
@@ -242,10 +215,10 @@ struct ContentView: View {
                         }
                     }
                     
-                    if !timerIsPaused {
+                    if !timerManager.timerIsPaused {
                         Button(action: {
                             Haptics.impact(.light)
-                            pauseTimer()
+                            timerManager.pause()
                         }) {
                             Image(systemName: "pause.fill")
                                 .font(.largeTitle)
@@ -257,10 +230,11 @@ struct ContentView: View {
                         }
                     }
                     
-                    if !timerIsPaused && timerStarted {
+                    if !timerManager.timerIsPaused && timerManager.timerStarted {
                         Button(action: {
                             Haptics.impact(.heavy)
-                            stopTimer()
+                            timerManager.stop()
+                            showDescSheet = true
                         }) {
                             Image(systemName: "stop.circle.fill")
                                 .font(.largeTitle)
@@ -280,7 +254,7 @@ struct ContentView: View {
                 }
             }
         }
-        .animation(.easeInOut, value: timerStarted)
+        .animation(.easeInOut, value: timerManager.timerStarted)
         .sheet(isPresented: $showDescSheet) {
             descriptionSheet
         }
@@ -288,115 +262,14 @@ struct ContentView: View {
             AddSubjectView()
         }
         .onAppear {
-            restoreTimerState()
-            if timerStarted && !timerIsPaused {
-                // Restart the actual timer if we restored a running session
-                resumeTimer()
+            // TimerManager handles restore in init; refresh accent if needed
+            if timerManager.timerStarted {
+                selectedAccentColor = getColorForSelectedSubject()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            updateCircularView()
-            restoreTimerState()
+            // Manager can handle foreground if extended later
         }
-    }
-    private func updateCircularView() {
-        if !timerIsPaused{
-            guard let startDate = timerStartDate else { return }
-            
-            let elapsedTime = Int(Date().timeIntervalSince(startDate))
-            _ = intervalNumber * (intervalTime * 60 + breakTime * 60)
-            let completedIntervals = elapsedTime / (intervalTime * 60 + breakTime * 60)
-            let timeInCurrentInterval = elapsedTime % (intervalTime * 60 + breakTime * 60)
-            
-            if completedIntervals >= intervalNumber {
-                stopTimer()
-            } else {
-                currentInterval = completedIntervals + 1
-                if timeInCurrentInterval < intervalTime * 60 {
-                    onBreak = false
-                    countdownTime = intervalTime * 60 - timeInCurrentInterval
-                } else {
-                    onBreak = true
-                    countdownTime = (breakTime * 60) - (timeInCurrentInterval - intervalTime * 60)
-                }
-            }
-        }
-    }
-    
-    private func resumeTimerIfNeeded() {
-        if !timerStarted && !timerIsPaused {
-            resumeTimer()
-        }
-    }
-    
-    private func saveTimerState() {
-        let state = PersistedTimerState(
-            intervalNumber: intervalNumber,
-            intervalTime: intervalTime,
-            breakTime: breakTime,
-            chosenSubject: chosenSubject,
-            timerStarted: timerStarted,
-            timerIsPaused: timerIsPaused,
-            onBreak: onBreak,
-            currentInterval: currentInterval,
-            totalWorkTime: totalWorkTime,
-            timerStartDate: timerStartDate,
-            countdownTime: countdownTime
-        )
-        if let data = try? JSONEncoder().encode(state) {
-            UserDefaults.standard.set(data, forKey: timerStateKey)
-        }
-    }
-    
-    private func restoreTimerState() {
-        guard let data = UserDefaults.standard.data(forKey: timerStateKey),
-              let state = try? JSONDecoder().decode(PersistedTimerState.self, from: data) else {
-            return
-        }
-        
-        // Ignore very old sessions (more than 3 hours)
-        if let start = state.timerStartDate, Date().timeIntervalSince(start) > 3 * 3600 {
-            clearTimerState()
-            return
-        }
-        
-        intervalNumber = state.intervalNumber
-        intervalTime = state.intervalTime
-        breakTime = state.breakTime
-        chosenSubject = state.chosenSubject
-        timerStarted = state.timerStarted
-        timerIsPaused = state.timerIsPaused
-        onBreak = state.onBreak
-        currentInterval = state.currentInterval
-        totalWorkTime = state.totalWorkTime
-        timerStartDate = state.timerStartDate
-        
-        // Recompute remaining time based on real elapsed if session was active
-        if timerStarted && !timerIsPaused, let startDate = timerStartDate {
-            let elapsed = Int(Date().timeIntervalSince(startDate))
-            let phaseDuration = (onBreak ? breakTime : intervalTime) * 60
-            let timeInPhase = elapsed % (intervalTime * 60 + breakTime * 60)   // rough
-            if onBreak {
-                countdownTime = max(0, (breakTime * 60) - (timeInPhase - intervalTime * 60))
-            } else {
-                countdownTime = max(0, (intervalTime * 60) - timeInPhase)
-            }
-        } else {
-            countdownTime = state.countdownTime
-        }
-        
-        if timerStarted {
-            selectedAccentColor = getColorForSelectedSubject()
-        }
-        
-        // If the session should have naturally ended, stop it
-        if timerStarted && currentInterval > intervalNumber {
-            stopTimer()
-        }
-    }
-    
-    private func clearTimerState() {
-        UserDefaults.standard.removeObject(forKey: timerStateKey)
     }
     
     var isExamAndClass: Bool {
@@ -485,9 +358,9 @@ struct ContentView: View {
                 Button(LocalizedStringKey("Save")) {
                     Haptics.notification(.success)
                     let newReport = Report(context: moc)
-                    newReport.date = timerStartDate
+                    newReport.date = timerManager.timerStartDate
                     newReport.subjectName = chosenSubject
-                    newReport.totalTime = Int16(totalWorkTime)
+                    newReport.totalTime = Int16(timerManager.totalWorkTime)
                     
                     if let chosenSubject = chosenSubject {
                         // Add topics based on whether it's an exam or project
@@ -532,128 +405,23 @@ struct ContentView: View {
     }
     
     private var countdownView: some View {
-        Text(timeString(time: countdownTime))
+        Text(timeString(time: timerManager.countdownTime))
             .font(.custom("Poppins-Regular", size: 60))
     }
     
     
     private func progressValue() -> CGFloat {
-        let totalDuration = onBreak ? breakTime * 60 : intervalTime * 60
-        return totalDuration > 0 ? CGFloat(countdownTime) / CGFloat(totalDuration) : 0
+        let totalDuration = timerManager.onBreak ? timerManager.breakTime * 60 : timerManager.intervalTime * 60
+        return totalDuration > 0 ? CGFloat(timerManager.countdownTime) / CGFloat(totalDuration) : 0
     }
     
-    private func startTimer() {
-        timerStartDate = Date()
-        timer?.invalidate()
-        currentInterval = 1
-        onBreak = false
-        countdownTime = intervalTime * 60
-        timerIsPaused = false
-        timerStarted = true
-        totalWorkTime = 0
 
-        // Schedule notification for end of the first work interval
-        scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
-        
-        saveTimerState()
-        
-        DispatchQueue.global(qos: .background).async {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                DispatchQueue.main.async {
-                    self.updateTimer()
-                }
-            }
-            RunLoop.current.add(self.timer!, forMode: .common)
-            RunLoop.current.run()
-        }
-    }
     
-    private func updateTimer() {
-        DispatchQueue.global(qos: .background).async {
-            if self.countdownTime > 0 {
-                DispatchQueue.main.async {
-                    self.countdownTime -= 1
-                    if !self.onBreak {
-                        self.totalWorkTime += 1
-                    }
-                    // Persist progress periodically (cheap)
-                    if self.countdownTime % 5 == 0 {
-                        self.saveTimerState()
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.handleEndOfInterval()
-                }
-            }
-        }
-    }
+
     
-    private func handleEndOfInterval() {
-        if onBreak {
-            currentInterval += 1
-            if currentInterval <= intervalNumber {
-                onBreak = false
-                countdownTime = intervalTime * 60
-                // Notify when this next work interval ends (time for break)
-                scheduleNotification(message: "time_for_break_message", delay: TimeInterval(intervalTime * 60))
-            } else {
-                stopTimer()
-                scheduleNotification(message: "timer_is_over_message", delay: 1)
-                return
-            }
-        } else {
-            onBreak = true
-            countdownTime = breakTime * 60
-            // Break is starting now - notify soon, and pre-schedule the "next interval" for end of break
-            scheduleNotification(message: "time_for_break_message", delay: 2)
-            scheduleNotification(message: "starting_next_interval_message", delay: TimeInterval(breakTime * 60))
-        }
-        saveTimerState()
-    }
+
     
-    private func stopTimer() {
-        timerEndDate = Date()
-        timer?.invalidate()
-        countdownTime = 0
-        timerIsPaused = true
-        timerStarted = false
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        clearTimerState()
-        showDescSheet = true
-    }
-    
-    
-    private func pauseTimer() {
-        timer?.invalidate()
-        timerIsPaused = true
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        saveTimerState()
-    }
-    
-    private func resumeTimer() {
-        timerIsPaused = false
-        saveTimerState()
-        DispatchQueue.global(qos: .background).async {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                DispatchQueue.main.async {
-                    if self.countdownTime > 0 {
-                        self.countdownTime -= 1
-                        if !self.onBreak {
-                            self.totalWorkTime += 1
-                        }
-                        if self.countdownTime % 5 == 0 {
-                            self.saveTimerState()
-                        }
-                    } else {
-                        self.handleEndOfInterval()
-                    }
-                }
-            }
-            RunLoop.current.add(self.timer!, forMode: .common)
-            RunLoop.current.run()
-        }
-    }
+
     
     private func timeString(time: Int) -> String {
         if time <= 0 {
