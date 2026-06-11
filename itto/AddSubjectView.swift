@@ -23,6 +23,7 @@ struct AddSubjectView: View {
     @State private var examSubjects: [String] = [""]
     @State private var selectedDays: [Weekday] = []
     @State private var selectedWeekdays: [Weekday] = []
+    @State private var dueDate: Date? = nil
     @FocusState private var isNameFieldFocused: Bool
     
     var body: some View {
@@ -51,6 +52,20 @@ struct AddSubjectView: View {
                                     .padding()
                                     .focused($isNameFieldFocused)
                                 ColorPicker("", selection: $color)
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+                        
+                        Section {
+                            Toggle("Has due date", isOn: Binding(
+                                get: { dueDate != nil },
+                                set: { if $0 { dueDate = Date().addingTimeInterval(86400 * 7) } else { dueDate = nil } }
+                            ))
+                            if let _ = dueDate {
+                                DatePicker("Due date", selection: Binding(
+                                    get: { dueDate ?? Date() },
+                                    set: { dueDate = $0 }
+                                ), displayedComponents: .date)
                             }
                         }
                         .listRowBackground(Color.gray.opacity(0.1))
@@ -101,6 +116,20 @@ struct AddSubjectView: View {
                                 if let firstSubject = subject.first {
                                     name = firstSubject.name ?? ""
                                 }
+                            }
+                        }
+                        .listRowBackground(Color.gray.opacity(0.1))
+
+                        Section {
+                            Toggle("Has due date", isOn: Binding(
+                                get: { dueDate != nil },
+                                set: { if $0 { dueDate = Date().addingTimeInterval(86400 * 7) } else { dueDate = nil } }
+                            ))
+                            if let _ = dueDate {
+                                DatePicker("Due date", selection: Binding(
+                                    get: { dueDate ?? Date() },
+                                    set: { dueDate = $0 }
+                                ), displayedComponents: .date)
                             }
                         }
                         .listRowBackground(Color.gray.opacity(0.1))
@@ -203,6 +232,9 @@ struct AddSubjectView: View {
             dailySubject.category = chosenCategory
             dailySubject.topics = examSubjects as NSObject
             dailySubject.color = colorString
+            if let due = dueDate {
+                if let exam = newSubject as? Exams { exam.dueDate = due }
+            }
         } else if chosenCategory == "Project" {
             let dailySubject = DailySubjects(context: moc)
             dailySubject.subjectName = name
@@ -210,6 +242,9 @@ struct AddSubjectView: View {
             dailySubject.isCompleted = false
             dailySubject.category = chosenCategory
             dailySubject.color = colorString  // Set color
+            if let due = dueDate {
+                if let project = newSubject as? Projects { project.dueDate = due }
+            }
         } else {
             for day in selectedWeekdays {
                 if let dateForDay = getNextDate(for: day) {

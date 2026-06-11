@@ -175,9 +175,16 @@ struct SubjectView: View {
                 HStack {
                     GradientCircleView(baseColor: exam.color?.toColor() ?? Color.white)
                         .frame(width: 16, height: 16)
-                    Text(exam.examName ?? "Unknown")
-                        .font(.custom("Poppins-Regular", size: 15))
-                        .foregroundColor(.primary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(exam.examName ?? "Unknown")
+                            .font(.custom("Poppins-Regular", size: 15))
+                            .foregroundColor(.primary)
+                        if let due = exam.dueDate {
+                            Text("Due \(due, style: .date)")
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
                     Spacer()
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
@@ -192,9 +199,16 @@ struct SubjectView: View {
                 HStack {
                     GradientCircleView(baseColor: project.color?.toColor() ?? Color.white)
                         .frame(width: 16, height: 16)
-                    Text(project.name ?? "Unknown")
-                        .font(.custom("Poppins-Regular", size: 15))
-                        .foregroundColor(.primary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(project.name ?? "Unknown")
+                            .font(.custom("Poppins-Regular", size: 15))
+                            .foregroundColor(.primary)
+                        if let due = project.dueDate {
+                            Text("Due \(due, style: .date)")
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
                     Spacer()
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
