@@ -108,7 +108,8 @@ struct ExamDetailsView: View {
         guard let managedObjectContext = exam.managedObjectContext else { return }
         
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.name ?? "", "Exam")
+        // Use examName (the user-visible exam title) as the key for DailySubjects, matching how it is created in AddSubjectView
+        fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.examName ?? exam.name ?? "", "Exam")
         
         do {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
@@ -132,7 +133,8 @@ struct ExamDetailsView: View {
         guard let managedObjectContext = exam.managedObjectContext else { return }
         
         let fetchRequest: NSFetchRequest<DailySubjects> = DailySubjects.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.examName ?? "", "Exam")
+        // Primary key for exam DailySubjects is examName
+        fetchRequest.predicate = NSPredicate(format: "subjectName == %@ AND category == %@", exam.examName ?? exam.name ?? "", "Exam")
         
         do {
             let dailySubjects = try managedObjectContext.fetch(fetchRequest)
