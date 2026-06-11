@@ -302,6 +302,7 @@ struct ReselectSubjectsView: View {
                                     set: { newValue in
                                         subject.days = newValue.map { $0.rawValue } as NSObject
                                         try? moc.save()
+                                        updateDailySubjectsFor(subject: subject, with: newValue, moc: moc)
                                     }
                                 ))
                             }
@@ -344,6 +345,7 @@ private func updateDailySubjectsFor(subject: Subjects, with newDays: [Weekday], 
                     dailySubject.date = nextDate
                     dailySubject.isCompleted = false
                     dailySubject.category = "Class"
+                    dailySubject.color = subject.color
                 }
             }
         }
