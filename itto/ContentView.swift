@@ -67,6 +67,13 @@ struct ContentView: View {
         return Array(subjectNames.union(projectNames).union(examNames))
     }
     
+    private func setPreset(sets: Int, interval: Int, breakTime: Int) {
+        Haptics.impact(.light)
+        intervalNumber = sets
+        intervalTime = interval
+        self.breakTime = breakTime
+    }
+    
     let sets = [1, 2, 3, 4, 5, 6]
     let times = [1, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     let breakTimes = [1, 5, 10, 15, 20]
@@ -96,6 +103,14 @@ struct ContentView: View {
                 
                 if !timerStarted {
                     VStack {
+                        HStack(spacing: 12) {
+                            Button("25/5") { setPreset(sets: 4, interval: 25, breakTime: 5) }
+                            Button("50/10") { setPreset(sets: 2, interval: 50, breakTime: 10) }
+                            Button("Pomodoro") { setPreset(sets: 4, interval: 25, breakTime: 5) }
+                        }
+                        .font(.custom("Poppins-Regular", size: 14))
+                        .foregroundColor(.white.opacity(0.8))
+                        
                         ZStack {
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(Color.gray.opacity(0.05))
