@@ -160,6 +160,8 @@ struct ContentView: View {
                                 .opacity(0.8)
                          
                         }
+                        .accessibilityLabel("Start timer session")
+                        .accessibilityHint("Begins the Pomodoro focus timer with current settings")
                     }
                     .padding()
                     .transition(.asymmetric(insertion: .opacity.combined(with: .slide), removal: .opacity.combined(with: .slide)))

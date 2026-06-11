@@ -393,6 +393,8 @@ struct CheckboxView: View {
                 Haptics.impact(.light)
                 self.onChanged(self.isChecked)
             }
+            .accessibilityLabel(isChecked ? "Mark as incomplete" : "Mark as complete")
+            .accessibilityHint("Toggles completion status for this item")
     }
 }
 struct ReselectSubjectsView: View {
