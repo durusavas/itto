@@ -71,6 +71,36 @@ struct ReportView: View {
         return streak
     }
     
+    private var currentWeekStart: Date {
+        weekRange(offset: weekOffset).0
+    }
+    
+    private var currentWeekEnd: Date {
+        weekRange(offset: weekOffset).1
+    }
+    
+    private var currentWeekReports: [CombinedReport] {
+        combinedReports.filter { report in
+            report.date >= currentWeekStart && report.date <= currentWeekEnd
+        }
+    }
+    
+    private var totalMinutesThisWeek: Int {
+        currentWeekReports.reduce(0) { $0 + Int($1.totalTime) }
+    }
+    
+    private var avgDailyMinutes: Double {
+        guard !currentWeekReports.isEmpty else { return 0 }
+        return Double(totalMinutesThisWeek) / 7.0
+    }
+    
+    private var topSubjectThisWeek: String? {
+        let grouped = Dictionary(grouping: currentWeekReports, by: { $0.subjectName })
+        return grouped.max(by: { 
+            $0.value.reduce(0) { $0 + Int($1.totalTime) } < $1.value.reduce(0) { $0 + Int($1.totalTime) }
+        })?.key
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -94,6 +124,45 @@ struct ReportView: View {
                         }
                         .padding(.bottom, 8)
                     }
+                    
+                    // Week insights summary
+                    HStack(spacing: 16) {
+                        VStack(spacing: 2) {
+                            Text("Total")
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                            Text("\(totalMinutesThisWeek / 60)h \(totalMinutesThisWeek % 60)m")
+                                .font(.custom("Poppins-SemiBold", size: 16))
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        VStack(spacing: 2) {
+                            Text("Avg / day")
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.secondary)
+                            Text(String(format: "%.1fh", avgDailyMinutes / 60))
+                                .font(.custom("Poppins-SemiBold", size: 16))
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        if let top = topSubjectThisWeek {
+                            VStack(spacing: 2) {
+                                Text("Top subject")
+                                    .font(.custom("Poppins-Regular", size: 12))
+                                    .foregroundColor(.secondary)
+                                Text(top)
+                                    .font(.custom("Poppins-SemiBold", size: 14))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal)
+                    .background(Color.gray.opacity(0.08))
+                    .cornerRadius(12)
+                    .padding(.bottom, 8)
                     
                     Chart {
                         ForEach(daysOfTheWeek(start: weekRange(offset: weekOffset).0), id: \.self) { day in
