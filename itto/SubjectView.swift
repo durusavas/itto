@@ -72,6 +72,23 @@ struct SubjectView: View {
                                     .foregroundColor(.secondary)
                                     .padding(.top, 40)
                             }
+                            
+                            // First-use empty state
+                            if searchText.isEmpty &&
+                               filteredSubjectsList.isEmpty &&
+                               filteredExamsList.isEmpty &&
+                               filteredProjectsList.isEmpty {
+                                VStack(spacing: 12) {
+                                    Text("Welcome to itto 👋")
+                                        .font(.custom("Poppins-SemiBold", size: 20))
+                                    Text("Tap the + button to add your first class, exam, or project.\n\nYour schedule will automatically appear in the Today tab.")
+                                        .font(.custom("Poppins-Regular", size: 15))
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .padding(.vertical, 40)
+                            }
                         }
                     }
                     .scrollIndicators(.hidden)

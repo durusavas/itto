@@ -60,6 +60,22 @@ struct TodayView: View {
                             if let projects = groupedDailySubjects["project"], !projects.isEmpty {
                                 sectionView(title: "project", content: projects.map { projectSection(dailySubject: $0) as! AnyView })
                             }
+                            
+                            // Empty state for first-time or quiet days
+                            if (groupedDailySubjects["class"]?.isEmpty ?? true) &&
+                               (groupedDailySubjects["exam"]?.isEmpty ?? true) &&
+                               (groupedDailySubjects["project"]?.isEmpty ?? true) {
+                                VStack(spacing: 12) {
+                                    Text("All clear for today 🎉")
+                                        .font(.custom("Poppins-SemiBold", size: 20))
+                                    Text("Add your classes, exams, or projects in the Subjects tab to see them here.\n\nOr start a focus session from the Timer tab.")
+                                        .font(.custom("Poppins-Regular", size: 15))
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .padding(.vertical, 40)
+                            }
                         }
                     }
                     .scrollIndicators(.hidden)
