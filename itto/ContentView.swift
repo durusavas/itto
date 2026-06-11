@@ -9,6 +9,7 @@ import CoreData
 import Foundation
 import UserNotifications
 import AVFoundation
+import UIKit
 
 struct ContentView: View {
     
@@ -144,6 +145,7 @@ struct ContentView: View {
                     
                     MainCircleView(colors: getDailySubjectColors(for: Date())) {
                         Button(action: {
+                            Haptics.impact(.medium)
                             startTimer()
                         }) {
                             Image(systemName: "play.fill")
@@ -196,6 +198,7 @@ struct ContentView: View {
                 HStack {
                     if timerIsPaused && timerStarted {
                         Button(action: {
+                            Haptics.impact(.medium)
                             resumeTimer()
                         }) {
                             Image(systemName: "play.fill")
@@ -210,6 +213,7 @@ struct ContentView: View {
                     
                     if !timerIsPaused {
                         Button(action: {
+                            Haptics.impact(.light)
                             pauseTimer()
                         }) {
                             Image(systemName: "pause.fill")
@@ -224,6 +228,7 @@ struct ContentView: View {
                     
                     if !timerIsPaused && timerStarted {
                         Button(action: {
+                            Haptics.impact(.heavy)
                             stopTimer()
                         }) {
                             Image(systemName: "stop.circle.fill")
@@ -373,6 +378,7 @@ struct ContentView: View {
                 }
                 
                 Button(LocalizedStringKey("Save")) {
+                    Haptics.notification(.success)
                     let newReport = Report(context: moc)
                     newReport.date = timerStartDate
                     newReport.subjectName = chosenSubject
@@ -540,6 +546,18 @@ struct ContentView: View {
         return "\(minutes)"
     }
 
+}
+
+struct Haptics {
+    static func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
+    }
+    
+    static func notification(_ type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
+    }
 }
 
 struct CircularGradientBackground: ViewModifier {

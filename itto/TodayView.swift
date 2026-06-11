@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import UIKit
 
 struct TodayView: View {
     @State private var showReselectSubjectsPopup = false
@@ -260,6 +261,18 @@ struct TodayView: View {
     }
 }
 
+struct Haptics {
+    static func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
+    }
+    
+    static func notification(_ type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
+    }
+}
+
 struct CheckboxView: View {
     @State var isChecked: Bool
     let color: Color
@@ -272,6 +285,7 @@ struct CheckboxView: View {
             .foregroundColor(color)
             .onTapGesture {
                 self.isChecked.toggle()
+                Haptics.impact(.light)
                 self.onChanged(self.isChecked)
             }
     }
