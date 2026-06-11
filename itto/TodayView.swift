@@ -125,25 +125,7 @@ struct TodayView: View {
         return completedTopics.contains(topic)
     }
     
-    private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String, isCompleted: Bool) {
-        moc.performAndWait {
-            withAnimation {
-                var completedTopics = dailySubject.topicsCompleted as? [String] ?? []
-                if isCompleted {
-                    completedTopics.append(topic)
-                } else {
-                    completedTopics.removeAll { $0 == topic }
-                }
-                dailySubject.topicsCompleted = completedTopics as NSObject
-                let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
-                dailySubject.isCompleted = allTopicsCompleted
-                if allTopicsCompleted {
-                    moc.delete(dailySubject)
-                }
-                try? moc.save()
-            }
-        }
-    }
+    // (removed duplicate definition - unified below)
     
     private func examSection(dailySubject: DailySubjects) -> some View {
         VStack(alignment: .leading) {
@@ -228,17 +210,30 @@ struct TodayView: View {
     private func updateCompletionStatus(for dailySubject: DailySubjects, topic: String? = nil, isCompleted: Bool) {
         moc.performAndWait {
             withAnimation {
-                var completedTopics = dailySubject.topicsCompleted as? [String] ?? []
-                if isCompleted {
-                    completedTopics.append(topic ?? "")
+                if let topic = topic {
+                    // Exam or Project: manage per-topic completion
+                    var completedTopics = dailySubject.topicsCompleted as? [String] ?? []
+                    if isCompleted {
+                        if !completedTopics.contains(topic) {
+                            completedTopics.append(topic)
+                        }
+                    } else {
+                        completedTopics.removeAll { $0 == topic }
+                    }
+                    dailySubject.topicsCompleted = completedTopics as NSObject
+
+                    let allTopics = dailySubject.topics as? [String] ?? []
+                    let allDone = !allTopics.isEmpty && Set(completedTopics) == Set(allTopics)
+                    dailySubject.isCompleted = allDone
+                    if allDone {
+                        moc.delete(dailySubject)
+                    }
                 } else {
-                    completedTopics.removeAll { $0 == topic }
-                }
-                dailySubject.topicsCompleted = completedTopics as NSObject
-                let allTopicsCompleted = Set(completedTopics) == Set(dailySubject.topics as? [String] ?? [])
-                dailySubject.isCompleted = allTopicsCompleted
-                if isCompleted {
-                    moc.delete(dailySubject)
+                    // Class (simple checkbox): toggle and remove from Today when completed
+                    dailySubject.isCompleted = isCompleted
+                    if isCompleted {
+                        moc.delete(dailySubject)
+                    }
                 }
                 try? moc.save()
             }
